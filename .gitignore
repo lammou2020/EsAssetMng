@@ -1,0 +1,10 @@
+.vscode
+__pycache__/
+Pipfile
+*.pyc
+*.db
+bookshelf.db
+app.yaml
+tox.ini
+doc/
+tests/

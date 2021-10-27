@@ -1,0 +1,74 @@
+{#
+# Copyright 2020 Inc.
+#}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>ES Asset Mng</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" >
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" >
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" ></script>
+    
+  </head>
+  <body>
+    <div class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <div class="navbar-brand">資產管理</div>
+        </div>
+        <ul class="nav navbar-nav">
+          <li><a href="/EsAsset"><span class="glyphicon">&#xe021</span></a></li-->
+          <li><a href="/EsAsset">資產信息</a></li>
+          <li class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false">
+              <span class="glyphicon glyphicon-paperclip"></span><span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu"><a class="dropdown-toggle" data-toggle="dropdown" href="#">
+              <li><a class="dropdown-toggle" data-toggle="dropdown" href="#">註銷</a></li>
+              <li><a class="dropdown-toggle" data-toggle="dropdown" href="#">搬移</a></li>
+              <li><a class="dropdown-toggle" data-toggle="dropdown" href="#">變换</a></li>
+              <li><a class="dropdown-toggle" data-toggle="dropdown" href="#">變賣</a></li>
+            </ul>
+          </li>
+          <li><a href="/EsAsset">單據信息</a></li>
+          <li><a href="/EsAsset">所屬課室</a></li>
+          <li><a href="/EsAsset">所屬倉儲</a></li>
+          <li><a href="/EsAsset">報表</a></li>
+          <li><a href="/EsAsset">廠家信息</a></li>
+          <li><a href="/EsAsset/mine">我輸入單據</a></li>
+        </ul>
+        {# [START profile] #}
+        <p class="navbar-text navbar-right">
+        {% if session.profile %}
+          <a href="/logout">
+            {% if session.profile.image %}
+              <img class="img-circle" src="{{session.profile.image.url}}" width="24">
+            {% endif %}
+            {{session.profile.user}}
+          </a>
+        {% else %}
+          <a href="/login">Sign in</a>
+        {% endif %}
+        </p>
+        {# [END profile] #}
+      </div>
+    </div>
+    <div class="container">
+      {% block content %}{% endblock %}
+    </div>
+    {{user}}
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <ul class=flashes>
+        {% for message in messages %}
+          <li>{{ message }}</li>
+        {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+  </body>
+
+</html>
