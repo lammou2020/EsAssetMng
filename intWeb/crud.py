@@ -40,6 +40,17 @@ def upload_image_file(file,UPLOAD_FOLDER):
     return public_url
 
 @crud.route("/")
+def home():
+    token = request.args.get('page_token', None)
+    if token:
+        token = token.encode('utf-8')
+    books, next_page_token = get_model().list(cursor=token)
+    return render_template(
+        "index.html",
+        books=books,
+        next_page_token=next_page_token)
+
+@crud.route("/list")
 def list():
     token = request.args.get('page_token', None)
     if token:

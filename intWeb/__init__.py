@@ -61,7 +61,7 @@ def create_app(config, debug=False, testing=False, config_overrides=None):
         del session['profile']
         session.modified = True
         #oauth2.storage.delete()
-        return redirect(request.referrer or '/')
+        return redirect(request.referrer or '/EsAsset/')
     # [END logout]
 
     @app.route('/login', methods=['GET', 'POST'])
@@ -76,7 +76,8 @@ def create_app(config, debug=False, testing=False, config_overrides=None):
             if user:
               if username == user["user"] and  password == user["Pass"] :
                  session['profile'] =  user
-                 return redirect(url_for('index'))
+                 #return redirect(url_for('index'))
+                 return redirect( '/EsAsset/')
             
         return '''
             <div style="margin-top: 20%;margin-left:50%;margin-right:50%">

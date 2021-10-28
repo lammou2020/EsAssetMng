@@ -1,32 +1,15 @@
 # Copyright 2015 Google Inc.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
-
 builtin_list = list
 
-
 db = SQLAlchemy()
-
 
 def init_app(app):
     # Disable track modifications, as it unnecessarily uses memory.
     app.config.setdefault('SQLALCHEMY_TRACK_MODIFICATIONS', False)
     db.init_app(app)
-
 
 def from_sql(row):
     """Translates a SQLAlchemy model instance into a dictionary"""
@@ -51,7 +34,6 @@ class User(db.Model):
         self.Role=Role
         self.Classno=Classno
         self.Seat=Seat
-
     def __repr__(self):
         return "<User(User='%s', Role=%s)" % (self.user, self.Role)
 
@@ -89,7 +71,6 @@ class Lesson(db.Model):
     def __repr__(self):
         return "<Lesson(Lesson='%s', Title=%s)" % (self.Lesson, self.Title)
 
-
 def list(limit=10, cursor=None):
     cursor = int(cursor) if cursor else 0
     query = (Lesson.query
@@ -100,7 +81,6 @@ def list(limit=10, cursor=None):
     lessons = builtin_list(map(from_sql, query.all()))
     next_page = cursor + limit if len(lessons) == limit else None
     return (lessons, next_page)
-
 
 # [START list_by_user]
 def list_by_user(user_id, limit=10, cursor=None):
@@ -121,13 +101,11 @@ def read(id):
         return None
     return from_sql(result)
 
-
 def create(data):
     lesson = Lesson(**data)
     db.session.add(lesson)
     db.session.commit()
     return from_sql(lesson)
-
 
 def update(data, id):
     lesson = Lesson.query.get(id)
@@ -136,16 +114,13 @@ def update(data, id):
     db.session.commit()
     return from_sql(lesson)
 
-
 def delete(id):
     Lesson.query.filter_by(id=id).delete()
     db.session.commit()
 
-
 def _create_database():
     """
-    If this script is run directly, create all the tables necessary to run the
-    application.
+    If this script is run directly, create all the tables necessary to run the application.
     """
     app = Flask(__name__)
     app.config.from_pyfile('../config.py')
@@ -160,10 +135,7 @@ def _create_database():
         db.session.add(studa)
         db.session.add(studb)
         db.session.commit()
-
     print("All tables created")
-    
-
 
 if __name__ == '__main__':
     _create_database()
