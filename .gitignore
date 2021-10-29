@@ -8,3 +8,4 @@ app.yaml
 tox.ini
 doc/
 tests/
+sqlite3.*
