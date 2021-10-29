@@ -38,6 +38,7 @@ class Acc(db.Model):
     ctime = db.Column(db.DateTime, nullable=False,default=datetime.utcnow)  #创建时间
     utime = db.Column(db.DateTime, nullable=False,default=datetime.utcnow)  #更新时间
     describe=db.Column(db.Text)
+    readonly=db.Column(db.Integer,default=0)
     def __init__(self, acno=None, acc=None, orderNo=None, regSDate=None,voucherNo=None,vendor=None,createdById=None,imageUrl=None):
         self.acno=acno
         self.acc=acc
@@ -63,6 +64,7 @@ class Item(db.Model):
     adjust= db.Column(db.Integer)
     depreciation= db.Column(db.Integer)
     insure= db.Column(db.Integer)
+    
     # ItemType
     itemTypeId = db.Column(db.Integer)
     # Acc
