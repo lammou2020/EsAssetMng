@@ -64,7 +64,6 @@ class Item(db.Model):
     adjust= db.Column(db.Integer)
     depreciation= db.Column(db.Integer)
     insure= db.Column(db.Integer)
-    
     # ItemType
     itemTypeId = db.Column(db.Integer)
     # Acc
@@ -77,8 +76,9 @@ class Item(db.Model):
     # Area
     #area_id = db.Column(db.Integer, db.ForeignKey('person.id'))
     #db.relationship('Area', backref='Item', lazy=True)
-    area = db.Column(db.String(80),unique=True,nullable=False)
+    location = db.Column(db.String(80),unique=True,nullable=False)
     imageUrl = db.Column(db.String(255))    
+    belong = db.Column(db.String(255))    
     ctime = db.Column(db.DateTime, nullable=False,default=datetime.utcnow)  #创建时间
     utime = db.Column(db.DateTime, nullable=False,default=datetime.utcnow)  #更新时间
     describe = db.Column(db.Text)
@@ -92,7 +92,6 @@ class Item(db.Model):
     #cabinet = models.CharField(max_length=32, null=True, blank=True, verbose_name='机柜号')
     #railnum = models.IntegerField(null=True, blank=True, verbose_name="导轨位置")
     #put_shelf_time = models.DateField(verbose_name='上线时间')
-
     def __init__(self, name=None):
         self.name =name
     def __repr__(self):
