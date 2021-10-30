@@ -2,7 +2,7 @@
 # Copyright 2020 Inc.
 #}
 
-{% extends "base.html" %}
+{% extends "esasset/base.html" %}
 
 {% block content %}
 
@@ -39,7 +39,16 @@
   </div>
   <div class="col-lg-8">
     {% if session.profile and session.profile.Role == "1" %}
-    
+    <h4>單據</h4>
+    <a href="/EsAsset/ACC/add" class="btn btn-success btn-sm">
+      <i class="glyphicon glyphicon-plus"></i>
+      Add ACC
+    </a>
+    <h4>資產</h4>
+    <a href="/EsAsset/ASSET/add" class="btn btn-success btn-sm">
+      <i class="glyphicon glyphicon-plus"></i>
+      Add ASSET
+    </a>    
     {% endif %}
     {% for book in books %}
     <div class="media">

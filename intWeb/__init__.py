@@ -1,7 +1,7 @@
 import json
 import logging
 from functools import wraps
-from flask import current_app, Flask, redirect, request, session, url_for
+from flask import current_app, Flask, redirect, request, session, url_for, render_template
 import httplib2
 # [START include]
 #from oauth2client.contrib.flask_util import UserOAuth2
@@ -16,7 +16,7 @@ from flask_session import Session
 
 def create_app(config, debug=False, testing=False, config_overrides=None):
     
-    app = Flask(__name__)
+    app = Flask(__name__,static_url_path="")
     app.config.from_object(config)
 
     app.debug = debug
@@ -33,6 +33,10 @@ def create_app(config, debug=False, testing=False, config_overrides=None):
     with app.app_context():
         model = get_model()
         model.init_app(app)
+        model_asset= get_assest_model()
+        model_asset.init_app(app)
+        model_lessons= get_lessons_model()
+        model_lessons.init_app(app)
     app.config['SESSION_COOKIE_NAME'] ="connect.sid"
     app.config['SESSION_TYPE'] = 'redis'  # session类型为redis
     app.config['SESSION_PERMANENT'] = False  # 如果设置为True，则关闭浏览器session就失效。
@@ -52,6 +56,11 @@ def create_app(config, debug=False, testing=False, config_overrides=None):
     #
         
     # [END init_app]
+    # Register the Bookshelf CRUD blueprint.
+    from intWeb import esasset, lessons
+
+    app.register_blueprint(esasset.crud,name="EsAsset", url_prefix='/EsAsset')
+    app.register_blueprint(lessons.crud,name="lessons", url_prefix='/lessons')
 
     # [START logout]
     # Add a logout handler.
@@ -77,7 +86,8 @@ def create_app(config, debug=False, testing=False, config_overrides=None):
               if username == user["user"] and  password == user["Pass"] :
                  session['profile'] =  user
                  #return redirect(url_for('index'))
-                 return redirect( '/EsAsset/')
+                 return redirect(url_for('EsAsset.list'))
+                 
             
         return '''
             <div style="margin-top: 20%;margin-left:50%;margin-right:50%">
@@ -89,14 +99,24 @@ def create_app(config, debug=False, testing=False, config_overrides=None):
             </div>
         '''
 
-    # Register the Bookshelf CRUD blueprint.
-    from .crud import crud
-    app.register_blueprint(crud, url_prefix='/EsAsset')
 
+
+    
     # Add a default root route.
     @app.route("/")
     def index():
-        return redirect(url_for('crud.list'))
+        return redirect(url_for('.list'))
+
+    @app.route("/index")
+    def list():
+        #token = request.args.get('page_token', None)
+        #if token:
+        #    token = token.encode('utf-8')
+        #books, next_page_token = get_model().list(cursor=token)
+        return render_template(
+            "index.html")
+            #books=books,
+            #next_page_token=next_page_token)        
     
     @app.route("/sess")
     def showsess():    
@@ -132,9 +152,16 @@ def create_app(config, debug=False, testing=False, config_overrides=None):
     return app
 
 def get_model():
-    from . import model_cloudsql
-    model = model_cloudsql
-    return model
+    import intWeb.auth.models as model_cloudsql
+    return model_cloudsql
+
+def get_assest_model():
+    import intWeb.esasset.models as model_esassest
+    return model_esassest
+
+def get_lessons_model():
+    import intWeb.lessons.models as model_lessons
+    return model_lessons
 
 # [START request_user_info]
 def _request_user_info(credentials):

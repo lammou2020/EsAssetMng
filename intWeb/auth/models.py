@@ -45,7 +45,7 @@ def readUser(UserName):
     return from_sql(result)
 
 #insert into user (user,Pass,Name,Role) values('admin','123','admin',1);
-
+'''
 class Lesson(db.Model):
     __tablename__ = 'Lesson'
     id = db.Column(db.Integer, primary_key=True)
@@ -117,13 +117,14 @@ def update(data, id):
 def delete(id):
     Lesson.query.filter_by(id=id).delete()
     db.session.commit()
+'''
 
 def _create_database():
     """
     If this script is run directly, create all the tables necessary to run the application.
     """
     app = Flask(__name__)
-    app.config.from_pyfile('../config.py')
+    app.config.from_pyfile('../../config.py')
     init_app(app)
     with app.app_context():
         db.drop_all()

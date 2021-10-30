@@ -1,4 +1,5 @@
-from intWeb import get_model,  storage, login_required_auth
+from intWeb import storage, login_required_auth
+from intWeb import get_assest_model
 from flask import flash,Blueprint, current_app, redirect, render_template, request, \
     session, url_for,send_file,Flask,send_from_directory
 import os
@@ -44,9 +45,9 @@ def home():
     token = request.args.get('page_token', None)
     if token:
         token = token.encode('utf-8')
-    books, next_page_token = get_model().list(cursor=token)
+    books, next_page_token = get_assest_model().list(cursor=token)
     return render_template(
-        "index.html",
+        "esasset/index.html",
         books=books,
         next_page_token=next_page_token)
 
@@ -55,9 +56,9 @@ def list():
     token = request.args.get('page_token', None)
     if token:
         token = token.encode('utf-8')
-    books, next_page_token = get_model().list(cursor=token)
+    books, next_page_token = get_assest_model().list(cursor=token)
     return render_template(
-        "list.html",
+        "esasset/list.html",
         books=books,
         next_page_token=next_page_token)
 
@@ -68,18 +69,18 @@ def list_mine():
     token = request.args.get('page_token', None)
     if token:
         token = token.encode('utf-8')
-    books, next_page_token = get_model().list_by_user(
+    books, next_page_token = get_assest_model().list_by_user(
         user_id=session['profile']['id'],
         cursor=token)
     return render_template(
-        "list.html",
+        "esasset/list.html",
         books=books,
         next_page_token=next_page_token)
 # [END list_mine]
 
 @crud.route('/<id>')
 def view(id):
-    book = get_model().read(id)
+    book = get_assest_model().read(id)
     crspath=book["Path"]
     crsclassno=book["Classno"]
     lecturesfile=[]    
@@ -122,11 +123,11 @@ def view(id):
                         filenames.append({"f":"#","n":_file})
                     elif session['profile']['Role']<"8":
                         filenames.append({"f":quote(str(file)),"n":f"{_file} {fseat}"})
-    return render_template("view.html", book=book,lecturesfile=lecturesfile,filenames=filenames)
+    return render_template("esasset/view.html", book=book,lecturesfile=lecturesfile,filenames=filenames)
     
 @crud.route('/<id>/downloadall')
 def download_all(id):
-    book = get_model().read(id)
+    book = get_assest_model().read(id)
     crspath=book["Path"]
     seat=session['profile']['Seat']
     path = current_app.config['HW_UPLOAD_FOLDER']
@@ -151,7 +152,7 @@ def download_all(id):
 
 @crud.route('/<id>/download/<filename>')
 def download_file(id,filename):
-    book = get_model().read(id)
+    book = get_assest_model().read(id)
     crspath=book["Path"]
     seat=session['profile']['Seat']
     #return render_template("view.html", book=book)
@@ -170,7 +171,7 @@ def download_file(id,filename):
 
 @crud.route('/<id>/downloadlecture/<filename>')
 def download_lecturefile(id,filename):
-    book = get_model().read(id)
+    book = get_assest_model().read(id)
     crspath=book["Path"]
     #return render_template("view.html", book=book)
     # Get current path os.getcwd()
@@ -199,7 +200,7 @@ def showimage(id,filename):
 
 @crud.route('/<id>/upload', methods=['GET', 'POST'])
 def uploadfiles(id):
-    book = get_model().read(id)
+    book = get_assest_model().read(id)
     crspath=book["Path"]
     seat=session['profile']['Seat']
     path = current_app.config['HW_UPLOAD_FOLDER']
@@ -242,18 +243,18 @@ def add():
         if 'profile' in session:
             data['createdById'] = session['profile']['id']
 
-        book = get_model().create(data)
+        book = get_assest_model().create(data)
 
         return redirect(url_for('.view', id=book['id']))
 
-    return render_template("form.html", action="Add", book={})
+    return render_template("esasset/form.html", action="Add", book={})
 # [END add]
 
 
 @crud.route('/<id>/edit', methods=['GET', 'POST'])
 @login_required_auth
 def edit(id):
-    book = get_model().read(id)
+    book = get_assest_model().read(id)
 
     if request.method == 'POST':
         data = request.form.to_dict(flat=True)
@@ -263,17 +264,17 @@ def edit(id):
         if image_url:
             data['imageUrl'] = image_url
 
-        book = get_model().update(data, id)
+        book = get_assest_model().update(data, id)
 
         return redirect(url_for('.view', id=book['id']))
 
-    return render_template("form.html", action="Edit", book=book)
+    return render_template("esasset/form.html", action="Edit", book=book)
 
 
 @crud.route('/<id>/delete')
 @login_required_auth
 def delete(id):
-    book = get_model().read(id)
+    book = get_assest_model().read(id)
     crspath=book["Path"]
     if (book["createdById"]==str(session['profile']['id']))  :
 
@@ -282,13 +283,13 @@ def delete(id):
         for root,dirs, files in os.walk(UPLOAD_FOLDER):
            for file in files:      
                os.remove(UPLOAD_FOLDER+"/"+file)
-        get_model().delete(id)        
+        get_assest_model().delete(id)        
     return redirect(url_for('.list'))
 
 @crud.route('/<id>/cleanclasswork')
 @login_required_auth
 def cleanclasswork(id):
-    book = get_model().read(id)
+    book = get_assest_model().read(id)
     crspath=book["Path"]
     if (book["createdById"]==str(session['profile']['id']))  :
         path = current_app.config['HW_UPLOAD_FOLDER']
@@ -296,5 +297,5 @@ def cleanclasswork(id):
         for root,dirs, files in os.walk(UPLOAD_FOLDER):
            for file in files:      
                os.remove(UPLOAD_FOLDER+"/"+file)
-        #get_model().delete(id)        
+        #get_assest_model().delete(id)        
     return redirect(url_for('.list'))

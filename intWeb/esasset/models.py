@@ -98,6 +98,60 @@ class Item(db.Model):
     def __repr__(self):
         return "<item(name='%s')" % (self.name)    
 
+##############################################
+def list(limit=10, cursor=None):
+    cursor = int(cursor) if cursor else 0
+    query = (Acc.query
+             #.filter_by(Open=1)
+             .order_by(Acc.id)
+             .limit(limit)
+             .offset(cursor))
+    lessons = builtin_list(map(from_sql, query.all()))
+    next_page = cursor + limit if len(lessons) == limit else None
+    return (lessons, next_page)
+
+# [START list_by_user]
+def list_by_user(user_id, limit=10, cursor=None):
+    cursor = int(cursor) if cursor else 0
+    query = (Acc.query
+             .filter_by(createdById=user_id)
+             .order_by(Acc.id)
+             .limit(limit)
+             .offset(cursor))
+    lessons = builtin_list(map(from_sql, query.all()))
+    next_page = cursor + limit if len(lessons) == limit else None
+    return (lessons, next_page)
+# [END list_by_user]
+
+def read(id):
+    result = Acc.query.get(id)
+    if not result:
+        return None
+    return from_sql(result)
+
+def create(data):
+    Acc = Acc(**data)
+    db.session.add(Acc)
+    db.session.commit()
+    return from_sql(Acc)
+
+def update(data, id):
+    Acc = Acc.query.get(id)
+    for k, v in data.items():
+        setattr(Acc, k, v)
+    db.session.commit()
+    return from_sql(Acc)
+
+def delete(id):
+    Acc.query.filter_by(id=id).delete()
+    db.session.commit()
+
+
+
+
+#############################################
+
+
 asset_type_choice = (
         ('cloud_host', '云主机'),
         ('virtual_machine', '虚拟机'),
@@ -171,7 +225,7 @@ def _create_database():
     If this script is run directly, create all the tables necessary to run the application.
     """
     app = Flask(__name__)
-    app.config.from_pyfile('../config.py')
+    app.config.from_pyfile('../../config.py')
     init_app(app)
     with app.app_context():
         db.drop_all()

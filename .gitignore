@@ -9,3 +9,5 @@ tox.ini
 doc/
 tests/
 sqlite3.*
+intWeb/static/
+flask-sqlalchemy/
