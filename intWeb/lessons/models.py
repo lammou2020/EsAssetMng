@@ -4,7 +4,8 @@ from flask_sqlalchemy import SQLAlchemy
 
 builtin_list = list
 
-db = SQLAlchemy()
+from intWeb import db
+#db = SQLAlchemy()
 
 def init_app(app):
     # Disable track modifications, as it unnecessarily uses memory.

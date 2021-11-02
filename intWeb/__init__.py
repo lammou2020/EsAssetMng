@@ -2,6 +2,9 @@ import json
 import logging
 from functools import wraps
 from flask import current_app, Flask, redirect, request, session, url_for, render_template
+import click
+from flask.cli import with_appcontext
+
 import httplib2
 # [START include]
 #from oauth2client.contrib.flask_util import UserOAuth2
@@ -9,14 +12,25 @@ import httplib2
 import redis
 pool=redis.ConnectionPool(host='127.0.0.1',port=6379)
 
+from flask_sqlalchemy import SQLAlchemy
+
+db = SQLAlchemy()
+init_db_flag=False
 from flask_session import Session
 #from .mySession import MySessionInterface
 #oauth2 = UserOAuth2()
 # [END include]
 
+def from_sql(row):
+    """Translates a SQLAlchemy model instance into a dictionary"""
+    data = row.__dict__.copy()
+    data['id'] = row.id
+    data.pop('_sa_instance_state')
+    return data
+
 def create_app(config, debug=False, testing=False, config_overrides=None):
     
-    app = Flask(__name__,static_url_path="")
+    app = Flask(__name__) #,static_url_path="")
     app.config.from_object(config)
 
     app.debug = debug
@@ -29,6 +43,11 @@ def create_app(config, debug=False, testing=False, config_overrides=None):
     if not app.testing:
         logging.basicConfig(level=logging.INFO)
 
+    #app.config.from_mapping(
+        # default secret that should be overridden in environ or config
+        # SQLALCHEMY_TRACK_MODIFICATIONS=False,
+    #)
+
     # Setup the data model.
     with app.app_context():
         model = get_model()
@@ -37,6 +56,17 @@ def create_app(config, debug=False, testing=False, config_overrides=None):
         model_asset.init_app(app)
         model_lessons= get_lessons_model()
         model_lessons.init_app(app)
+        model_hello= get_hello_model()
+        model_hello.init_app(app)
+        model_blog=get_blog_model()
+        model_blog.init_app(app)
+        print(init_db_flag)
+        if init_db_flag:
+            import intWeb.initDB
+            db.init_app(app)
+            intWeb.initDB.initdb_data(db,app)
+
+        
     app.config['SESSION_COOKIE_NAME'] ="connect.sid"
     app.config['SESSION_TYPE'] = 'redis'  # session类型为redis
     app.config['SESSION_PERMANENT'] = False  # 如果设置为True，则关闭浏览器session就失效。
@@ -57,11 +87,13 @@ def create_app(config, debug=False, testing=False, config_overrides=None):
         
     # [END init_app]
     # Register the Bookshelf CRUD blueprint.
-    from intWeb import esasset, lessons
+    from intWeb import esasset, lessons,hello, auth,blog
 
     app.register_blueprint(esasset.crud,name="EsAsset", url_prefix='/EsAsset')
     app.register_blueprint(lessons.crud,name="lessons", url_prefix='/lessons')
-
+    app.register_blueprint(hello.crud,name="hello", url_prefix='/hello')
+    app.register_blueprint(auth.bp,name="auth", url_prefix='/auth')
+    app.register_blueprint(blog.bp,name="blog", url_prefix='/blog')
     # [START logout]
     # Add a logout handler.
     @app.route('/logout')
@@ -78,13 +110,15 @@ def create_app(config, debug=False, testing=False, config_overrides=None):
         if request.method == 'POST':
             username = request.form['username']
             password = request.form['password']
-            user=get_model().readUser(username)
-            print(user)
+            #user=get_model().readUser(username)
+            user=get_model().User.query.filter_by(user=username).first()
             #session['username']
             #for record in records:
             if user:
-              if username == user["user"] and  password == user["Pass"] :
-                 session['profile'] =  user
+              #if username == user["user"] and  password == user["Pass"] :
+              if user.check_password(password):
+                 session["user_id"] = user.id
+                 session['profile'] = from_sql(user)
                  #return redirect(url_for('index'))
                  return redirect(url_for('EsAsset.list'))
                  
@@ -163,6 +197,14 @@ def get_lessons_model():
     import intWeb.lessons.models as model_lessons
     return model_lessons
 
+def get_hello_model():
+    import intWeb.hello.models as model_hello
+    return model_hello
+
+def get_blog_model():
+    import intWeb.blog.models as model_blog
+    return model_blog
+
 # [START request_user_info]
 def _request_user_info(credentials):
     """
@@ -196,4 +238,5 @@ def login_required_auth(f):
             return redirect(url_for('login', next=request.url))
         return f(*args, **kwargs)
     return decorated_function
+
 

@@ -8,7 +8,8 @@ from flask_sqlalchemy import SQLAlchemy
 
 builtin_list = list
 
-db = SQLAlchemy()
+from intWeb import db
+#db = SQLAlchemy()
 
 def init_app(app):
     # Disable track modifications, as it unnecessarily uses memory.
@@ -22,6 +23,7 @@ def from_sql(row):
     data.pop('_sa_instance_state')
     return data
 
+
 class Acc(db.Model):
     __tablename__ = 'Acc'
     id= db.Column(db.Integer,primary_key=True)
@@ -34,11 +36,13 @@ class Acc(db.Model):
     vendor= db.Column(db.String(80))
     total=db.Column(db.Integer)
     createdById = db.Column(db.String(255))    
+    Path=db.Column(db.String(80))
     imageUrl = db.Column(db.String(255))    
     ctime = db.Column(db.DateTime, nullable=False,default=datetime.utcnow)  #创建时间
     utime = db.Column(db.DateTime, nullable=False,default=datetime.utcnow)  #更新时间
     describe=db.Column(db.Text)
     readonly=db.Column(db.Integer,default=0)
+    
     def __init__(self, acno=None, acc=None, orderNo=None, regSDate=None,voucherNo=None,vendor=None,createdById=None,imageUrl=None):
         self.acno=acno
         self.acc=acc
@@ -50,52 +54,6 @@ class Acc(db.Model):
         self.imageUrl=None
     def __repr__(self):
         return "<acc(accno='%s', acc=%s)" % (self.accno, self.acc)    
-
-class Item(db.Model):
-    __tablename__ = 'Item'    
-    id = db.Column(db.Integer,primary_key=True)
-    name = db.Column(db.String(80),unique=True,nullable=False)
-    model= db.Column(db.String(80),unique=True,nullable=False)
-    sn = db.Column(db.String(80),unique=True,nullable=False)
-    quantity= db.Column(db.Integer)
-    price = db.Column(db.Integer)
-    amount= db.Column(db.Integer)
-    # status
-    adjust= db.Column(db.Integer)
-    depreciation= db.Column(db.Integer)
-    insure= db.Column(db.Integer)
-    # ItemType
-    itemTypeId = db.Column(db.Integer)
-    # Acc
-    # acno
-    acc_id = db.Column(db.Integer, db.ForeignKey('Acc.id'), nullable=False)
-    acc = db.relationship('Acc',  backref=db.backref('Item', lazy=True))
-    #orderNO  = db.Column(db.String(80),unique=True,nullable=False)
-    #voucherNo = db.Column(db.String(80),unique=True,nullable=False)
-    #vendor = db.Column(db.String(80),unique=True,nullable=False)
-    # Area
-    #area_id = db.Column(db.Integer, db.ForeignKey('person.id'))
-    #db.relationship('Area', backref='Item', lazy=True)
-    location = db.Column(db.String(80),unique=True,nullable=False)
-    imageUrl = db.Column(db.String(255))    
-    belong = db.Column(db.String(255))    
-    ctime = db.Column(db.DateTime, nullable=False,default=datetime.utcnow)  #创建时间
-    utime = db.Column(db.DateTime, nullable=False,default=datetime.utcnow)  #更新时间
-    describe = db.Column(db.Text)
-    #belong = models.ForeignKey('Belong', verbose_name='所属公司', null=True, blank=True, on_delete=models.SET_NULL)
-    #manufacturer = models.ForeignKey('Manufacturer',verbose_name='厂家', null=True, blank=True, on_delete=models.CASCADE)
-    #asset_type = models.CharField(choices=asset_type_choice, max_length=64, default='virtual_machine', verbose_name="资产类型")
-    #status = models.SmallIntegerField(choices=asset_status_choice, default=0, verbose_name='设备状态')
-    #cpu = models.CharField(max_length=60,blank=True, null=True)
-    #disk = models.CharField(max_length=60,blank=True, null=True)
-    #memory = models.CharField(max_length=60,blank=True, null=True)
-    #cabinet = models.CharField(max_length=32, null=True, blank=True, verbose_name='机柜号')
-    #railnum = models.IntegerField(null=True, blank=True, verbose_name="导轨位置")
-    #put_shelf_time = models.DateField(verbose_name='上线时间')
-    def __init__(self, name=None):
-        self.name =name
-    def __repr__(self):
-        return "<item(name='%s')" % (self.name)    
 
 ##############################################
 def list(limit=10, cursor=None):
@@ -122,6 +80,7 @@ def list_by_user(user_id, limit=10, cursor=None):
     return (lessons, next_page)
 # [END list_by_user]
 
+
 def read(id):
     result = Acc.query.get(id)
     if not result:
@@ -146,10 +105,52 @@ def delete(id):
     db.session.commit()
 
 
+class Item(db.Model):
+    __tablename__ = 'Item'    
+    id = db.Column(db.Integer,primary_key=True)
+    name = db.Column(db.String(80),unique=True,nullable=False)
+    model= db.Column(db.String(80),unique=True,nullable=False)
+    sn = db.Column(db.String(80),unique=True,nullable=False)
+    quantity= db.Column(db.Integer)
+    price = db.Column(db.Integer)
+    amount= db.Column(db.Integer)
+    # status
+    adjust= db.Column(db.Integer)
+    depreciation= db.Column(db.Integer)
+    insure= db.Column(db.Integer)
+    
+    # ItemType
+    itemTypeId = db.Column(db.Integer)
+    # Acc
+    # acno
+    acc_id = db.Column(db.Integer, db.ForeignKey('Acc.id'), nullable=False)
+    acc = db.relationship('Acc',  backref=db.backref('Item', lazy=True))
+    #orderNO  = db.Column(db.String(80),unique=True,nullable=False)
+    #voucherNo = db.Column(db.String(80),unique=True,nullable=False)
+    #vendor = db.Column(db.String(80),unique=True,nullable=False)
+    # Area
+    #area_id = db.Column(db.Integer, db.ForeignKey('person.id'))
+    #db.relationship('Area', backref='Item', lazy=True)
+    area = db.Column(db.String(80),unique=True,nullable=False)
+    imageUrl = db.Column(db.String(255))    
+    ctime = db.Column(db.DateTime, nullable=False,default=datetime.utcnow)  #创建时间
+    utime = db.Column(db.DateTime, nullable=False,default=datetime.utcnow)  #更新时间
+    describe = db.Column(db.Text)
+    #belong = models.ForeignKey('Belong', verbose_name='所属公司', null=True, blank=True, on_delete=models.SET_NULL)
+    #manufacturer = models.ForeignKey('Manufacturer',verbose_name='厂家', null=True, blank=True, on_delete=models.CASCADE)
+    #asset_type = models.CharField(choices=asset_type_choice, max_length=64, default='virtual_machine', verbose_name="资产类型")
+    #status = models.SmallIntegerField(choices=asset_status_choice, default=0, verbose_name='设备状态')
+    #cpu = models.CharField(max_length=60,blank=True, null=True)
+    #disk = models.CharField(max_length=60,blank=True, null=True)
+    #memory = models.CharField(max_length=60,blank=True, null=True)
+    #cabinet = models.CharField(max_length=32, null=True, blank=True, verbose_name='机柜号')
+    #railnum = models.IntegerField(null=True, blank=True, verbose_name="导轨位置")
+    #put_shelf_time = models.DateField(verbose_name='上线时间')
 
-
-#############################################
-
+    def __init__(self, name=None):
+        self.name =name
+    def __repr__(self):
+        return "<item(name='%s')" % (self.name)    
 
 asset_type_choice = (
         ('cloud_host', '云主机'),

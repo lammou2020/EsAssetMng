@@ -4,7 +4,7 @@ MAX_CONTENT_LENGTH = 8 * 1024 * 1024
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
 # Image Path
 UPLOAD_FOLDER=os.getcwd()+"\\TEMP"
-HW_UPLOAD_FOLDER="c:/STUDITWORK/"
+HW_UPLOAD_FOLDER="c:/ASSETDIR/"
 # [START secret_key]
 SECRET_KEY = 'catcat'
 SESSION_COOKIE_NAME='connect.sid'

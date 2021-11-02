@@ -6,10 +6,10 @@
 
 {% block content %}
 {% if session.profile and session.profile.Role == "1" %}
-<h4>Assets</h4>
+<h4>課程</h4>
 <a href="/lessons/add" class="btn btn-success btn-sm">
   <i class="glyphicon glyphicon-plus"></i>
-  Add asset
+  Add 課程
 </a>
 {% endif %}
 {% for book in books %}

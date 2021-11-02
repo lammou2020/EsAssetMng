@@ -78,22 +78,19 @@ def list_mine():
         next_page_token=next_page_token)
 # [END list_mine]
 
-@crud.route('/<id>')
-def view(id):
-    book = get_assest_model().read(id)
+def Get_FileList(book, lecturesfile, filenames):
     crspath=book["Path"]
-    crsclassno=book["Classno"]
-    lecturesfile=[]    
-    filenames=[]  
     path = current_app.config['HW_UPLOAD_FOLDER']
     LECTURE_FOLDER = os.path.join(path, crspath+"LECTURE")
     if not os.path.isdir(LECTURE_FOLDER):
         os.mkdir(LECTURE_FOLDER)
+
     for root,dirs, files in os.walk(LECTURE_FOLDER):
         for file in files:
             basename, extension = file.rsplit('.', 1)
             _file=basename.split('-_')[0]+"."+extension
             lecturesfile.append({"f":quote(str(file)),"n":_file})    
+
     if session=={}:
         pass
     elif session.get('profile') is None :
@@ -101,9 +98,7 @@ def view(id):
     elif session.get('profile') == {} :
         pass        
     else:
-        seat=session['profile'].get('Seat')
-        classno=session['profile']['Classno']
-        if (book["createdById"]==str(session['profile']['id'])) or (crsclassno==classno) :
+        if (book["createdById"]==str(session['profile']['id']))  :
             path = current_app.config['HW_UPLOAD_FOLDER']
             LECTURE_FOLDER = os.path.join(path, crspath+"LECTURE")
             if not os.path.isdir(LECTURE_FOLDER):
@@ -112,6 +107,7 @@ def view(id):
             UPLOAD_FOLDER = os.path.join(path, crspath)
             if not os.path.isdir(UPLOAD_FOLDER):
                 os.mkdir(UPLOAD_FOLDER)  
+
             for root,dirs, files in os.walk(UPLOAD_FOLDER):
                 for file in files:
                     basename, extension = file.rsplit('.', 1)
@@ -119,10 +115,16 @@ def view(id):
                     _file=bn[0]+"."+extension
                     fseat=""
                     if len(bn)>1: fseat=bn[1][:2]
-                    if f"-_{seat}" in file:
-                        filenames.append({"f":"#","n":_file})
-                    elif session['profile']['Role']<"8":
+                    if session['profile']['Role']<"8":
                         filenames.append({"f":quote(str(file)),"n":f"{_file} {fseat}"})
+    pass
+
+@crud.route('/<id>')
+def view(id):
+    book = get_assest_model().read(id)
+    lecturesfile=[]    
+    filenames=[]  
+    #Get_FileList(book,lecturesfile,filenames)             
     return render_template("esasset/view.html", book=book,lecturesfile=lecturesfile,filenames=filenames)
     
 @crud.route('/<id>/downloadall')
@@ -207,23 +209,26 @@ def uploadfiles(id):
     LECTURE_FOLDER = os.path.join(path, crspath+"LECTURE")
     if not os.path.isdir(LECTURE_FOLDER):
         os.mkdir(LECTURE_FOLDER)
+
     UPLOAD_FOLDER = os.path.join(path, crspath)
     if not os.path.isdir(UPLOAD_FOLDER):
         os.mkdir(UPLOAD_FOLDER)
+
     if session['profile']['Role']<"8":
         UPLOAD_FOLDER=LECTURE_FOLDER
+
     if request.method == 'POST':
         if 'files[]' not in request.files:
             flash('No file part')
             return render_template("view.html", book=book)
+        
         files = request.files.getlist('files[]')
         for file in files:
             upload_hw_file(file,UPLOAD_FOLDER,seat)
+        
         flash('File(s) successfully uploaded')
         return redirect(f"/lessons/{id}")
         #return render_template("view.html", book=book)
-
-
 
 # [START add]
 @crud.route('/add', methods=['GET', 'POST'])

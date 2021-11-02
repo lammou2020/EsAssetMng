@@ -6,11 +6,12 @@
 
 {% block content %}
 {% if session.profile and session.profile.Role == "1" %}
-<h4>Assets</h4>
+<h4>資產項目</h4>
 <a href="/EsAsset/add" class="btn btn-success btn-sm">
   <i class="glyphicon glyphicon-plus"></i>
-  Add asset
+  Add 項目
 </a>
+<small>按單據或專案項目劃分項目</small>
 {% endif %}
 {% for book in books %}
 <div class="media">
@@ -22,8 +23,8 @@
       {% endif %}
     </div>
     <div class="media-body">
-      <h4>{{book.Title}}</h4>
-      <p>{{book.Classno}}</p>
+      <h4>{{book.id}} {{book.acc}}</h4>
+      <p>{{book.describe}}</p>
     </div>
   </a>
 </div>

@@ -1,10 +1,12 @@
-# Copyright 2015 Google Inc.
+from sqlalchemy.ext.hybrid import hybrid_property
+from werkzeug.security import check_password_hash
+from werkzeug.security import generate_password_hash
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
 builtin_list = list
-
-db = SQLAlchemy()
+from intWeb import db
+#db = SQLAlchemy()
 
 def init_app(app):
     # Disable track modifications, as it unnecessarily uses memory.
@@ -21,19 +23,35 @@ def from_sql(row):
 class User(db.Model):
     __tablename__ = 'User'
     id = db.Column(db.Integer, primary_key=True)
-    user = db.Column(db.String(255), unique=True)
-    Pass = db.Column(db.String(255))
+    #username = db.Column(db.String, unique=True, nullable=False)
+    user = db.Column(db.String(255), unique=True, nullable=False)
+    _password = db.Column("password", db.String, nullable=False)
+    #Pass = db.Column(db.String(255))
     Name = db.Column(db.String(255))
     Classno = db.Column(db.String(255))
     Seat = db.Column(db.String(255))
     Role = db.Column(db.String(255))
-    def __init__(self, user=None, Pass=None,Name=None,Role=None,Classno=None,Seat=None):
+
+    @hybrid_property
+    def password(self):
+        return self._password
+
+    @password.setter
+    def password(self, value):
+        """Store the password as a hash for security."""
+        self._password = generate_password_hash(value)
+
+    def check_password(self, value):
+        return check_password_hash(self.password, value)
+
+    def __init__(self, user=None, password=None,Name=None,Role=None,Classno=None,Seat=None):
         self.user = user
-        self.Pass = Pass
+        self.password = password
         self.Name = Name
         self.Role=Role
         self.Classno=Classno
         self.Seat=Seat
+
     def __repr__(self):
         return "<User(User='%s', Role=%s)" % (self.user, self.Role)
 
