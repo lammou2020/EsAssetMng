@@ -30,8 +30,8 @@ class Acc(db.Model):
     acno = db.Column(db.String(80),unique=True,nullable=False)
     acc= db.Column(db.String(160))
     orderNo= db.Column(db.String(80))
-    regSDate= db.Column(db.DateTime, nullable=False,default=datetime.utcnow)
-    regEdate= db.Column(db.DateTime)
+    regSDate= db.Column(db.String(10))
+    regEdate= db.Column(db.String(10))
     voucherNo= db.Column(db.String(80))
     vendor= db.Column(db.String(80))
     total=db.Column(db.Integer)
@@ -43,7 +43,7 @@ class Acc(db.Model):
     describe=db.Column(db.Text)
     readonly=db.Column(db.Integer,default=0)
     
-    def __init__(self, acno=None, acc=None, orderNo=None, regSDate=None,voucherNo=None,vendor=None,createdById=None,imageUrl=None):
+    def __init__(self, acno=None, acc=None, orderNo=None, regSDate=None,voucherNo=None,vendor=None,total=None,describe=None,createdById=None,imageUrl=None,Path=None):
         self.acno=acno
         self.acc=acc
         self.orderNo=orderNo
@@ -51,7 +51,10 @@ class Acc(db.Model):
         self.voucherNo=voucherNo
         self.vendor=vendor
         self.createdById=createdById
-        self.imageUrl=None
+        self.imageUrl=imageUrl
+        self.total=total
+        self.describe=describe
+        self.Path=Path
     def __repr__(self):
         return "<acc(accno='%s', acc=%s)" % (self.accno, self.acc)    
 
@@ -88,17 +91,17 @@ def read(id):
     return from_sql(result)
 
 def create(data):
-    Acc = Acc(**data)
-    db.session.add(Acc)
+    acc = Acc(**data)
+    db.session.add(acc)
     db.session.commit()
-    return from_sql(Acc)
+    return from_sql(acc)
 
 def update(data, id):
-    Acc = Acc.query.get(id)
+    acc = Acc.query.get(id)
     for k, v in data.items():
-        setattr(Acc, k, v)
+        setattr(acc, k, v)
     db.session.commit()
-    return from_sql(Acc)
+    return from_sql(acc)
 
 def delete(id):
     Acc.query.filter_by(id=id).delete()

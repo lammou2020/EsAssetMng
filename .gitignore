@@ -10,4 +10,5 @@ doc/
 tests/
 sqlite3.*
 intWeb/static/
+intWeb/initDB.py
 flask-sqlalchemy/

@@ -6,39 +6,48 @@
 {% extends "esasset/base.html" %}
 
 {% block content %}
-<h3>{{action}} Asset</h3>
+<h3>{{action}} 單據或專案項目</h3>
 <script src="https://cdn.ckeditor.com/4.15.1/standard/ckeditor.js"></script>
 <form method="POST" enctype="multipart/form-data">
   <div class="form-group">
-    <label for="Lesson">Lesson</label>
-    <input type="text" name="Lesson" id="Lesson" value="{{book.Lesson}}" class="form-control"/>
+    <label for="Lesson">acno項目代號 NNNN-NNN</label>
+    <input type="text" name="acno" id="acno" value="{{book.acno}}" class="form-control"/>
   </div>
   <div class="form-group">
-    <label for="Title">Title</label>
-    <input type="text" name="Title" id="Title" value="{{book.Title}}" class="form-control"/>
+    <label for="Title">acc單據或專案項目名稱</label>
+    <input type="text" name="acc" id="acc" value="{{book.acc}}" class="form-control"/>
+  </div>
+  <div class="form-group">
+    <label for="Classno">orderNo 訂單編號</label>
+    <input type="text" name="orderNo" id="orderNo" value="{{book.orderNo}}" class="form-control"/>
+  </div>  
+  <div class="form-group">
+    <label for="regSDate">regSDate登記日期</label>
+    <input type="text" name="regSDate" id="regSDate" value="{{book.regSDate}}" class="form-control"/>
+  </div>
+  <div class="form-group">
+    <label for="voucherNo">voucherNo傳票編號</label>
+    <input type="text" name="voucherNo" id="voucherNo" value="{{book.voucherNo}}" class="form-control"/>
+  </div>  
+  <div class="form-group">
+    <label for="vendor">vendor供應商</label>
+    <input type="text" name="vendor" id="vendor" value="{{book.vendor}}" class="form-control"/>
+  </div>  
+  <div class="form-group">
+    <label for="total">total總金額</label>
+    <input type="text" name="total" id="total" value="{{book.total}}" class="form-control"/>
+  </div>  
+
+  <div class="form-group">
+    <label for="describe">Description</label>
+    <textarea name="describe" id="describe" class="form-control">{{book.describe}}</textarea>
+    <script>
+      CKEDITOR.replace( 'describe' );
+    </script>
   </div>
   <div class="form-group">
     <label for="Path">Path</label>
     <input type="text" name="Path" id="Path" value="{{book.Path}}" class="form-control"/>
-  </div>
-  <div class="form-group">
-    <label for="Classno">Classno</label>
-    <input type="text" name="Classno" id="Classno" value="{{book.Classno}}" class="form-control"/>
-  </div>  
-  <div class="form-group">
-    <label for="Open">Open lesson 0/1</label>
-    <input type="text" name="Open" id="Open" value="{{book.Open}}" class="form-control" placeholder="" pattern="([0-9]+)" title="Enter Number" />
-  </div>  
-  <div class="form-group">
-    <label for="logDate">Date</label>
-    <input type="text" name="logDate" id="logDate" value="{{book.logDate}}" class="form-control"/>
-  </div>
-  <div class="form-group">
-    <label for="Descr">Description</label>
-    <textarea name="Descr" id="Descr" class="form-control">{{book.Descr}}</textarea>
-    <script>
-      CKEDITOR.replace( 'Descr' );
-    </script>
   </div>
   <div class="form-group">
     <label for="image">Cover Image</label>

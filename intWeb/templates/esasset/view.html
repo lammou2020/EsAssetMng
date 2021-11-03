@@ -9,21 +9,13 @@
 <h4>{{book.Lesson}} {{book.Title}}</h4>
 {% if session.profile and session.profile.Role < "8" %}
 <div class="btn-group">
-  <a onclick="window.location.href ='/EsAsset/{{book.id}}/downloadall?{{ range(1, 100) | random }}'+Math.random()" class="btn btn-primary btn-sm">
-    <i class="glyphicon glyphicon-edit"></i>
-    Zip Lesson
-  </a>  
   <a href="/EsAsset/{{book.id}}/edit" class="btn btn-primary btn-sm">
     <i class="glyphicon glyphicon-edit"></i>
-    Edit Lesson
-  </a>
-  <a href="/EsAsset/{{book.id}}/cleanclasswork" class="btn btn-danger btn-sm">
-    <i class="glyphicon glyphicon-trash"></i>
-    clean classwork
+    Edit 項目
   </a>
   <a href="/EsAsset/{{book.id}}/delete" class="btn btn-danger btn-sm">
     <i class="glyphicon glyphicon-trash"></i>
-    Delete Lesson
+    Delete 項目
   </a>
 </div>
 {% endif %}
@@ -38,23 +30,14 @@
 </div>
 <div class="media-body">
   <h4 class="book-title">
-    {{book.Title}}
-    <small>{{book.logDate}}</small>
+    {{book.acc}}
+    <small>{{book.regSDate}}</small>
   </h4>
-  <div>{{book.Descr|safe }} </div>
+  <div>{{book.describe|safe }} </div>
   <small class="book-added-by">for {{book.Classno}} created by userid( {{book.get('createdById')|default('Anonymous', True)}})</small>
 </div>
-<h4>Lecture:</h4>
-{% for file in lecturesfile %}
-<div class="media">
-  <a href="/EsAsset/{{book.id}}/downloadlecture/{{file.f}}">
-    <span>{{file.n}}</span>
-  </a>
-</div>
-{% else %}
-<p>No files found</p>
-{% endfor %}
-<h4>Classwork:</h4>
+
+<h4>Img:</h4>
 {% for file in filenames %}
 <div>
   <a href="/EsAsset/{{book.id}}/download/{{file.f}}">
