@@ -1,6 +1,11 @@
 "# EsAsset" 
 init db   
 python main.py --initdb   
+
+from datetime import datetime
+datetime.strptime(start, '%Y-%m-%d')
+Idea.query.filter(Idea.time >= datetime.strptime(start, '%Y-%m-%d'),
+                  Idea.time <= datetime.strptime(end, '%Y-%m-%d')).all()
    
 run    
 python main.py   

@@ -68,20 +68,13 @@
     </table>
     <p>{{book.describe | safe}}</p>
   </div>
-  {% if session.profile and session.profile.Role < "8" %} <div class="btn-group">
-    <a href="/EsAsset/item/Add?acno={{book.id}}" class="btn btn-primary btn-sm">
-      <i class="glyphicon glyphicon-edit"></i>
-      Add 明細
-    </a>
-    <br>
-    {% endif %}
+
 <h3>明細</h3>
-
-
   <table>
     <tr>
       <td>id</td>
-      <td>校內編號</td>
+      
+      <td>產品編號</td>
       <td style="width: 100px;">產品名稱</td>
       <td>型號</td>
       <td>SN/PN</td>
@@ -115,6 +108,7 @@
       <td>{{item_.acc_acno}}</td>
       <td>{{item_.regSDate}}</td>
     </tr>
+
   {% else %}
   <tr><td>No lessons found</td></tr>
   {% endfor %}

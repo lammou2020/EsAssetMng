@@ -5,6 +5,7 @@ from datetime import datetime
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 #from config import SECRET_KEY
+from sqlalchemy import desc
 
 builtin_list = list
 
@@ -30,18 +31,18 @@ class Acc(db.Model):
     acno = db.Column(db.String(80),unique=True,nullable=False)
     acc= db.Column(db.String(160))
     orderNo= db.Column(db.String(80))
-    regSDate= db.Column(db.String(10))
-    regEdate= db.Column(db.String(10))
+    regSDate= db.Column(db.DateTime, nullable=False,default=datetime.utcnow) 
+    regEdate= db.Column(db.DateTime) 
     voucherNo= db.Column(db.String(80))
     vendor= db.Column(db.String(80))
     total=db.Column(db.Integer)
+    describe=db.Column(db.Text)
+    readonly=db.Column(db.Integer,default=0)
     createdById = db.Column(db.String(255))    
     Path=db.Column(db.String(80))
     imageUrl = db.Column(db.String(255))    
     ctime = db.Column(db.DateTime, nullable=False,default=datetime.utcnow)  #创建时间
     utime = db.Column(db.DateTime, nullable=False,default=datetime.utcnow)  #更新时间
-    describe=db.Column(db.Text)
-    readonly=db.Column(db.Integer,default=0)
     
     def __init__(self, acno=None, acc=None, orderNo=None, regSDate=None,voucherNo=None,vendor=None,total=None,describe=None,createdById=None,imageUrl=None,Path=None):
         self.acno=acno
@@ -69,6 +70,18 @@ def list(limit=10, cursor=None):
     lessons = builtin_list(map(from_sql, query.all()))
     next_page = cursor + limit if len(lessons) == limit else None
     return (lessons, next_page)
+
+def list_desc(limit=10, cursor=None):
+    cursor = int(cursor) if cursor else 0
+    query = (Acc.query
+             #.filter_by(Open=1)
+             .order_by(desc(Acc.id))
+             .limit(limit)
+             .offset(cursor))
+    lessons = builtin_list(map(from_sql, query.all()))
+    next_page = cursor + limit if len(lessons) == limit else None
+    return (lessons, next_page)
+
 
 # [START list_by_user]
 def list_by_user(user_id, limit=10, cursor=None):
@@ -111,22 +124,29 @@ def delete(id):
 class Item(db.Model):
     __tablename__ = 'Item'    
     id = db.Column(db.Integer,primary_key=True)
-    name = db.Column(db.String(80),unique=True,nullable=False)
-    model= db.Column(db.String(80),unique=True,nullable=False)
-    sn = db.Column(db.String(80),unique=True,nullable=False)
-    quantity= db.Column(db.Integer)
-    price = db.Column(db.Integer)
-    amount= db.Column(db.Integer)
-    # status
-    adjust= db.Column(db.Integer)
+    itemno=db.Column(db.Integer,unique=True,nullable=False) # 物品編號
+    name = db.Column(db.String(80))  # 產品
+    model= db.Column(db.String(80))  # 型號
+    sn = db.Column(db.String(80))    # SN/PN
+    quantity= db.Column(db.Integer)  # 數量
+    price = db.Column(db.Integer)    # 單價
+    adjust= db.Column(db.Integer)    # 調整 
+    amount= db.Column(db.Integer)    # 金額
     depreciation= db.Column(db.Integer)
-    insure= db.Column(db.Integer)
+    depr_ed= db.Column(db.Integer)    # 攤折完
+    insure=db.Column(db.Integer)   
+    insureNote =db.Column(db.String(80))   # 保險
+    note1=db.Column(db.Text)  # 地方
+    note2=db.Column(db.Text)  # 資助
+    # status
     
+    insure= db.Column(db.Integer)
     # ItemType
     itemTypeId = db.Column(db.Integer)
     # Acc
     # acno
-    acc_id = db.Column(db.Integer, db.ForeignKey('Acc.id'), nullable=False)
+    regSDate= db.Column(db.DateTime, nullable=False,default=datetime.utcnow) 
+    acc_acno = db.Column(db.Integer, db.ForeignKey('Acc.acno'), nullable=False)
     acc = db.relationship('Acc',  backref=db.backref('Item', lazy=True))
     #orderNO  = db.Column(db.String(80),unique=True,nullable=False)
     #voucherNo = db.Column(db.String(80),unique=True,nullable=False)
@@ -134,7 +154,8 @@ class Item(db.Model):
     # Area
     #area_id = db.Column(db.Integer, db.ForeignKey('person.id'))
     #db.relationship('Area', backref='Item', lazy=True)
-    area = db.Column(db.String(80),unique=True,nullable=False)
+    #area = db.Column(db.String(80),unique=True,nullable=False)
+    area = db.Column(db.String(80))
     imageUrl = db.Column(db.String(255))    
     ctime = db.Column(db.DateTime, nullable=False,default=datetime.utcnow)  #创建时间
     utime = db.Column(db.DateTime, nullable=False,default=datetime.utcnow)  #更新时间
@@ -150,10 +171,115 @@ class Item(db.Model):
     #railnum = models.IntegerField(null=True, blank=True, verbose_name="导轨位置")
     #put_shelf_time = models.DateField(verbose_name='上线时间')
 
-    def __init__(self, name=None):
+    def __init__(self, 
+                 itemno=None,
+                 name=None,
+                 model=None,
+                 sn=None,
+                 quantity=None,
+                 price=None,
+                 adjust=None,
+                 amount=None,
+                 depr_ed=None,
+                 insureNote=None,
+                 note1=None,
+                 note2=None,
+                 acc_acno=None,
+                 regSDate=None):
+        self.itemno =itemno
         self.name =name
+        self.model =model
+        self.sn =sn
+        self.quantity =quantity
+        self.price =price
+        self.adjust = adjust
+        self.amount = amount
+        self.adjust = adjust
+        self.depr_ed = depr_ed
+        self.insureNote=insureNote
+        self.note1=note1
+        self.note2=note2
+        self.acc_acno=acc_acno
+        self.regSDate=regSDate
     def __repr__(self):
         return "<item(name='%s')" % (self.name)    
+
+
+##############################################
+
+def Itemlist_by_acno(acc_acno):
+    query = (Item.query
+             .filter_by(acc_acno=acc_acno)
+             .order_by(Item.id))
+    lessons = builtin_list(map(from_sql, query.all()))
+    return (lessons)
+
+def Itemlist(limit=10, cursor=None):
+    cursor = int(cursor) if cursor else 0
+    query = (Item.query
+             #.filter_by(Open=1)
+             .order_by(Item.id)
+             .limit(limit)
+             .offset(cursor))
+    lessons = builtin_list(map(from_sql, query.all()))
+    next_page = cursor + limit if len(lessons) == limit else None
+    return (lessons, next_page)
+
+def Itemlist_desc(limit=10, cursor=None):
+    cursor = int(cursor) if cursor else 0
+    query = (Item.query
+             #.filter_by(Open=1)
+             .order_by(desc(Item.id))
+             .limit(limit)
+             .offset(cursor))
+    lessons = builtin_list(map(from_sql, query.all()))
+    next_page = cursor + limit if len(lessons) == limit else None
+    return (lessons, next_page)
+
+
+# [START list_by_user]
+def Itemlist_by_user(user_id, limit=10, cursor=None):
+    cursor = int(cursor) if cursor else 0
+    query = (Item.query
+             .filter_by(createdById=user_id)
+             .order_by(Item.id)
+             .limit(limit)
+             .offset(cursor))
+    lessons = builtin_list(map(from_sql, query.all()))
+    next_page = cursor + limit if len(lessons) == limit else None
+    return (lessons, next_page)
+# [END list_by_user]
+
+
+
+def readItem(id):
+    result = Item.query.get(id)
+    if not result:
+        return None
+    return from_sql(result)
+
+def createItem(data):
+    acc = Item(**data)
+    db.session.add(acc)
+    db.session.commit()
+    return from_sql(acc)
+
+def updateItem(data, id):
+    acc = Item.query.get(id)
+    for k, v in data.items():
+        setattr(acc, k, v)
+    db.session.commit()
+    return from_sql(acc)
+
+def deleteItem(id):
+    Item.query.filter_by(id=id).delete()
+    db.session.commit()
+
+
+##############################################
+
+
+
 
 asset_type_choice = (
         ('cloud_host', '云主机'),

@@ -62,9 +62,9 @@ def create_app(config, debug=False, testing=False, config_overrides=None):
         model_blog.init_app(app)
         print(init_db_flag)
         if init_db_flag:
-            import intWeb.initDB
+            from intWeb.initDB__ import initdb_data
             db.init_app(app)
-            intWeb.initDB.initdb_data(db,app)
+            initdb_data(db,app)
 
         
     app.config['SESSION_COOKIE_NAME'] ="connect.sid"

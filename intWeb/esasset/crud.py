@@ -6,6 +6,8 @@ import os
 import zipfile
 
 from urllib.parse import quote
+from datetime import datetime
+
 
 crud = Blueprint('crud', __name__)
 
@@ -56,7 +58,7 @@ def list():
     token = request.args.get('page_token', None)
     if token:
         token = token.encode('utf-8')
-    books, next_page_token = get_assest_model().list(cursor=token)
+    books, next_page_token = get_assest_model().list_desc(cursor=token)
     return render_template(
         "esasset/list.html",
         books=books,
@@ -119,13 +121,88 @@ def Get_FileList(book, lecturesfile, filenames):
                         filenames.append({"f":quote(str(file)),"n":f"{_file} {fseat}"})
     pass
 
+#####
+# [START add]
+
+
+@crud.route('/item/<id>')
+def itemview(id):
+    
+    book = get_assest_model().readItem(id)
+    #Get_FileList(book,lecturesfile,filenames)             
+    return render_template("esasset/item/view.html", book=book)
+
+
+@crud.route('/item/add', methods=['GET', 'POST'])
+@login_required_auth
+def itemadd():
+    if request.method == 'POST':
+        data = request.form.to_dict(flat=True)
+
+        # If an image was uploaded, update the data to point to the new image.
+        path = current_app.config['HW_UPLOAD_FOLDER']
+        image_url = upload_image_file(request.files.get('image'),path)
+
+        if image_url:
+            data['imageUrl'] = image_url
+
+        # If the user is logged in, associate their profile with the new book.
+        if 'profile' in session:
+            data['createdById'] = session['profile']['id']
+        data['regSDate']=datetime.strptime(data['regSDate'], '%Y-%m-%d')
+        book = get_assest_model().createItem(data)
+
+        return redirect(url_for('.view', id=book['id']))
+
+    return render_template("esasset/item/form.html", action="Add", book={})
+# [END add]
+
+
+@crud.route('/item/<id>/edit', methods=['GET', 'POST'])
+@login_required_auth
+def itemedit(id):
+    book = get_assest_model().read(id)
+
+    if request.method == 'POST':
+        data = request.form.to_dict(flat=True)
+        path = current_app.config['HW_UPLOAD_FOLDER']
+        image_url = upload_image_file(request.files.get('image'),path)
+
+        if image_url:
+            data['imageUrl'] = image_url
+
+        book = get_assest_model().updateItem(data, id)
+
+        return redirect(url_for('.view', id=book['id']))
+
+    return render_template("esasset/item/form.html", action="Edit", book=book)
+
+
+@crud.route('/item/<id>/delete')
+@login_required_auth
+def itemdelete(id):
+    book = get_assest_model().read(id)
+    crspath=book["Path"]
+    if (book["createdById"]==str(session['profile']['id']))  :
+        path = current_app.config['HW_UPLOAD_FOLDER']
+        UPLOAD_FOLDER = os.path.join(path, crspath)
+        for root,dirs, files in os.walk(UPLOAD_FOLDER):
+           for file in files:      
+               os.remove(UPLOAD_FOLDER+"/"+file)
+        get_assest_model().deleteItem(id)        
+    return redirect(url_for('.list'))
+
+#####
+
+
+
 @crud.route('/<id>')
 def view(id):
+    
     book = get_assest_model().read(id)
-    lecturesfile=[]    
-    filenames=[]  
+    items=  get_assest_model().Itemlist_by_acno(book["acno"])
     #Get_FileList(book,lecturesfile,filenames)             
-    return render_template("esasset/view.html", book=book,lecturesfile=lecturesfile,filenames=filenames)
+    return render_template("esasset/view.html", book=book,items=items,lecturesfile=[],filenames=[])
     
 @crud.route('/<id>/downloadall')
 def download_all(id):
@@ -247,7 +324,7 @@ def add():
         # If the user is logged in, associate their profile with the new book.
         if 'profile' in session:
             data['createdById'] = session['profile']['id']
-
+        data['regSDate']=datetime.strptime(data['regSDate'], '%Y-%m-%d')
         book = get_assest_model().create(data)
 
         return redirect(url_for('.view', id=book['id']))

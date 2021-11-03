@@ -10,8 +10,11 @@ if "--initdb" in args:
     from shutil import copyfile
     import re
     import datetime
+    import os
     datetime_str=re.sub("[ .:]","_",datetime.datetime.now().isoformat())
-    copyfile("bookshelf.db", f"bookshelf{datetime_str}.db")
+    filepath="bookshelf.db"
+    if os.path.isfile(filepath):
+        copyfile(filepath, f"bookshelf{datetime_str}.db")
 
 
 app = intWeb.create_app(config)

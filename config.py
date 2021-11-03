@@ -5,11 +5,13 @@ ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
 # Image Path
 UPLOAD_FOLDER=os.getcwd()+"\\TEMP"
 HW_UPLOAD_FOLDER="c:/ASSETDIR/"
+
 # [START secret_key]
 SECRET_KEY = 'catcat'
 SESSION_COOKIE_NAME='connect.sid'
 REDIS_PORT=6379
 # [END secret_key]
+
 # DATA_BACKEND = 'mysql'
 DATA_BACKEND = 'sqlite'
 
