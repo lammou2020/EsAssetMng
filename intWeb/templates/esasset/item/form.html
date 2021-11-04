@@ -6,41 +6,74 @@
 {% extends "esasset/base.html" %}
 
 {% block content %}
-<h3>{{action}} 單據或專案項目</h3>
+<h3>{{action}} 產品</h3>
 <script src="https://cdn.ckeditor.com/4.15.1/standard/ckeditor.js"></script>
 <form method="POST" enctype="multipart/form-data">
   <div class="form-group">
-    <label for="Lesson">acno項目代號 NNNN-NNN</label>
-    <input type="text" name="acno" id="acno" value="{{book.acno}}" class="form-control"/>
+    <label for="itemno">校內代號4271NNNNN</label>
+    <input type="text" name="itemno" id="itemno" value="{{book.itemno}}" placeholder="PPPPNNNNNN" required=true pattern="([0-9]{4}[0-9]{6})" title="Enter 427100001 (電腦類4271)" class="form-control"/>
   </div>
   <div class="form-group">
-    <label for="Title">acc單據或專案項目名稱</label>
-    <input type="text" name="acc" id="acc" value="{{book.acc}}" class="form-control"/>
+    <label for="name">產品名稱</label>
+    <input type="text" name="name" id="name" value="{{book.name}}" class="form-control"/>
   </div>
   <div class="form-group">
-    <label for="Classno">orderNo 訂單編號</label>
-    <input type="text" name="orderNo" id="orderNo" value="{{book.orderNo}}" class="form-control"/>
+    <label for="model">型號</label>
+    <input type="text" name="model" id="model" value="{{book.model}}" class="form-control"/>
   </div>  
   <div class="form-group">
-    <label for="regSDate">regSDate登記日期</label>
-    <input type="date" name="regSDate" id="regSDate" value="{{book.regSDate}}" class="form-control"/>
-  </div>
-  <div class="form-group">
-    <label for="voucherNo">voucherNo傳票編號</label>
-    <input type="text" name="voucherNo" id="voucherNo" value="{{book.voucherNo}}" class="form-control"/>
+    <label for="sn">SN/PN</label>
+    <input type="text" name="sn" id="sn" value="{{book.sn}}" class="form-control"/>
   </div>  
   <div class="form-group">
-    <label for="vendor">vendor供應商</label>
-    <input type="text" name="vendor" id="vendor" value="{{book.vendor}}" class="form-control"/>
+    <label for="quantity">數量</label>
+    <input type="text" name="quantity" id="quantity" value="{{book.quantity}}" class="form-control"/>
   </div>  
   <div class="form-group">
-    <label for="total">total總金額</label>
-    <input type="text" name="total" id="total" value="{{book.total}}" class="form-control"/>
+    <label for="price">單價</label>
+    <input type="text" name="price" id="price" value="{{book.price}}" class="form-control"/>
   </div>  
+  <div class="form-group">
+    <label for="adjust">調整</label>
+    <input type="text" name="adjust" id="adjust" value="{{book.adjust}}" class="form-control"/>
+  </div>  
+  <div class="form-group">
+    <label for="amount">小計</label>
+    <input type="text" name="amount" id="amount" value="{{book.amount}}" class="form-control"/>
+  </div>    
+
+
 
   <div class="form-group">
-    <label for="describe">Description</label>
-    <textarea name="describe" id="describe" class="form-control">{{book.describe}}</textarea>
+    <label for="note1">存放地點</label>
+    <input type="text" name="note1" id="note1" value="{{book.note1}}" class="form-control"/>
+  </div>    
+  <div class="form-group">
+    <label for="depr_ed">攤折完</label>
+    <input type="text" name="depr_ed" id="depr_ed" value="{{book.depr_ed}}" class="form-control"/>
+  </div>    
+  <div class="form-group">
+    <label for="insure">保險</label>
+    <input type="text" name="insure" id="insure" value="{{book.insure}}" class="form-control"/>
+  </div>    
+
+
+  <div class="form-group">
+    <label for="lebalmark">張貼標籤</label>
+    <input type="text" name="lebalmark" id="lebalMark" value="{{book.lebalmark}}" class="form-control"/>
+  </div>    
+  <input type="hidden" name="acc_acno" value="{{book.acc_acno}}">
+  <div class="form-group">
+    <label for="inventory">定期盤點</label>
+    <input type="text" name="inventory" id="inventory" value="{{book.inventory}}" class="form-control"/>
+  </div>    
+  <div class="form-group">
+    <label for="regSDate">登記日期regSDate</label>
+    <input name="regSDate" value="{{book.regSDate}}" placeholder="YYYY-MM-DD" pattern="([0-9]{4}-[0-9]{2}-[0-9]{2})|()" title="Enter a date in this format YYYY-MM-DD" class="form-control"/>
+  </div>
+  <div class="form-group">
+    <label for="note2">Description</label>
+    <textarea name="note2" id="note2" class="form-control">{{book.note2}}</textarea>
     <script>
       CKEDITOR.replace( 'describe' );
     </script>

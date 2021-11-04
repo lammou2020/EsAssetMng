@@ -69,7 +69,7 @@
     <p>{{book.describe | safe}}</p>
   </div>
   {% if session.profile and session.profile.Role < "8" %} <div class="btn-group">
-    <a href="/EsAsset/item/Add?acno={{book.id}}" class="btn btn-primary btn-sm">
+    <a href="/EsAsset/{{book.id}}/item/add?acno={{book.acno}}&regSDate={{book.regSDate}}" class="btn btn-primary btn-sm">
       <i class="glyphicon glyphicon-edit"></i>
       Add 明細
     </a>
@@ -99,7 +99,7 @@
 
   {% for item_ in items %}
     <tr>
-      <td><a href="/EsAsset/item/{{item_.id}}">{{item_.id}}</a></td>
+      <td><a href="/EsAsset/{{book.id}}/item/{{item_.id}}">{{item_.id}}</a></td>
       <td>{{item_.itemno}}</td>
       <td>{{item_.name}}</td>
       <td>{{item_.model}}</td>

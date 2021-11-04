@@ -11,13 +11,21 @@
     padding-left: 5px;
   }
 </style>
+
+
+
 <h4>{{book.Lesson}} {{book.Title}}</h4>
+<a href="/EsAsset/{{acc_id}}" class="btn btn-primary btn-sm">
+  <i class="glyphicon glyphicon-edit"></i>
+  返回專項
+</a>
 {% if session.profile and session.profile.Role < "8" %} <div class="btn-group">
-  <a href="/EsAsset/{{book.id}}/edit" class="btn btn-primary btn-sm">
+
+  <a href="/EsAsset/{{acc_id}}/item/{{book.id}}/edit" class="btn btn-primary btn-sm">
     <i class="glyphicon glyphicon-edit"></i>
     Edit 項目
   </a>
-  <a href="/EsAsset/{{book.id}}/delete" class="btn btn-danger btn-sm">
+  <a href="/EsAsset/{{acc_id}}/item/{{book.id}}/delete" class="btn btn-danger btn-sm">
     <i class="glyphicon glyphicon-trash"></i>
     Delete 項目
   </a>
@@ -30,89 +38,51 @@
       {% else %}
       {% endif %}
     </div>
-
   </div>
   <div class="media-body">
+
     <table>
       <tr>
-        <td>id,項目代號</td>
-        <td>專案項目名稱</td>
-        <td>訂單編號</td>
-        <td>登記日期</td>
-        <td>傳票編號</td>
-        <td>vendor供應商</td>
-        <td>createdById</td>
+        <td>id</td>
+        
+        <td>產品編號</td>
+        <td style="width: 100px;">產品名稱</td>
+        <td>型號</td>
+        <td>SN/PN</td>
+        <td>數量</td>
+        <td>單價</td>
+        <td>調整</td>
+        <td>小計</td>
+        <td>攤折</td>
+        <td>保險</td>
+        <td>位置</td>
+        <td>備註</td>
+        <td>主項編號</td>
+        <td>登錄日期</td>
       </tr>
+  
       <tr>
-        <td>
-          <a href="/EsAsset/{{book.id}}">{{book.id}}.{{book.acno}}</a>
-        </td>
-        <td>
-          <h4>{{book.acc}}</h4>
-        </td>
-        <td>
-          {{book.orderNo}}
-        </td>
-        <td>
-          {{book.regSDate}}
-        </td>
-        <td>
-          {{book.voucherNo}}
-        </td>
-        <td>
-          {{book.vendor}}
-        </td>
-        <td>
-          {{book.createdById}}
-        </td>
+        <td>{{book.id}}</a></td>
+        <td>{{book.itemno}}</td>
+        <td>{{book.name}}</td>
+        <td>{{book.model}}</td>
+        <td>{{book.sn}}</td>
+        <td>{{book.quantity}}</td>
+        <td>{{book.price}}</td>
+        <td>{{book.adjust}}</td>
+        <td>{{book.amount}}</td>
+        <td>{{book.depr_ed}}</td>
+        <td>{{book.insureNote}}</td>
+        <td>{{book.note1}}</td>
+        <td>{{book.note2}}</td>
+        <td>{{book.acc_acno}}</td>
+        <td>{{book.regSDate}}</td>
+      </tr>
     </table>
     <p>{{book.describe | safe}}</p>
   </div>
 
-<h3>明細</h3>
-  <table>
-    <tr>
-      <td>id</td>
-      
-      <td>產品編號</td>
-      <td style="width: 100px;">產品名稱</td>
-      <td>型號</td>
-      <td>SN/PN</td>
-      <td>數量</td>
-      <td>單價</td>
-      <td>調整</td>
-      <td>小計</td>
-      <td>攤折</td>
-      <td>保險</td>
-      <td>位置</td>
-      <td>備註</td>
-      <td>主項編號</td>
-      <td>登錄日期</td>
-    </tr>
-
-  {% for item_ in items %}
-    <tr>
-      <td><a href="/EsAsset/item/{{item_.id}}">{{item_.id}}</a></td>
-      <td>{{item_.itemno}}</td>
-      <td>{{item_.name}}</td>
-      <td>{{item_.model}}</td>
-      <td>{{item_.sn}}</td>
-      <td>{{item_.quantity}}</td>
-      <td>{{item_.price}}</td>
-      <td>{{item_.adjust}}</td>
-      <td>{{item_.amount}}</td>
-      <td>{{item_.depr_ed}}</td>
-      <td>{{item_.insureNote}}</td>
-      <td>{{item_.note1}}</td>
-      <td>{{item_.note2}}</td>
-      <td>{{item_.acc_acno}}</td>
-      <td>{{item_.regSDate}}</td>
-    </tr>
-
-  {% else %}
-  <tr><td>No lessons found</td></tr>
-  {% endfor %}
-</table>
+ 
 
 
 

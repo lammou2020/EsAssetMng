@@ -125,17 +125,18 @@ def Get_FileList(book, lecturesfile, filenames):
 # [START add]
 
 
-@crud.route('/item/<id>')
-def itemview(id):
-    
-    book = get_assest_model().readItem(id)
+@crud.route('/<id>/item/<itemid>')
+def itemview(id,itemid):
+    book = get_assest_model().readItem(itemid)
     #Get_FileList(book,lecturesfile,filenames)             
-    return render_template("esasset/item/view.html", book=book)
+    return render_template("esasset/item/view.html",acc_id=id, book=book)
 
 
-@crud.route('/item/add', methods=['GET', 'POST'])
+@crud.route('/<id>/item/add', methods=['GET', 'POST'])
 @login_required_auth
-def itemadd():
+def itemadd(id):
+    acc_acno= (request.args.get('acno', "0"))
+    regSDate= (request.args.get('regSDate', datetime.today().strftime( '%Y-%m-%d')))
     if request.method == 'POST':
         data = request.form.to_dict(flat=True)
 
@@ -152,36 +153,45 @@ def itemadd():
         data['regSDate']=datetime.strptime(data['regSDate'], '%Y-%m-%d')
         book = get_assest_model().createItem(data)
 
-        return redirect(url_for('.view', id=book['id']))
-
-    return render_template("esasset/item/form.html", action="Add", book={})
+        return redirect(url_for('.itemview', id=id,itemid=book['id']))
+    book={
+        "quantity":"0",
+        "price":"0",
+        "adjust":"0",
+        "amount":"0",
+        "depr_ed":"0",
+        "acc_acno":acc_acno,
+        "regSDate":regSDate}
+    return render_template("esasset/item/form.html", action="Add", book=book)
 # [END add]
 
 
-@crud.route('/item/<id>/edit', methods=['GET', 'POST'])
+@crud.route('/<id>/item/<itemid>/edit', methods=['GET', 'POST'])
 @login_required_auth
-def itemedit(id):
-    book = get_assest_model().read(id)
-
+def itemedit(id,itemid):
+    book = get_assest_model().readItem(itemid)
+    print(book)
+    book['regSDate']=book['regSDate'].isoformat()[:10]
     if request.method == 'POST':
         data = request.form.to_dict(flat=True)
         path = current_app.config['HW_UPLOAD_FOLDER']
         image_url = upload_image_file(request.files.get('image'),path)
-
         if image_url:
             data['imageUrl'] = image_url
 
-        book = get_assest_model().updateItem(data, id)
-
-        return redirect(url_for('.view', id=book['id']))
+        data['regSDate']=datetime.strptime(data['regSDate'], '%Y-%m-%d')
+        data['itemno']=int(data['itemno'])
+        book = get_assest_model().updateItem(data, itemid)
+        #return redirect(url_for('.view', id=book['id']))
+        return redirect(url_for('.itemview', id=id,itemid=book['id']))
 
     return render_template("esasset/item/form.html", action="Edit", book=book)
 
 
-@crud.route('/item/<id>/delete')
+@crud.route('/<id>/item/<itemid>/delete')
 @login_required_auth
-def itemdelete(id):
-    book = get_assest_model().read(id)
+def itemdelete(id,itemid):
+    book = get_assest_model().readItem(itemid)
     crspath=book["Path"]
     if (book["createdById"]==str(session['profile']['id']))  :
         path = current_app.config['HW_UPLOAD_FOLDER']
@@ -189,8 +199,8 @@ def itemdelete(id):
         for root,dirs, files in os.walk(UPLOAD_FOLDER):
            for file in files:      
                os.remove(UPLOAD_FOLDER+"/"+file)
-        get_assest_model().deleteItem(id)        
-    return redirect(url_for('.list'))
+        get_assest_model().deleteItem(itemid)        
+    return redirect(url_for('.view',id=id))
 
 #####
 
@@ -198,12 +208,79 @@ def itemdelete(id):
 
 @crud.route('/<id>')
 def view(id):
-    
     book = get_assest_model().read(id)
+    book["regSDate"]=book["regSDate"].strftime( '%Y-%m-%d')
     items=  get_assest_model().Itemlist_by_acno(book["acno"])
     #Get_FileList(book,lecturesfile,filenames)             
     return render_template("esasset/view.html", book=book,items=items,lecturesfile=[],filenames=[])
-    
+
+# [START add]
+@crud.route('/add', methods=['GET', 'POST'])
+@login_required_auth
+def add():
+    if request.method == 'POST':
+        data = request.form.to_dict(flat=True)
+
+        # If an image was uploaded, update the data to point to the new image.
+        path = current_app.config['HW_UPLOAD_FOLDER']
+        image_url = upload_image_file(request.files.get('image'),path)
+
+        if image_url:
+            data['imageUrl'] = image_url
+
+        # If the user is logged in, associate their profile with the new book.
+        if 'profile' in session:
+            data['createdById'] = session['profile']['id']
+        data['regSDate']=datetime.strptime(data['regSDate'], '%Y-%m-%d')
+        book = get_assest_model().create(data)
+
+        return redirect(url_for('.view', id=book['id']))
+    book={
+        "total":"0",
+        "readonly":"0",
+        "regSDate":datetime.today().strftime( '%Y-%m-%d')
+        }
+    return render_template("esasset/form.html", action="Add", book=book)
+# [END add]
+
+
+@crud.route('/<id>/edit', methods=['GET', 'POST'])
+@login_required_auth
+def edit(id):
+    book = get_assest_model().read(id)
+    book["regSDate"]=book["regSDate"].strftime( '%Y-%m-%d')
+    if request.method == 'POST':
+        data = request.form.to_dict(flat=True)
+        path = current_app.config['HW_UPLOAD_FOLDER']
+        image_url = upload_image_file(request.files.get('image'),path)
+
+        if image_url:
+            data['imageUrl'] = image_url
+        data['regSDate']=datetime.strptime(data['regSDate'], '%Y-%m-%d')
+        book = get_assest_model().update(data, id)
+
+        return redirect(url_for('.view', id=book['id']))
+
+    return render_template("esasset/form.html", action="Edit", book=book)
+
+
+@crud.route('/<id>/delete')
+@login_required_auth
+def delete(id):
+    book = get_assest_model().read(id)
+    crspath=book["Path"]
+    if (book["createdById"]==str(session['profile']['id']))  :
+
+        path = current_app.config['HW_UPLOAD_FOLDER']
+        UPLOAD_FOLDER = os.path.join(path, crspath)
+        for root,dirs, files in os.walk(UPLOAD_FOLDER):
+           for file in files:      
+               os.remove(UPLOAD_FOLDER+"/"+file)
+        get_assest_model().delete(id)        
+    return redirect(url_for('.list'))
+
+
+
 @crud.route('/<id>/downloadall')
 def download_all(id):
     book = get_assest_model().read(id)
@@ -307,66 +384,6 @@ def uploadfiles(id):
         return redirect(f"/lessons/{id}")
         #return render_template("view.html", book=book)
 
-# [START add]
-@crud.route('/add', methods=['GET', 'POST'])
-@login_required_auth
-def add():
-    if request.method == 'POST':
-        data = request.form.to_dict(flat=True)
-
-        # If an image was uploaded, update the data to point to the new image.
-        path = current_app.config['HW_UPLOAD_FOLDER']
-        image_url = upload_image_file(request.files.get('image'),path)
-
-        if image_url:
-            data['imageUrl'] = image_url
-
-        # If the user is logged in, associate their profile with the new book.
-        if 'profile' in session:
-            data['createdById'] = session['profile']['id']
-        data['regSDate']=datetime.strptime(data['regSDate'], '%Y-%m-%d')
-        book = get_assest_model().create(data)
-
-        return redirect(url_for('.view', id=book['id']))
-
-    return render_template("esasset/form.html", action="Add", book={})
-# [END add]
-
-
-@crud.route('/<id>/edit', methods=['GET', 'POST'])
-@login_required_auth
-def edit(id):
-    book = get_assest_model().read(id)
-
-    if request.method == 'POST':
-        data = request.form.to_dict(flat=True)
-        path = current_app.config['HW_UPLOAD_FOLDER']
-        image_url = upload_image_file(request.files.get('image'),path)
-
-        if image_url:
-            data['imageUrl'] = image_url
-
-        book = get_assest_model().update(data, id)
-
-        return redirect(url_for('.view', id=book['id']))
-
-    return render_template("esasset/form.html", action="Edit", book=book)
-
-
-@crud.route('/<id>/delete')
-@login_required_auth
-def delete(id):
-    book = get_assest_model().read(id)
-    crspath=book["Path"]
-    if (book["createdById"]==str(session['profile']['id']))  :
-
-        path = current_app.config['HW_UPLOAD_FOLDER']
-        UPLOAD_FOLDER = os.path.join(path, crspath)
-        for root,dirs, files in os.walk(UPLOAD_FOLDER):
-           for file in files:      
-               os.remove(UPLOAD_FOLDER+"/"+file)
-        get_assest_model().delete(id)        
-    return redirect(url_for('.list'))
 
 @crud.route('/<id>/cleanclasswork')
 @login_required_auth

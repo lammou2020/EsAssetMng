@@ -17,15 +17,16 @@
     <div id="accordion">
       <h3>資產</h3>
       <div style="margin:0;padding:0;">
-          <h4 style="margin:0;padding:0;"><a href=#><img src="/static/images/markicon/edit.png" />新增單據</a></h4>
-          <h4 style="margin:0;padding:0;"><a href=#><img src="/static/images/markicon/edit.png" />單據明細</a></h4>
+          <h4 style="margin:0;padding:0;"><a href=/EsAsset/add><img src="/static/images/markicon/edit.png" />新增專案</a></h4>
+          <h4 style="margin:0;padding:0;"><a href=/EsAsset/1/item/add><img src="/static/images/markicon/edit.png" />新增產品明細</a></h4>
       </div>
-      <h3>處理</h3>
+      <h3>科目分類</h3>
       <div style="margin:0;padding:0;">
-        <h4 style="margin:0;padding:0;"><a href=#><img src="/static/images/markicon/edit.png" />搬移</a></h4>
-        <h4 style="margin:0;padding:0;"><a href=#><img src="/static/images/markicon/edit.png" />註銷</a></h4>
-        <h4 style="margin:0;padding:0;"><a href=#><img src="/static/images/markicon/edit.png" />變換</a></h4>
-        <h4 style="margin:0;padding:0;"><a href=#><img src="/static/images/markicon/edit.png" />變賣</a></h4>
+        
+        <h4 style="margin:0;padding:0;"><a href=/EsAsset/list><img src="/static/images/markicon/edit.png" />課室傢具4261</a></h4>
+        <h4 style="margin:0;padding:0;"><a href=/EsAsset/list><img src="/static/images/markicon/edit.png" />其他傢具4269</a></h4>
+        <h4 style="margin:0;padding:0;"><a href=/EsAsset/list><img src="/static/images/markicon/edit.png" />電腦4271</a></h4>
+        <h4 style="margin:0;padding:0;"><a href=/EsAsset/list><img src="/static/images/markicon/edit.png" />視聽及實驗儀器<br>4274</a></h4>
       </div>
       <h3>報表</h3>
       <div style="margin:0;padding:0;">
@@ -39,15 +40,15 @@
   </div>
   <div class="col-lg-8">
     {% if session.profile and session.profile.Role == "1" %}
-    <h4>單據</h4>
-    <a href="/EsAsset/ACC/add" class="btn btn-success btn-sm">
+    <h4>專項</h4>
+    <a href="/EsAsset/add" class="btn btn-success btn-sm">
       <i class="glyphicon glyphicon-plus"></i>
-      Add ACC
+      Add 專項
     </a>
     <h4>資產</h4>
-    <a href="/EsAsset/ASSET/add" class="btn btn-success btn-sm">
+    <a href="/EsAsset/1/item/add" class="btn btn-success btn-sm">
       <i class="glyphicon glyphicon-plus"></i>
-      Add ASSET
+      Add 產品
     </a>    
     {% endif %}
     {% for book in books %}

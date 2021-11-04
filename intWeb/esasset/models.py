@@ -28,7 +28,7 @@ def from_sql(row):
 class Acc(db.Model):
     __tablename__ = 'Acc'
     id= db.Column(db.Integer,primary_key=True)
-    acno = db.Column(db.String(80),unique=True,nullable=False)
+    acno = db.Column(db.BigInteger,unique=True,nullable=False)
     acc= db.Column(db.String(160))
     orderNo= db.Column(db.String(80))
     regSDate= db.Column(db.DateTime, nullable=False,default=datetime.utcnow) 
@@ -124,7 +124,7 @@ def delete(id):
 class Item(db.Model):
     __tablename__ = 'Item'    
     id = db.Column(db.Integer,primary_key=True)
-    itemno=db.Column(db.Integer,unique=True,nullable=False) # 物品編號
+    itemno=db.Column(db.BigInteger,unique=True,nullable=False) # 物品編號
     name = db.Column(db.String(80))  # 產品
     model= db.Column(db.String(80))  # 型號
     sn = db.Column(db.String(80))    # SN/PN
@@ -132,21 +132,19 @@ class Item(db.Model):
     price = db.Column(db.Integer)    # 單價
     adjust= db.Column(db.Integer)    # 調整 
     amount= db.Column(db.Integer)    # 金額
-    depreciation= db.Column(db.Integer)
     depr_ed= db.Column(db.Integer)    # 攤折完
-    insure=db.Column(db.Integer)   
-    insureNote =db.Column(db.String(80))   # 保險
+    insure =db.Column(db.String(80))   # 保險
     note1=db.Column(db.Text)  # 地方
     note2=db.Column(db.Text)  # 資助
     # status
-    
-    insure= db.Column(db.Integer)
+    lebalmark= db.Column(db.String(80))   # 標籤
+    inventory= db.Column(db.String(80))   # 清查
     # ItemType
     itemTypeId = db.Column(db.Integer)
     # Acc
     # acno
     regSDate= db.Column(db.DateTime, nullable=False,default=datetime.utcnow) 
-    acc_acno = db.Column(db.Integer, db.ForeignKey('Acc.acno'), nullable=False)
+    acc_acno = db.Column(db.BigInteger, db.ForeignKey('Acc.acno'), nullable=False)
     acc = db.relationship('Acc',  backref=db.backref('Item', lazy=True))
     #orderNO  = db.Column(db.String(80),unique=True,nullable=False)
     #voucherNo = db.Column(db.String(80),unique=True,nullable=False)
@@ -155,7 +153,8 @@ class Item(db.Model):
     #area_id = db.Column(db.Integer, db.ForeignKey('person.id'))
     #db.relationship('Area', backref='Item', lazy=True)
     #area = db.Column(db.String(80),unique=True,nullable=False)
-    area = db.Column(db.String(80))
+    createdById = db.Column(db.String(255))    
+    Path=db.Column(db.String(80))
     imageUrl = db.Column(db.String(255))    
     ctime = db.Column(db.DateTime, nullable=False,default=datetime.utcnow)  #创建时间
     utime = db.Column(db.DateTime, nullable=False,default=datetime.utcnow)  #更新时间
@@ -181,11 +180,18 @@ class Item(db.Model):
                  adjust=None,
                  amount=None,
                  depr_ed=None,
-                 insureNote=None,
+                 insure=None,
                  note1=None,
                  note2=None,
                  acc_acno=None,
-                 regSDate=None):
+                 regSDate=None,
+                 lebalmark=None,
+                 inventory=None,
+                 Path=None,
+                 imageUrl=None,
+                 createdById=None
+
+                 ):
         self.itemno =itemno
         self.name =name
         self.model =model
@@ -196,11 +202,17 @@ class Item(db.Model):
         self.amount = amount
         self.adjust = adjust
         self.depr_ed = depr_ed
-        self.insureNote=insureNote
+        self.insure=insure
         self.note1=note1
         self.note2=note2
         self.acc_acno=acc_acno
         self.regSDate=regSDate
+        self.lebalmark=lebalmark
+        self.inventory=inventory        
+        self.Path=Path
+        self.imageUrl=imageUrl
+        self.createdById=createdById
+
     def __repr__(self):
         return "<item(name='%s')" % (self.name)    
 

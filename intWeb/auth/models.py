@@ -23,9 +23,8 @@ def from_sql(row):
 class User(db.Model):
     __tablename__ = 'User'
     id = db.Column(db.Integer, primary_key=True)
-    #username = db.Column(db.String, unique=True, nullable=False)
     user = db.Column(db.String(255), unique=True, nullable=False)
-    _password = db.Column("password", db.String, nullable=False)
+    _password = db.Column("password", db.String(225), nullable=False)
     #Pass = db.Column(db.String(255))
     Name = db.Column(db.String(255))
     Classno = db.Column(db.String(255))

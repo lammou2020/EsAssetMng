@@ -12,15 +12,15 @@ SESSION_COOKIE_NAME='connect.sid'
 REDIS_PORT=6379
 # [END secret_key]
 
-# DATA_BACKEND = 'mysql'
+#DATA_BACKEND = 'mysql'
 DATA_BACKEND = 'sqlite'
 
 SQLITE_PATH=f"{os.getcwd()}\\bookshelf.db"
 SQLALCHEMY_SQLITE_URI = ( 'sqlite:///{path}').format(path=SQLITE_PATH)
 
 MYSQL_HOST='127.0.0.1'
-MYSQL_USER = 'user'
-MYSQL_PASSWORD = 'pass'
+MYSQL_USER = 'root'
+MYSQL_PASSWORD = ''
 MYSQL_DATABASE = 'bookshelf'
 SQLALCHEMY_MYSQL_URI = (
     'mysql+pymysql://{user}:{password}@{host}:3306/{database}?charset=utf8mb4').format(
