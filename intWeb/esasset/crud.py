@@ -1,10 +1,10 @@
 from intWeb import storage, login_required_auth
 from intWeb import get_assest_model
 from flask import flash,Blueprint, current_app, redirect, render_template, request, \
-    session, url_for,send_file,Flask,send_from_directory
+    session, url_for,send_file,Flask,send_from_directory,jsonify
 import os
 import zipfile
-
+import math
 from urllib.parse import quote
 from datetime import datetime
 
@@ -80,6 +80,18 @@ def list_mine():
         next_page_token=next_page_token)
 # [END list_mine]
 
+@crud.route("/categoryitemlist/<cateid>")
+def categoryitemlist(cateid):
+    token = request.args.get('page_token', None)
+    if token:
+        token = token.encode('utf-8')
+    books, next_page_token = get_assest_model().categoryitemlist_desc(cateid=cateid,cursor=token)
+    return render_template(
+        "esasset/item/list.html",
+        books=books,
+        next_page_token=next_page_token)
+
+
 def Get_FileList(book, lecturesfile, filenames):
     crspath=book["Path"]
     path = current_app.config['HW_UPLOAD_FOLDER']
@@ -151,6 +163,10 @@ def itemadd(id):
         if 'profile' in session:
             data['createdById'] = session['profile']['id']
         data['regSDate']=datetime.strptime(data['regSDate'], '%Y-%m-%d')
+        if data["itemno"]==""  or data["itemno"]=="None" or data["itemno"]==None:
+            data["itemno"]=None
+        else:
+            data["itemTypeId"]=math.floor(int(data["itemno"])/1000000)
         book = get_assest_model().createItem(data)
 
         return redirect(url_for('.itemview', id=id,itemid=book['id']))
@@ -165,6 +181,21 @@ def itemadd(id):
     return render_template("esasset/item/form.html", action="Add", book=book)
 # [END add]
 
+@crud.route('/<id>/item/api/JSON/update/<itemid>', methods=['GET', 'POST'])
+@login_required_auth
+def itemJsonUpdate(id,itemid):
+    data=request.get_json()
+    print(data)
+    if 'regSDate' in data:
+        data['regSDate']=datetime.strptime(data['regSDate'], '%Y-%m-%d')
+    if 'itemno' in data:   
+        if data["itemno"]=="" or data["itemno"]=="None" or data["itemno"]==None:
+            data["itemno"]=None
+        else:
+            data["itemTypeId"]=math.floor(int(data['itemno'])/1000000)
+    book = get_assest_model().updateItem(data, itemid)
+    return jsonify( book)
+
 
 @crud.route('/<id>/item/<itemid>/edit', methods=['GET', 'POST'])
 @login_required_auth
@@ -178,9 +209,12 @@ def itemedit(id,itemid):
         image_url = upload_image_file(request.files.get('image'),path)
         if image_url:
             data['imageUrl'] = image_url
-
+        
         data['regSDate']=datetime.strptime(data['regSDate'], '%Y-%m-%d')
-        data['itemno']=int(data['itemno'])
+        if data["itemno"]=="" or data["itemno"]=="None" or data["itemno"]==None:
+            data["itemno"]=None
+        else:
+            data["itemTypeId"]=math.floor(int(data['itemno'])/1000000)
         book = get_assest_model().updateItem(data, itemid)
         #return redirect(url_for('.view', id=book['id']))
         return redirect(url_for('.itemview', id=id,itemid=book['id']))
@@ -279,6 +313,14 @@ def delete(id):
         get_assest_model().delete(id)        
     return redirect(url_for('.list'))
 
+
+@crud.route("/<id>/itemgrid")
+def itemgrid(id):
+    book = get_assest_model().read(id)
+    book["regSDate"]=book["regSDate"].strftime( '%Y-%m-%d')
+    items= get_assest_model().Itemlist_by_acno(book["acno"])
+    #Get_FileList(book,lecturesfile,filenames)             
+    return render_template("esasset/grid.html", book=book,items=items,lecturesfile=[],filenames=[])
 
 
 @crud.route('/<id>/downloadall')

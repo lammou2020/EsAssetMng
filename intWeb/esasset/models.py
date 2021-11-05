@@ -124,7 +124,7 @@ def delete(id):
 class Item(db.Model):
     __tablename__ = 'Item'    
     id = db.Column(db.Integer,primary_key=True)
-    itemno=db.Column(db.BigInteger,unique=True,nullable=False) # 物品編號
+    itemno=db.Column(db.BigInteger,unique=True,nullable=True) # 物品編號
     name = db.Column(db.String(80))  # 產品
     model= db.Column(db.String(80))  # 型號
     sn = db.Column(db.String(80))    # SN/PN
@@ -189,7 +189,8 @@ class Item(db.Model):
                  inventory=None,
                  Path=None,
                  imageUrl=None,
-                 createdById=None
+                 createdById=None,
+                 itemTypeId=None
 
                  ):
         self.itemno =itemno
@@ -212,12 +213,24 @@ class Item(db.Model):
         self.Path=Path
         self.imageUrl=imageUrl
         self.createdById=createdById
-
+        self.itemTypeId=itemTypeId
     def __repr__(self):
         return "<item(name='%s')" % (self.name)    
 
 
 ##############################################
+def categoryitemlist_desc(cateid,limit=10,cursor=None):
+    cursor = int(cursor) if cursor else 0
+    query = (Item.query
+             .filter_by(itemTypeId = int(cateid))
+             .order_by(desc(Item.itemno))
+             .limit(limit)
+             .offset(cursor))
+    lessons = builtin_list(map(from_sql, query.all()))
+    next_page = cursor + limit if len(lessons) == limit else None
+    return (lessons, next_page)
+
+
 
 def Itemlist_by_acno(acc_acno):
     query = (Item.query

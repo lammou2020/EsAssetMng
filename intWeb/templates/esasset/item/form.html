@@ -9,9 +9,10 @@
 <h3>{{action}} 產品</h3>
 <script src="https://cdn.ckeditor.com/4.15.1/standard/ckeditor.js"></script>
 <form method="POST" enctype="multipart/form-data">
+  <button type="submit" class="btn btn-success">Save</button>
   <div class="form-group">
-    <label for="itemno">校內代號4271NNNNN</label>
-    <input type="text" name="itemno" id="itemno" value="{{book.itemno}}" placeholder="PPPPNNNNNN" required=true pattern="([0-9]{4}[0-9]{6})" title="Enter 427100001 (電腦類4271)" class="form-control"/>
+    <label for="itemno">校內代號4271 000000</label>
+    <input type="text" name="itemno" id="itemno" value="{{book.itemno}}" placeholder="PPPPNNNNNN" pattern="([0-9]{4}[0-9]{6})|([0-9]{19})|None|()" title="Enter 427100001 (電腦類4271)" class="form-control"/>
   </div>
   <div class="form-group">
     <label for="name">產品名稱</label>
