@@ -8,14 +8,8 @@
   <script src='/static/javascripts/cool/grid_v2.js?v=2' ></script>
   <script src='/static/javascripts/cool/table2csv.js' ></script>
   <link rel='stylesheet' href='/static/javascripts/cool/grid.css'  />
-  <script>
-     var PostUrl="field_post.php";    //race_post.php
-  </script>
   <style>
-    td {
-      padding-right: 5px;
-      padding-left: 5px;
-    }
+    td {padding-right: 5px; padding-left: 5px; }
   </style>
   <h4>{{book.Lesson}} {{book.Title}}</h4>
   {% if session.profile and session.profile.Role < "8" %} <div class="btn-group">
@@ -27,11 +21,11 @@
       <i class="glyphicon glyphicon-edit"></i>
       下戴CSV
      </a>
-     <a href="#" class="btn btn-primary btn-sm">
+     <a href="#" class="btn btn-primary btn-sm" id="editbtn">
       <i class="glyphicon glyphicon-edit"></i>
       編輯
      </a>     
-     <a href="#" class="btn btn-primary btn-sm">
+     <a href="#" class="btn btn-primary btn-sm"id="readmodebtn">
       <i class="glyphicon glyphicon-edit"></i>
       唯讀
      </a>
@@ -143,17 +137,13 @@
   
   <script>
     $("#exportCSV").on('click', function(event) {
-    var args = [$('#EDUTBL'), 'export_items.csv'];
-    exportTableToCSV.apply(this, args);
+      var args = [$('#EDUTBL'), 'export_{{book.acc}}_items.csv'];
+      exportTableToCSV.apply(this, args);
     });
 
-    var fn='{{book.acc}}.csv';
     var PostUrl='item/api/JSON/update' ;    
-
-    //$('#returnUrlBtn').attr("href", returnUrl);
     $(document).ready(function(){
-    	//BindingPastFrm("PastFrm","PastFrmText","EDUTBL");
-    	BindingFunctions("editbtn","savebtn","pastbtn","exportbtn",'readmodebtn');
+    	BindingFunctions("editbtn","savebtn",'readmodebtn');
     	BindingHead_EditMode(['MA_H','MB_H','MC_H','MD_H','ME_H','MF_H','MG_H','MH_H','MI_H',,'MJ_H','MK_H','ML_H','MM_H']);
     	BindingFieldDefsIntegerFields({'MA':'INT','ME':'INT','MF':'INT','MG':'INT','MH':'INT','MI':'INT'});
     	GenOriginalData();

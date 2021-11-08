@@ -300,7 +300,19 @@ def deleteItem(id):
     Item.query.filter_by(id=id).delete()
     db.session.commit()
 
+def readAllFromTable(tablename):
+    if tablename=="acc":
+        query = (Acc.query
+                 .order_by(Acc.id))
+        lessons = builtin_list(map(from_sql, query.all()))
+        return (lessons)
 
+    elif  tablename=="item":
+        query = (Item.query
+                 .order_by(Item.id))
+        lessons = builtin_list(map(from_sql, query.all()))
+        return (lessons)
+    return None
 ##############################################
 
 

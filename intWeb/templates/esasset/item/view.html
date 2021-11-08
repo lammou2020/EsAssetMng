@@ -82,12 +82,27 @@
     <p>{{book.describe | safe}}</p>
   </div>
 
- 
-
-  [Up_load_Img]
-
-  [Show Img]
-
+  <h4>Product Img:</h4>
+  {% for file in filenames %}
+  <div>
+    <a href="/EsAsset/{{acc_id}}/item/{{book.id}}/download/{{file.f}}">
+      <span>{{file.n}}</span>
+    </a>
+  </div>
+  {% else %}
+  <p>No files found</p>
+  {% endfor %}
+  <form method="post" action="/EsAsset/{{acc_id}}/item/{{book.id}}/upload" enctype="multipart/form-data">
+    <dl>
+    <p>
+      <input type="file" name="files[]" multiple="true" autocomplete="off" required>
+    </p>
+    </dl>
+    <p>
+    <input type="submit" value="提交"">
+    <span>MAX_CONTENT_LENGTH = 8 * 1024 * 1024</span>
+  </p>
+  </form>
 
 
 

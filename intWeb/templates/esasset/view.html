@@ -5,13 +5,33 @@
 {% extends "esasset/base.html" %}
 
 {% block content %}
+<script src="/static/javascripts/JsBarcode.all.min.js"></script>
+<canvas id="canvas"></canvas>
+<!-- or -->
+<!--img id="barcode"/-->
+<!-- or -->
+<svg id="barcode"></svg>
+<script>
+// By using querySelector
+JsBarcode("#barcode", "ACC{{book.acno}}", {
+  format: "CODE39",
+ // mod43: true
+ height: 50
+});
+// or by passing an element variable
+//var element = document.getElementById("barcode");
+// or jqeuery
+//JsBarcode(element, "Hi!");
+
+//$("#barcode").JsBarcode("Hi!");
+</script>
 <style>
   td {
     padding-right: 5px;
     padding-left: 5px;
   }
 </style>
-<h4>{{book.Lesson}} {{book.Title}}</h4>
+<h4>{{book.id}} {{book.acc}}</h4>
 {% if session.profile and session.profile.Role < "8" %} <div class="btn-group">
   <a href="/EsAsset/{{book.id}}/edit" class="btn btn-primary btn-sm">
     <i class="glyphicon glyphicon-edit"></i>
@@ -123,21 +143,30 @@
       <td>{{item_.regSDate}}</td>
     </tr>
   {% else %}
-  <tr><td>No lessons found</td></tr>
+  <tr><td>No found</td></tr>
   {% endfor %}
 </table>
 
-[Up_load_Img]
-
-[Show Img]
-
-
-
-
-
-
-
-
-
+<h4>Product Img:</h4>
+{% for file in filenames %}
+<div>
+  <a href="/EsAsset/{{book.id}}/download/{{file.f}}">
+    <span>{{file.n}}</span>
+  </a>
+</div>
+{% else %}
+<p>No files found</p>
+{% endfor %}
+<form method="post" action="/EsAsset/{{book.id}}/upload" enctype="multipart/form-data">
+  <dl>
+  <p>
+    <input type="file" name="files[]" multiple="true" autocomplete="off" required>
+  </p>
+  </dl>
+  <p>
+  <input type="submit" value="提交"">
+  <span>MAX_CONTENT_LENGTH = 8 * 1024 * 1024</span>
+</p>
+</form>
 
 {% endblock %}

@@ -11,8 +11,8 @@
 <form method="POST" enctype="multipart/form-data">
   <button type="submit" class="btn btn-success">Save</button>
   <div class="form-group">
-    <label for="itemno">校內代號4271 000000</label>
-    <input type="text" name="itemno" id="itemno" value="{{book.itemno}}" placeholder="PPPPNNNNNN" pattern="([0-9]{4}[0-9]{6})|([0-9]{19})|None|()" title="Enter 427100001 (電腦類4271)" class="form-control"/>
+    <label for="itemno">校內代號4271000000</label>
+    <input type="text" name="itemno" id="itemno" value="{{book.itemno}}" placeholder="PPPPNNNNNN" pattern="([0-9]{4}[0-9]{6}[0-9]{*})|None|()" title="Enter 427100001 (電腦類4271)" class="form-control"/>
   </div>
   <div class="form-group">
     <label for="name">產品名稱</label>

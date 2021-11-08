@@ -19,13 +19,14 @@ def upload_hw_file(file,UPLOAD_FOLDER,seat):
         file.filename,
         file.content_type,
         UPLOAD_FOLDER,
+        0,
         seat
     )
     current_app.logger.info(
         "Uploaded file %s as %s.", file.filename, public_url)
     return public_url
 
-def upload_image_file(file,UPLOAD_FOLDER):
+def upload_image_file(file,UPLOAD_FOLDER,pixStr=None):
     """
     Upload the user-uploaded file to Google Cloud Storage and retrieve its
     publicly-accessible URL.
@@ -36,7 +37,10 @@ def upload_image_file(file,UPLOAD_FOLDER):
         file,#.read(),
         file.filename,
         file.content_type,
-        UPLOAD_FOLDER
+        UPLOAD_FOLDER,
+        pixStr,
+        "EsAsset",
+
     )
     current_app.logger.info(
         "Uploaded file %s as %s.", file.filename, public_url)
@@ -92,45 +96,22 @@ def categoryitemlist(cateid):
         next_page_token=next_page_token)
 
 
-def Get_FileList(book, lecturesfile, filenames):
-    crspath=book["Path"]
+def Get_FileList(crspath, filenames, prefix=None):
     path = current_app.config['HW_UPLOAD_FOLDER']
-    LECTURE_FOLDER = os.path.join(path, crspath+"LECTURE")
+    LECTURE_FOLDER = os.path.join(path, crspath)
     if not os.path.isdir(LECTURE_FOLDER):
         os.mkdir(LECTURE_FOLDER)
-
-    for root,dirs, files in os.walk(LECTURE_FOLDER):
-        for file in files:
-            basename, extension = file.rsplit('.', 1)
-            _file=basename.split('-_')[0]+"."+extension
-            lecturesfile.append({"f":quote(str(file)),"n":_file})    
-
-    if session=={}:
-        pass
-    elif session.get('profile') is None :
-        pass
-    elif session.get('profile') == {} :
-        pass        
     else:
-        if (book["createdById"]==str(session['profile']['id']))  :
-            path = current_app.config['HW_UPLOAD_FOLDER']
-            LECTURE_FOLDER = os.path.join(path, crspath+"LECTURE")
-            if not os.path.isdir(LECTURE_FOLDER):
-                os.mkdir(LECTURE_FOLDER)
-    
-            UPLOAD_FOLDER = os.path.join(path, crspath)
-            if not os.path.isdir(UPLOAD_FOLDER):
-                os.mkdir(UPLOAD_FOLDER)  
-
-            for root,dirs, files in os.walk(UPLOAD_FOLDER):
-                for file in files:
+        for root,dirs, files in os.walk(LECTURE_FOLDER):
+            for file in files:
+                if prefix==None:
                     basename, extension = file.rsplit('.', 1)
-                    bn=basename.split('-_')
-                    _file=bn[0]+"."+extension
-                    fseat=""
-                    if len(bn)>1: fseat=bn[1][:2]
-                    if session['profile']['Role']<"8":
-                        filenames.append({"f":quote(str(file)),"n":f"{_file} {fseat}"})
+                    _file=basename.split('-_')[0]+"."+extension
+                    filenames.append({"f":quote(str(file)),"n":_file})    
+                elif prefix in file:
+                    basename, extension = file.rsplit('.', 1)
+                    _file=basename.split('-_')[0]+"."+extension
+                    filenames.append({"f":quote(str(file)),"n":_file})    
     pass
 
 #####
@@ -140,8 +121,10 @@ def Get_FileList(book, lecturesfile, filenames):
 @crud.route('/<id>/item/<itemid>')
 def itemview(id,itemid):
     book = get_assest_model().readItem(itemid)
-    #Get_FileList(book,lecturesfile,filenames)             
-    return render_template("esasset/item/view.html",acc_id=id, book=book)
+    filenames=[]
+    crspath=str(book["acc_acno"])
+    Get_FileList(crspath,filenames,"ASS"+crspath+"ID"+str(book["id"])+"_")             
+    return render_template("esasset/item/view.html",acc_id=id, book=book,filenames=filenames)
 
 
 @crud.route('/<id>/item/add', methods=['GET', 'POST'])
@@ -154,7 +137,7 @@ def itemadd(id):
 
         # If an image was uploaded, update the data to point to the new image.
         path = current_app.config['HW_UPLOAD_FOLDER']
-        image_url = upload_image_file(request.files.get('image'),path)
+        image_url = upload_image_file(request.files.get('image'),path,acc_acno)
 
         if image_url:
             data['imageUrl'] = image_url
@@ -206,7 +189,7 @@ def itemedit(id,itemid):
     if request.method == 'POST':
         data = request.form.to_dict(flat=True)
         path = current_app.config['HW_UPLOAD_FOLDER']
-        image_url = upload_image_file(request.files.get('image'),path)
+        image_url = upload_image_file(request.files.get('image'),path,str(data["acc_acno"]))
         if image_url:
             data['imageUrl'] = image_url
         
@@ -221,32 +204,69 @@ def itemedit(id,itemid):
 
     return render_template("esasset/item/form.html", action="Edit", book=book)
 
-
+#####
 @crud.route('/<id>/item/<itemid>/delete')
 @login_required_auth
 def itemdelete(id,itemid):
     book = get_assest_model().readItem(itemid)
-    crspath=book["Path"]
+    crspath=book["acc_acno"]
     if (book["createdById"]==str(session['profile']['id']))  :
         path = current_app.config['HW_UPLOAD_FOLDER']
-        UPLOAD_FOLDER = os.path.join(path, crspath)
-        for root,dirs, files in os.walk(UPLOAD_FOLDER):
-           for file in files:      
-               os.remove(UPLOAD_FOLDER+"/"+file)
+        #UPLOAD_FOLDER = os.path.join(path, crspath)
+        #for root,dirs, files in os.walk(UPLOAD_FOLDER):
+        #   for file in files:      
+        #       os.remove(UPLOAD_FOLDER+"/"+file)
         get_assest_model().deleteItem(itemid)        
     return redirect(url_for('.view',id=id))
 
+
+@crud.route('/<id>/item/<itemid>/upload', methods=['GET', 'POST'])
+def uploadItemfiles(id,itemid):
+    book = get_assest_model().readItem(itemid)
+    crspath=str(book["acc_acno"])
+    path = current_app.config['HW_UPLOAD_FOLDER']
+    UPLOAD_FOLDER = os.path.join(path, crspath)
+    if not os.path.isdir(UPLOAD_FOLDER):
+        os.mkdir(UPLOAD_FOLDER)
+    if request.method == 'POST':
+        if 'files[]' not in request.files:
+            flash('No file part')
+            return render_template("view.html", book=book)
+        files = request.files.getlist('files[]')
+        for file in files:
+            upload_hw_file(file,UPLOAD_FOLDER,"ASS"+crspath+"ID"+str(book["id"])+"_")
+        flash('File(s) successfully uploaded')
+        return redirect(f"/EsAsset/{id}")
+        #return render_template("view.html", book=book)    
+
+@crud.route('/<id>/item/<itemid>/download/<filename>')
+def download_item_file(id,itemid,filename):
+    book = get_assest_model().readItem(itemid)
+    crspath=str(book["acc_acno"])
+    #return render_template("view.html", book=book)
+    # Get current path os.getcwd()
+    path = current_app.config['HW_UPLOAD_FOLDER']
+    # file Upload
+    UPLOAD_FOLDER = os.path.join(path, crspath)
+    FilePath=UPLOAD_FOLDER+"/"+filename
+    basename, extension = filename.rsplit('.', 1)
+    _file=basename.split('-_')[0]+"."+extension    
+    return send_file(FilePath,
+            mimetype = 'zip',
+            attachment_filename= _file,
+            as_attachment = True)
+    # Delete the zip file if not needed
+
 #####
-
-
-
 @crud.route('/<id>')
 def view(id):
     book = get_assest_model().read(id)
     book["regSDate"]=book["regSDate"].strftime( '%Y-%m-%d')
     items=  get_assest_model().Itemlist_by_acno(book["acno"])
-    #Get_FileList(book,lecturesfile,filenames)             
-    return render_template("esasset/view.html", book=book,items=items,lecturesfile=[],filenames=[])
+    filenames=[]
+    crspath=str(book["acno"])
+    Get_FileList(crspath,filenames)     #"ACC"+crspath+"_"
+    return render_template("esasset/view.html", book=book,items=items,filenames=filenames)
 
 # [START add]
 @crud.route('/add', methods=['GET', 'POST'])
@@ -254,26 +274,23 @@ def view(id):
 def add():
     if request.method == 'POST':
         data = request.form.to_dict(flat=True)
-
         # If an image was uploaded, update the data to point to the new image.
         path = current_app.config['HW_UPLOAD_FOLDER']
-        image_url = upload_image_file(request.files.get('image'),path)
-
+        image_url = upload_image_file(request.files.get('image'),path,str(data["acno"]))
         if image_url:
             data['imageUrl'] = image_url
-
         # If the user is logged in, associate their profile with the new book.
         if 'profile' in session:
             data['createdById'] = session['profile']['id']
         data['regSDate']=datetime.strptime(data['regSDate'], '%Y-%m-%d')
         book = get_assest_model().create(data)
-
         return redirect(url_for('.view', id=book['id']))
     book={
         "total":"0",
         "readonly":"0",
         "regSDate":datetime.today().strftime( '%Y-%m-%d')
         }
+        
     return render_template("esasset/form.html", action="Add", book=book)
 # [END add]
 
@@ -286,7 +303,7 @@ def edit(id):
     if request.method == 'POST':
         data = request.form.to_dict(flat=True)
         path = current_app.config['HW_UPLOAD_FOLDER']
-        image_url = upload_image_file(request.files.get('image'),path)
+        image_url = upload_image_file(request.files.get('image'),path,str(data["acno"]))
 
         if image_url:
             data['imageUrl'] = image_url
@@ -319,8 +336,9 @@ def itemgrid(id):
     book = get_assest_model().read(id)
     book["regSDate"]=book["regSDate"].strftime( '%Y-%m-%d')
     items= get_assest_model().Itemlist_by_acno(book["acno"])
-    #Get_FileList(book,lecturesfile,filenames)             
-    return render_template("esasset/grid.html", book=book,items=items,lecturesfile=[],filenames=[])
+    filenames=[]
+    #Get_FileList(book,filenames)             
+    return render_template("esasset/grid.html", book=book,items=items,lecturesfile=[],filenames=filenames)
 
 
 @crud.route('/<id>/downloadall')
@@ -351,8 +369,7 @@ def download_all(id):
 @crud.route('/<id>/download/<filename>')
 def download_file(id,filename):
     book = get_assest_model().read(id)
-    crspath=book["Path"]
-    seat=session['profile']['Seat']
+    crspath=str(book["acno"])
     #return render_template("view.html", book=book)
     # Get current path os.getcwd()
     path = current_app.config['HW_UPLOAD_FOLDER']
@@ -399,20 +416,11 @@ def showimage(id,filename):
 @crud.route('/<id>/upload', methods=['GET', 'POST'])
 def uploadfiles(id):
     book = get_assest_model().read(id)
-    crspath=book["Path"]
-    seat=session['profile']['Seat']
+    crspath=str(book["acno"])
     path = current_app.config['HW_UPLOAD_FOLDER']
-    LECTURE_FOLDER = os.path.join(path, crspath+"LECTURE")
-    if not os.path.isdir(LECTURE_FOLDER):
-        os.mkdir(LECTURE_FOLDER)
-
     UPLOAD_FOLDER = os.path.join(path, crspath)
     if not os.path.isdir(UPLOAD_FOLDER):
         os.mkdir(UPLOAD_FOLDER)
-
-    if session['profile']['Role']<"8":
-        UPLOAD_FOLDER=LECTURE_FOLDER
-
     if request.method == 'POST':
         if 'files[]' not in request.files:
             flash('No file part')
@@ -420,10 +428,10 @@ def uploadfiles(id):
         
         files = request.files.getlist('files[]')
         for file in files:
-            upload_hw_file(file,UPLOAD_FOLDER,seat)
+            upload_hw_file(file,UPLOAD_FOLDER,"ACC"+crspath+"_")
         
         flash('File(s) successfully uploaded')
-        return redirect(f"/lessons/{id}")
+        return redirect(f"/EsAsset/{id}")
         #return render_template("view.html", book=book)
 
 
@@ -440,3 +448,11 @@ def cleanclasswork(id):
                os.remove(UPLOAD_FOLDER+"/"+file)
         #get_assest_model().delete(id)        
     return redirect(url_for('.list'))
+
+
+
+@crud.route('/JSON/db/<tablename>')
+@login_required_auth
+def JSON_DB(tablename):
+    book = get_assest_model().readAllFromTable(tablename)
+    return jsonify(book)
