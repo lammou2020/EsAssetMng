@@ -251,10 +251,14 @@ def download_item_file(id,itemid,filename):
     FilePath=UPLOAD_FOLDER+"/"+filename
     basename, extension = filename.rsplit('.', 1)
     _file=basename.split('-_')[0]+"."+extension    
-    return send_file(FilePath,
-            mimetype = 'zip',
-            attachment_filename= _file,
-            as_attachment = True)
+    if extension in  ['jpg']:
+        return send_file(FilePath,
+                mimetype = 'image/*')
+    else:
+        return send_file(FilePath,
+                mimetype = 'zip',
+                attachment_filename= _file,
+                as_attachment = True)
     # Delete the zip file if not needed
 
 #####
@@ -378,10 +382,15 @@ def download_file(id,filename):
     FilePath=UPLOAD_FOLDER+"/"+filename
     basename, extension = filename.rsplit('.', 1)
     _file=basename.split('-_')[0]+"."+extension    
-    return send_file(FilePath,
-            mimetype = 'zip',
-            attachment_filename= _file,
-            as_attachment = True)
+    if extension in  ['jpg']:
+        return send_file(FilePath,
+                mimetype = 'image/*',
+                )
+    else:
+        return send_file(FilePath,
+                mimetype = 'zip',
+                attachment_filename= _file,
+                as_attachment = True)
     # Delete the zip file if not needed
 
 @crud.route('/<id>/downloadlecture/<filename>')
