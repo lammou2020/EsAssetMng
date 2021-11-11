@@ -1,6 +1,7 @@
 import intWeb
 import config
 import sys
+from waitress import serve
 args = sys.argv[1:]
 if "--help" in args:
     print("--initdb")
@@ -27,5 +28,6 @@ if __name__ == '__main__':
     elif "--initdb" in args:
         pass
     else:
-        app.run( host="0.0.0.0",port=83, debug=True)
+        #app.run( host="0.0.0.0",port=83, debug=True)
+        serve(app, host="0.0.0.0",port=83)
     #pass

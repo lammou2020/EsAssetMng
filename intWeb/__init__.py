@@ -60,7 +60,6 @@ def create_app(config, debug=False, testing=False, config_overrides=None):
         model_hello.init_app(app)
         model_blog=get_blog_model()
         model_blog.init_app(app)
-        print(init_db_flag)
         if init_db_flag:
             from intWeb.initDB__ import initdb_data
             db.init_app(app)

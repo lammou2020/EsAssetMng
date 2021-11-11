@@ -8,10 +8,56 @@
 {% block content %}
 <h3>{{action}} 產品</h3>
 <script src="https://cdn.ckeditor.com/4.15.1/standard/ckeditor.js"></script>
+
+<div id="menudialog">
+  <ul id="menu">
+    <li>
+      <div>4231	1	中央冷暖系統</div>
+    </li>
+    <li>
+      <div>4232	1	水管電力及氣體輸系統</div>
+    </li>
+    <li>
+      <div>4233	1	校車</div>
+    </li>
+    <li>
+      <div>4234	1	電訊網絡</div>
+    </li>
+    <li>
+      <div>4235	1	升降系統</div>
+    </li>
+    <li>
+      <div>4236	1	防火及安全系統</div>
+    </li>
+    <li>
+      <div>4249	1	幼兒玩具設備</div>
+    </li>
+    <li>
+      <div>Item 3</div>
+      <ul>
+        <li>
+          <div>Item 3-1</div>
+        </li>
+        <li>
+          <div>Item 3-2</div>
+        </li>
+        <li>
+          <div>Item 3-3</div>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <div>Item 4</div>
+    </li>
+    <li>
+      <div>Item 5</div>
+    </li>
+  </ul>
+</div>
 <form method="POST" enctype="multipart/form-data">
   <button type="submit" class="btn btn-success">Save</button>
   <div class="form-group">
-    <label for="itemno">校內代號4271000000</label>
+    <label for="itemno">[校內代號: 會計號碼4271 +物品分類002+ 序號001]</label><img onclick="diagramclick();" src="/static/fonts/diagram-3.svg">
     <input type="text" name="itemno" id="itemno" value="{{book.itemno}}" placeholder="PPPPNNNNNN" pattern="([0-9]{4}[0-9]{6}[0-9]{*})|None|()" title="Enter 427100001 (電腦類4271)" class="form-control"/>
   </div>
   <div class="form-group">
@@ -76,7 +122,30 @@
     <label for="note2">Description</label>
     <textarea name="note2" id="note2" class="form-control">{{book.note2}}</textarea>
     <script>
+    var dialog=null;
+     function diagramclick(){
+      dialog.dialog( "open" );
+    }
+      $( function() {
       CKEDITOR.replace( 'describe' );
+      $( "#menu" ).menu();
+      dialog = $( "#menudialog" ).dialog({
+      autoOpen: false,
+      height: 400,
+      width: 350,
+      modal: true,
+      buttons: {
+        Cancel: function() {
+          dialog.dialog( "close" );
+        }
+      },
+      close: function() {
+        //form[ 0 ].reset();
+        //allFields.removeClass( "ui-state-error" );
+      }
+    });
+
+      });
     </script>
   </div>
   <div class="form-group">
