@@ -89,11 +89,21 @@ def categoryitemlist(cateid):
     token = request.args.get('page_token', None)
     if token:
         token = token.encode('utf-8')
-    books, next_page_token = get_assest_model().categoryitemlist_desc(cateid=cateid,cursor=token)
+    books, next_page_token = get_assest_model().categoryitemlist_desc(cateid=cateid,buwei=1000000,cursor=token)
+    #between
     return render_template(
         "esasset/item/list.html",
         books=books,
         next_page_token=next_page_token)
+
+@crud.route("/JSON/categoryitemlist/<cateid>")
+def JSONcategoryitemlist(cateid):
+    token = request.args.get('page_token', None)
+    if token:
+        token = token.encode('utf-8')
+    books, next_page_token = get_assest_model().categoryitemlist_desc(cateid=cateid,buwei=1000,cursor=token)
+    return jsonify(books)
+
 
 
 def Get_FileList(crspath, filenames, prefix=None):
@@ -149,7 +159,8 @@ def itemadd(id):
         if data["itemno"]==""  or data["itemno"]=="None" or data["itemno"]==None:
             data["itemno"]=None
         else:
-            data["itemTypeId"]=math.floor(int(data["itemno"])/1000000)
+            #data["itemTypeId"]=math.floor(int(data["itemno"])/1000000)
+            pass
         book = get_assest_model().createItem(data)
 
         return redirect(url_for('.itemview', id=id,itemid=book['id']))
@@ -175,7 +186,8 @@ def itemJsonUpdate(id,itemid):
         if data["itemno"]=="" or data["itemno"]=="None" or data["itemno"]==None:
             data["itemno"]=None
         else:
-            data["itemTypeId"]=math.floor(int(data['itemno'])/1000000)
+            #data["itemTypeId"]=math.floor(int(data['itemno'])/1000000)
+            pass
     book = get_assest_model().updateItem(data, itemid)
     return jsonify( book)
 
@@ -197,7 +209,8 @@ def itemedit(id,itemid):
         if data["itemno"]=="" or data["itemno"]=="None" or data["itemno"]==None:
             data["itemno"]=None
         else:
-            data["itemTypeId"]=math.floor(int(data['itemno'])/1000000)
+            #data["itemTypeId"]=math.floor(int(data['itemno'])/1000000)
+            pass
         book = get_assest_model().updateItem(data, itemid)
         #return redirect(url_for('.view', id=book['id']))
         return redirect(url_for('.itemview', id=id,itemid=book['id']))

@@ -9,47 +9,19 @@
 <h3>{{action}} 產品</h3>
 <script src="https://cdn.ckeditor.com/4.15.1/standard/ckeditor.js"></script>
 
-<div id="menudialog">
-  <div id="accordion">
-    <h3>4271,2,資訊設備(一般)</h3>
-    <div style="margin:0;padding:0;">
-      <h4>4271,2,,001,桌上電腦 (主機，滑鼠，鍵盤),X,X,,</h4>
-      <h4>4271,2,,002,手提電腦 (主機，電池，火牛，光盤),X,X,,</h4>
-      <h4>4271,2,,003,打印機 (針機 / 噴墨 / 雷射 / 多功能),X,X,,</h4>
-      <h4>4271,2,,004,掃瞄器,X,X,,</h4>
-      <h4>4271,2,,005,伺服器 (主機),X,X,,</h4>
-      <h4>4271,2,,006,電腦熒幕 (CRT / LCD),X,X,,</h4>
-      <h4>4271,2,,007,手紋掃瞄器,X,X,,</h4>
-      <h4>4271,2,,008,條碼掃瞄器 / Barcode Reader USB,X,X,,</h4>
-      <h4>4271,2,,009,指紋考勤機,X,X,,</h4>
-      <h4>4271,2,,010,多媒體投影機,X,X,現時入4296科目賬#001,</h4>
-      <h4>4271,2,,011,接觸式智能卡閱讀器《插入身份證辨認》,X,X,,</h4>
-      <h4>4271,2,,012,大型外部儲存裝置,X,X,,</h4>
-      <h4>4271,2,,013,大型外部儲存裝置硬盤,X,X,,</h4>
-      <h4>4271,2,,014,平板電腦,X,X,,</h4>
-    </div>
-    <h3>4271,2,,《電腦配件》</h3>
-    <div style="margin:0;padding:0;">
-      <h4>4271,2,,101,底板 / 處理器 / 顯示卡,,,,</h4>
-      <h4>4271,2,,102,鍵盤,X,X,現時入63162科目賬#001,</h4>
-      <h4>4271,2,,103,電腦機箱,X,X,,</h4>
-      <h4>4271,2,,104,記憶體,,X,現時入63162科目賬#016,</h4>
-      <h4>4271,2,,106,滑鼠,,X,現時入63162科目賬#002,</h4>
-      <h4>4271,2,,108,內置硬盤,,X,現時入63162科目賬#003,</h4>
-      <h4>4271,2,,109,光碟機 (CD-ROM / CD-RW / DVD),,X,現時入63162科目賬#004 / #005,</h4>
-      <h4>4271,2,,110,Zip Drive,X,X,,</h4>
-      <h4>4271,2,,111,手寫板,X,X,現時入63162科目賬#008,</h4>
-      <h4>4271,2,,112,Lenten Reborn card,X,X,,</h4>
-      <h4>4271,2,,113,外置硬盤,X,X,現時入63162科目賬#017,</h4>
-      <h4>4271,2,,114,後備供電電池,X,X,,</h4>    
-    </div>
 
-  </div>    
-</div>
 <form method="POST" enctype="multipart/form-data">
   <button type="submit" class="btn btn-success">Save</button>
   <div class="form-group">
-    <label for="itemno">[校內代號: 會計號碼4271 +物品分類002+ 序號001]</label><img onclick="diagramclick();" src="/static/fonts/diagram-3.svg">
+    <label for="itemno">[校內代號: 會計號碼4271 +物品分類002+ 序號001]</label>
+    <span>ICT</span><img onclick="diagramclick(4271);" src="/static/fonts/diagram-3.svg">
+    <span>&nbsp;&nbsp;</span>
+    <span>課室</span><img onclick="diagramclick(4276);" src="/static/fonts/diagram-3.svg">
+    <span>&nbsp;&nbsp;</span>
+    <span>辦公室</span><img onclick="diagramclick(4272);" src="/static/fonts/diagram-3.svg">
+    <span>&nbsp;&nbsp;</span>
+    <span>水電消防</span><img onclick="diagramclick(4231);" src="/static/fonts/diagram-3.svg">
+    <span>&nbsp;&nbsp;</span>
     <input type="text" name="itemno" id="itemno" value="{{book.itemno}}" placeholder="PPPPNNNNNN" pattern="([0-9]{4}[0-9]{6}[0-9]{*})|None|()" title="Enter 427100001 (電腦類4271)" class="form-control"/>
   </div>
   <div class="form-group">
@@ -113,32 +85,7 @@
   <div class="form-group">
     <label for="note2">Description</label>
     <textarea name="note2" id="note2" class="form-control">{{book.note2}}</textarea>
-    <script>
-    var dialog=null;
-     function diagramclick(){
-      dialog.dialog( "open" );
-    }
-      $( function() {
-      CKEDITOR.replace( 'describe' );
-      $("#accordion").accordion();
-      dialog = $( "#menudialog" ).dialog({
-      autoOpen: false,
-      height: 400,
-      width: 350,
-      modal: true,
-      buttons: {
-        Cancel: function() {
-          dialog.dialog( "close" );
-        }
-      },
-      close: function() {
-        //form[ 0 ].reset();
-        //allFields.removeClass( "ui-state-error" );
-      }
-    });
 
-      });
-    </script>
   </div>
   <div class="form-group">
     <label for="Path">Path</label>
@@ -155,5 +102,5 @@
 
   <button type="submit" class="btn btn-success">Save</button>
 </form>
-
+{% include 'esasset/item/itemcategory.html' %}
 {% endblock %}

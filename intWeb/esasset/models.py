@@ -3,6 +3,7 @@ from datetime import datetime
 #from typing_extensions import NotRequired
 #from enum import unique
 from flask import Flask
+from sqlalchemy.sql.elements import between
 from flask_sqlalchemy import SQLAlchemy
 #from config import SECRET_KEY
 from sqlalchemy import desc
@@ -219,10 +220,12 @@ class Item(db.Model):
 
 
 ##############################################
-def categoryitemlist_desc(cateid,limit=10,cursor=None):
+def categoryitemlist_desc(cateid,buwei=1000000, limit=10,cursor=None):
     cursor = int(cursor) if cursor else 0
+    sint=int(cateid)*buwei
+    print(sint)
     query = (Item.query
-             .filter_by(itemTypeId = int(cateid))
+             .filter(Item.itemno.between(sint,sint+buwei-1))
              .order_by(desc(Item.itemno))
              .limit(limit)
              .offset(cursor))

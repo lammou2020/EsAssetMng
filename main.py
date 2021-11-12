@@ -28,6 +28,6 @@ if __name__ == '__main__':
     elif "--initdb" in args:
         pass
     else:
-        #app.run( host="0.0.0.0",port=83, debug=True)
-        serve(app, host="0.0.0.0",port=83)
+        app.run( host="0.0.0.0",port=83, debug=True)
+        #serve(app, host="0.0.0.0",port=83)
     #pass
