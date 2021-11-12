@@ -45,7 +45,7 @@ def itemlist():
             print(f'<h3><a href=#>{row[1]} {row[2]}</a></h3>')
             print(f'<div style="margin:0;padding:0;">')
         else:
-            print(f'<h4><a href=# onclick="GetNewItemNo({row[0]});">{row[0]}</a> {row[2]}</h4>')
+            print(f'<h4><a href=# onclick="GetNewItemNo({row[0]},this);">{row[0]} {row[2]}</a></h4>')
     if cnt>1 :print("</div>")
         
     pass

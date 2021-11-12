@@ -18,6 +18,7 @@ def initdb_data(db,app):
     mbc_admin = User("mbc","abcd1234","admin","1")
     studa = User("stu","123","stu","8","SC1A","01")
     studb = User("sta","123","stu","8","SC2A","01")
+    studb = User("ict","123","ict","1")
     acc=Acc(acno=0, acc="學校資產", orderNo="None", regSDate=datetime.now(),voucherNo="None",vendor="None",createdById=1)
     db.session.add(admin)
     db.session.add(mbc_admin)
@@ -36,6 +37,4 @@ def from_sql(row):
     return data
 
 AccTable=[
-    Acc(acno='2002427110', acc='電腦熒幕, Reborn Card,CDRW,電腦主機, ', orderNo='2427110', regSDate=datetime.strptime('2002-10-24', '%Y-%m-%d'), voucherNo='8P10-10',vendor='CTM',createdById=1),
-    Acc(acno='2002427111', acc='電腦主機', orderNo='2427111', regSDate=datetime.strptime('2002-10-24', '%Y-%m-%d'), voucherNo='8P10-21',vendor='易通電腦公司',createdById=1)
     ]

@@ -10,6 +10,7 @@
   <link rel='stylesheet' href='/static/javascripts/cool/grid.css'  />
   <style>
     td {padding-right: 5px; padding-left: 5px; }
+    th{min-width: 100px;}
   </style>
   <h4>{{book.Lesson}} {{book.Title}}</h4>
   {% if session.profile and session.profile.Role < "8" %} <div class="btn-group">
@@ -85,12 +86,12 @@
   <h3>明細</h3>
   
   
-    <table id=EDUTBL>
+    <table id=EDUTBL  class="table">
       <tr>
         <td>序</td>
         <td>編號</td>
         <td id="MA_H">校內編號</td>
-        <td id="MB_H" style="width: 100px;">產品名稱</td>
+        <td id="MB_H" style="min-width: 100px;">產品名稱</td>
         <td id="MC_H">型號</td>
         <td id="MD_H">SN/PN</td>
         <td id="ME_H">數量</td>
@@ -102,6 +103,17 @@
         <td id="MK_H">位置</td>
         <td id="ML_H">備註</td>
         <td id="MM_H">登錄日期</td>
+        {% if session.profile and  session.profile.user=='ict' %}
+        <td id="MN_H">hostname</td>
+        <td id="MO_H">wifi_mac</td>
+        <td id="MP_H">lan_mac	</td>
+        <td id="MQ_H">wifi_mac_style2	</td>
+        <td id="MR_H">lan_mac_sytle_2	</td>
+        <td id="MS_H">cpu</td>
+        <td id="MT_H">ram</td>
+        <td id="MU_H">disk</td>
+        <td id="MV_H">accyear</td>
+        {% endif %}   
         <td>專案編號</td>
       </tr>
   
@@ -122,6 +134,18 @@
         <td class="M" id="MK_note1_{{item_.id}}">{{item_.note1}}</td>
         <td class="M" id="ML_note2_{{item_.id}}">{{item_.note2}}</td>
         <td class="M" id="MM_regSDate_{{item_.id}}">{{item_.regSDate}}</td>
+        {% if session.profile and  session.profile.user=='ict' %}
+        <td class="M" id="MN_hostname_{{item_.id}}">{{item_.hostname}}</td>
+        <td class="M" id="MO_wifi-mac_{{item_.id}}">{{item_.wifi_mac}}</td>
+        <td class="M" id="MP_lan-mac_{{item_.id}}">{{item_.lan_mac	}}</td>
+        <td class="M" id="MQ_wifi-mac-style2_{{item_.id}}">{{item_.wifi_mac_style2	}}</td>
+        <td class="M" id="MR_lan-mac-sytle-2_{{item_.id}}">{{item_.lan_mac_sytle_2	}}</td>
+        <td class="M" id="MS_cpu_{{item_.id}}">{{item_.cpu}}</td>
+        <td class="M" id="MT_ram_{{item_.id}}">{{item_.ram}}</td>
+        <td class="M" id="MU_disk_{{item_.id}}">{{item_.disk}}</td>
+        <td class="M" id="MV_accyear_{{item_.id}}">{{item_.accyear}}</td>
+        {% endif %}   
+
         <td>{{item_.acc_acno}}</td>
       </tr>
     {% else %}
@@ -144,7 +168,8 @@
     var PostUrl='item/api/JSON/update' ;    
     $(document).ready(function(){
     	BindingFunctions("editbtn","savebtn",'readmodebtn');
-    	BindingHead_EditMode(['MA_H','MB_H','MC_H','MD_H','ME_H','MF_H','MG_H','MH_H','MI_H',,'MJ_H','MK_H','ML_H','MM_H']);
+    	BindingHead_EditMode(['MA_H','MB_H','MC_H','MD_H','ME_H','MF_H','MG_H','MH_H','MI_H',,'MJ_H',
+      'MK_H','ML_H','MM_H','MN_H','MO_H','MP_H','MQ_H','MR_H','MS_H','MT_H','MU_H','MV_H']);
     	BindingFieldDefsIntegerFields({'MA':'INT','ME':'INT','MF':'INT','MG':'INT','MH':'INT','MI':'INT'});
     	GenOriginalData();
     });  

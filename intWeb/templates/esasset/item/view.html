@@ -54,7 +54,7 @@
         <td>調整</td>
         <td>小計</td>
         <td>攤折</td>
-        <td>保險</td>
+        <td>保險/保養</td>
         <td>位置</td>
         <td>備註</td>
         <td>主項編號</td>
@@ -79,10 +79,47 @@
         <td>{{book.regSDate}}</td>
       </tr>
     </table>
-    <p>{{book.describe | safe}}</p>
+<br>
+<br>
+<br>
+
+      <b>ICT 設備</b>
+    <table>
+<tr>
+    <th>hostname</th>
+    <th>wifi_mac</th>
+    <th>lan_mac	</th>
+    <th>wifi_mac_style2	</th>
+    <th>lan_mac_sytle_2	</th>
+  
+</tr>
+
+  <tr>
+
+    <td>{{book.hostname}}</td>
+    <td>{{book.wifi_mac}}</td>
+    <td>{{book.lan_mac	}}</td>
+    <td>{{book.wifi_mac_style2	}}</td>
+    <td>{{book.lan_mac_sytle_2	}}</td>
+  </tr>
+<tr>
+  <th>cpu </th>
+  <th>ram	</th>
+  <th>disk</th>
+  <th>年度</th>
+</tr>
+  <tr>
+    <td>{{book.cpu 	}}</td>
+    <td>{{book.ram	}}</td>
+    <td>{{book.disk}}</td>
+    <td>{{book.accyear	}}</td>
+  </tr>
+</table>  
+  
+  <p>{{book.note2 | safe}}</p>
   </div>
 
-  <h4>Product Img:</h4>
+  <h5> 圖片:</h5>
   {% for file in filenames %}
   <div>
     <a href="/EsAsset/{{acc_id}}/item/{{book.id}}/download/{{file.f}}">

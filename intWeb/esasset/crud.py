@@ -179,7 +179,7 @@ def itemadd(id):
 @login_required_auth
 def itemJsonUpdate(id,itemid):
     data=request.get_json()
-    print(data)
+    
     if 'regSDate' in data:
         data['regSDate']=datetime.strptime(data['regSDate'], '%Y-%m-%d')
     if 'itemno' in data:   
@@ -196,7 +196,8 @@ def itemJsonUpdate(id,itemid):
 @login_required_auth
 def itemedit(id,itemid):
     book = get_assest_model().readItem(itemid)
-    print(book)
+    if str(session["profile"].get("id")) != book["createdById"] :  return "no create user!"
+
     book['regSDate']=book['regSDate'].isoformat()[:10]
     if request.method == 'POST':
         data = request.form.to_dict(flat=True)
@@ -316,6 +317,9 @@ def add():
 @login_required_auth
 def edit(id):
     book = get_assest_model().read(id)
+
+    if str(session["profile"].get("id")) != book["createdById"] :  return "no create user!"
+
     book["regSDate"]=book["regSDate"].strftime( '%Y-%m-%d')
     if request.method == 'POST':
         data = request.form.to_dict(flat=True)
@@ -336,6 +340,7 @@ def edit(id):
 @login_required_auth
 def delete(id):
     book = get_assest_model().read(id)
+    if str(session["profile"].get("id")) != book["createdById"] :  return "no create user!"
     crspath=book["Path"]
     if (book["createdById"]==str(session['profile']['id']))  :
 
@@ -351,10 +356,12 @@ def delete(id):
 @crud.route("/<id>/itemgrid")
 def itemgrid(id):
     book = get_assest_model().read(id)
+    if str(session["profile"].get("id")) != book["createdById"] :  return "no create user!"
     book["regSDate"]=book["regSDate"].strftime( '%Y-%m-%d')
     items= get_assest_model().Itemlist_by_acno(book["acno"])
     filenames=[]
     #Get_FileList(book,filenames)             
+    
     return render_template("esasset/grid.html", book=book,items=items,lecturesfile=[],filenames=filenames)
 
 

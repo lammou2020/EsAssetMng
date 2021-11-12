@@ -121,7 +121,6 @@ def delete(id):
     Acc.query.filter_by(id=id).delete()
     db.session.commit()
 
-
 class Item(db.Model):
     __tablename__ = 'Item'    
     id = db.Column(db.Integer,primary_key=True)
@@ -140,6 +139,16 @@ class Item(db.Model):
     # status
     lebalmark= db.Column(db.String(80))   # 標籤
     inventory= db.Column(db.String(80))   # 清查
+    # ICT
+    hostname= db.Column(db.String(80)) 	
+    wifi_mac= db.Column(db.String(80)) 	
+    lan_mac	= db.Column(db.String(80)) 
+    wifi_mac_style2	= db.Column(db.String(80)) 
+    lan_mac_sytle_2	= db.Column(db.String(80)) 
+    cpu 	= db.Column(db.String(80)) 
+    ram	= db.Column(db.String(80)) 
+    disk= db.Column(db.String(80)) 
+    accyear	= db.Column(db.String(80)) 
     # ItemType
     itemTypeId = db.Column(db.Integer)
     # Acc
@@ -191,8 +200,17 @@ class Item(db.Model):
                  Path=None,
                  imageUrl=None,
                  createdById=None,
-                 itemTypeId=None
-
+                 itemTypeId=None,
+                 hostname= None,
+                 wifi_mac= None,
+                 lan_mac	=None,
+                 wifi_mac_style2	=None,
+                 lan_mac_sytle_2	=None,
+                 cpu 	=None,
+                 ram	=None,
+                 disk=None,
+                 accyear	=None,
+                describe=None
                  ):
         self.itemno =itemno
         self.name =name
@@ -215,6 +233,17 @@ class Item(db.Model):
         self.imageUrl=imageUrl
         self.createdById=createdById
         self.itemTypeId=itemTypeId
+        self.hostname= hostname
+        self.wifi_mac= wifi_mac
+        self.lan_mac	=lan_mac	
+        self.wifi_mac_style2	=wifi_mac_style2	
+        self.lan_mac_sytle_2	=lan_mac_sytle_2	
+        self.cpu 	=cpu 	
+        self.ram	=ram	
+        self.disk=disk
+        self.accyear=accyear	
+        self.describe=describe
+
     def __repr__(self):
         return "<item(name='%s')" % (self.name)    
 
