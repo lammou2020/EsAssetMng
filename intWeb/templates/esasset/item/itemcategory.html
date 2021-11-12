@@ -83,22 +83,27 @@
 			contentType: "application/json"
 		}).done(function (data) {
 			console.log(data)
+            let itemno=0
+            let item_name=x.innerHTML
             if(data.length>0){
-                let oldval=$("#itemno").val()
-                if(oldval.length>0){
-
-                    prompt(data[0].itemno+1,data[0].itemno+1);
-                }else{
-                    $("#itemno").val(data[0].itemno+1)
-                    console.log(x.innerHTML)
-                    if($("#name").val().length>0){}
-                    else{
-                        $("#name").val(x.innerHTML)
-                    }
+                itemno=data[0].itemno+1
+            }
+            else
+            {
+                itemno=Number(item_name.split(" ")[0])*1000+1
+            }
+           let oldval=$("#itemno").val()
+           if(oldval.length>0){
+                prompt(itemno,itemno);
+            }else{
+                $("#itemno").val(itemno)
+                if($("#name").val().length>0){}
+                else{
+                    $("#name").val(x.innerHTML)
+                }
                    
                 }
               
-            }
 		});
        
     }
