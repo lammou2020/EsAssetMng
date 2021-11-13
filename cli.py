@@ -32,12 +32,13 @@ def itRows(limit,tablename):
     pass
 
 @click.command()
-def itemlist():
+@click.option('--pk', default=4271, help='number of PK')
+def itemlist(pk):
     import sqlite3
     con = sqlite3.connect('c:/code/ppym.sqlite')
     cur = con.cursor()
     cnt=0
-    for row in cur.execute(f"SELECT PK,SK,itemtype FROM itemtype where pk like '4271%' order by PK;"):
+    for row in cur.execute(f"SELECT PK,SK,itemtype FROM itemtype where pk like '{pk}%' order by PK;"):
         #print(row)
         cnt=cnt+1
         if str(row[1])=="4271":

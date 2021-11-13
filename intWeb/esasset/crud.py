@@ -84,6 +84,20 @@ def list_mine():
         next_page_token=next_page_token)
 # [END list_mine]
 
+@crud.route("/locationitemlist/<roomid>")
+def locationitemlist(roomid):
+    token = request.args.get('page_token', None)
+    if token:
+        token = token.encode('utf-8')
+    books, next_page_token = get_assest_model().locationitemlist_desc(roomid=roomid,buwei=1000000,cursor=token)
+    #between
+    return render_template(
+        "esasset/item/list.html",
+        books=books,
+        next_page_token=next_page_token,roomid=roomid)
+
+
+
 @crud.route("/categoryitemlist/<cateid>")
 def categoryitemlist(cateid):
     token = request.args.get('page_token', None)

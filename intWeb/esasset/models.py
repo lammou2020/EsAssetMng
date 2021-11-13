@@ -249,6 +249,20 @@ class Item(db.Model):
 
 
 ##############################################
+def locationitemlist_desc(roomid,buwei=1000000, limit=500,cursor=None):
+    cursor = int(cursor) if cursor else 0
+    query = (Item.query
+             .filter(Item.note1.like(f"%{roomid}%"))
+             .order_by(desc(Item.itemno))
+             #.limit(limit)
+             #.offset(cursor)
+             )
+    lessons = builtin_list(map(from_sql, query.all()))
+    next_page = cursor + limit if len(lessons) == limit else None
+    return (lessons, next_page)
+
+
+
 def categoryitemlist_desc(cateid,buwei=1000000, limit=10,cursor=None):
     cursor = int(cursor) if cursor else 0
     sint=int(cateid)*buwei

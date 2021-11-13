@@ -26,24 +26,41 @@
       {% endif %}
     </div>
     <div class="media-body">
-      <table>
+      <table class="table">
         <tr>
           <td>id,項目代號</td>
           <td>名稱</td>
-          <td>編號</td>
+          <td>型號</td>
+          <td>SN/PN</td>
           <td>登記日期</td>
+          <td>存放位置</td>
           <td>createdById</td>
         </tr>
         <tr>
           <td>
-            <a href="/EsAsset/{{book.id}}">{{book.id}}.{{book.itemno}}</a>
+            <a href="/EsAsset/{{book.acc_acno}}/item/{{book.id}}">{{book.id}}.{{book.itemno}}</a>
           </td>
           <td>
             <h4>{{book.name}}</h4>
           </td>
           <td>
+            {{book.model}}
+          </td>
+          <td>
+            {{book.sn}}
+          </td>
+          <td>
             {{book.regSDate}}
           </td>
+          <td>
+            {% set list1 = book.note1.split(';') %}
+            {% for item in list1 %}
+            {% if item.startswith(roomid) %}
+               <p>{{ item }}</p>
+                {% endif %}
+            {% endfor %} 
+          </td>
+
           <td>
             {{book.createdById}}
           </td>
@@ -62,8 +79,4 @@
   </ul>
 </nav>
 {% endif %}
-92233
-72036
-85477
-5807
 {% endblock %}
