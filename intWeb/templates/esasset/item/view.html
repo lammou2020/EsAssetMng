@@ -39,7 +39,10 @@
       {% endif %}
     </div>
   </div>
+  
+  
   <div class="media-body">
+    
     <table class="table">
       <tr>
         <td>id</td>
@@ -80,7 +83,7 @@
 <br>
 <br>
 <br>
-
+{% if (book.itemno|string).startswith("4271") %}
       <b>ICT 設備</b>
     <table class="table">
 <tr>
@@ -113,7 +116,7 @@
     <td>{{book.accyear	}}</td>
   </tr>
 </table>  
-  
+{% endif %}
   <p>{{book.note2 | safe}}</p>
   </div>
 

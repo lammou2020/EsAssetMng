@@ -205,12 +205,17 @@ def itemJsonUpdate(id,itemid):
     book = get_assest_model().updateItem(data, itemid)
     return jsonify( book)
 
+def CheckOwnRecordErr(book,session):
+    if session["profile"].get("id")==1 : return None
+    if str(session["profile"].get("id")) != book["createdById"] :  return "no create user!"
+    return None
 
 @crud.route('/<id>/item/<itemid>/edit', methods=['GET', 'POST'])
 @login_required_auth
 def itemedit(id,itemid):
     book = get_assest_model().readItem(itemid)
-    if str(session["profile"].get("id")) != book["createdById"] :  return "no create user!"
+    Err=CheckOwnRecordErr(book,session) 
+    if Err!= None :  return Err
 
     book['regSDate']=book['regSDate'].isoformat()[:10]
     if request.method == 'POST':
@@ -331,8 +336,10 @@ def add():
 @login_required_auth
 def edit(id):
     book = get_assest_model().read(id)
+    
+    Err=CheckOwnRecordErr(book,session) 
+    if Err!= None :  return Err
 
-    if str(session["profile"].get("id")) != book["createdById"] :  return "no create user!"
 
     book["regSDate"]=book["regSDate"].strftime( '%Y-%m-%d')
     if request.method == 'POST':
@@ -354,7 +361,8 @@ def edit(id):
 @login_required_auth
 def delete(id):
     book = get_assest_model().read(id)
-    if str(session["profile"].get("id")) != book["createdById"] :  return "no create user!"
+    Err=CheckOwnRecordErr(book,session)
+    if Err != None:  return Err
     crspath=book["Path"]
     if (book["createdById"]==str(session['profile']['id']))  :
 
@@ -370,7 +378,8 @@ def delete(id):
 @crud.route("/<id>/itemgrid")
 def itemgrid(id):
     book = get_assest_model().read(id)
-    if str(session["profile"].get("id")) != book["createdById"] :  return "no create user!"
+    Err=CheckOwnRecordErr(book,session)
+    if Err != None:  return Err
     book["regSDate"]=book["regSDate"].strftime( '%Y-%m-%d')
     items= get_assest_model().Itemlist_by_acno(book["acno"])
     filenames=[]
@@ -402,7 +411,7 @@ def download_all(id):
             mimetype = 'zip',
             attachment_filename= ZipFileName,
             as_attachment = True)
-    os.remove(ZipFilePath)
+    #os.remove(ZipFilePath)
 
 @crud.route('/<id>/download/<filename>')
 def download_file(id,filename):
@@ -482,6 +491,8 @@ def uploadfiles(id):
 @login_required_auth
 def cleanclasswork(id):
     book = get_assest_model().read(id)
+    Err=CheckOwnRecordErr(book,session)
+    if Err != None:  return Err
     crspath=book["Path"]
     if (book["createdById"]==str(session['profile']['id']))  :
         path = current_app.config['HW_UPLOAD_FOLDER']

@@ -55,7 +55,7 @@
           <td>
             {% set list1 = book.note1.split(';') %}
             {% for item in list1 %}
-            {% if item.startswith(roomid) %}
+            {% if (item|string).startswith(roomid|string) %}
                <p>{{ item }}</p>
                 {% endif %}
             {% endfor %} 
