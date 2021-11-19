@@ -261,6 +261,28 @@ def locationitemlist_desc(roomid,buwei=1000000, limit=500,cursor=None):
     next_page = cursor + limit if len(lessons) == limit else None
     return (lessons, next_page)
 
+def snitemlist_desc(sn,buwei=1000000, limit=10,cursor=None):
+    cursor = int(cursor) if cursor else 0
+    query = (Item.query
+             .filter(Item.sn.like(f"%{sn}%"))
+             .order_by(desc(Item.itemno))
+             .limit(limit)
+             .offset(cursor))
+    lessons = builtin_list(map(from_sql, query.all()))
+    next_page = cursor + limit if len(lessons) == limit else None
+    return (lessons, next_page)
+
+def modelitemlist_desc(model,buwei=1000000, limit=10,cursor=None):
+    cursor = int(cursor) if cursor else 0
+    query = (Item.query
+             .filter(Item.model.like(f"%{model}%"))
+             .order_by(desc(Item.itemno))
+             .limit(limit)
+             .offset(cursor))
+    lessons = builtin_list(map(from_sql, query.all()))
+    next_page = cursor + limit if len(lessons) == limit else None
+    return (lessons, next_page)
+
 
 
 def categoryitemlist_desc(cateid,buwei=1000000, limit=10,cursor=None):

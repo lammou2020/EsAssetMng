@@ -96,14 +96,45 @@ def locationitemlist(roomid):
         books=books,
         next_page_token=next_page_token,roomid=roomid)
 
+@crud.route("/snitemlist/<serialno>")
+def snitemlist(serialno):
+    token = request.args.get('page_token', None)
+    if token:
+        token = token.encode('utf-8')
+    if len(serialno)<4 : 
+        return render_template("esasset/item/list.html", books=[])
 
+    books, next_page_token = get_assest_model().snitemlist_desc(sn=serialno,cursor=token)
+    #between
+    return render_template(
+        "esasset/item/list.html",
+        books=books,
+        next_page_token=next_page_token)
+
+
+@crud.route("/modelitemlist/<model_no>")
+def modelitemlist(model_no):
+    token = request.args.get('page_token', None)
+    if token:
+        token = token.encode('utf-8')
+    if len(model_no)<4 : 
+        return render_template("esasset/item/list.html", books=[])
+
+    books, next_page_token = get_assest_model().modelitemlist_desc(model=model_no,cursor=token)
+    #between
+    return render_template(
+        "esasset/item/list.html",
+        books=books,
+        next_page_token=next_page_token)
 
 @crud.route("/categoryitemlist/<cateid>")
 def categoryitemlist(cateid):
     token = request.args.get('page_token', None)
     if token:
         token = token.encode('utf-8')
-    books, next_page_token = get_assest_model().categoryitemlist_desc(cateid=cateid,buwei=1000000,cursor=token)
+    buwei=1000000
+    if len(cateid)>4 : buwei=1000
+    books, next_page_token = get_assest_model().categoryitemlist_desc(cateid=cateid,buwei=buwei,cursor=token)
     #between
     return render_template(
         "esasset/item/list.html",
