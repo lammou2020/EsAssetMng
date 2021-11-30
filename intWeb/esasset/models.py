@@ -134,6 +134,7 @@ class Item(db.Model):
     amount= db.Column(db.Integer)    # 金額
     depr_ed= db.Column(db.Integer)    # 攤折完
     insure =db.Column(db.String(80))   # 保險
+    keeper=db.Column(db.String(80))
     note1=db.Column(db.Text)  # 地方
     note2=db.Column(db.Text)  # 資助
     # status
@@ -191,6 +192,7 @@ class Item(db.Model):
                  amount=None,
                  depr_ed=None,
                  insure=None,
+                 keeper=None,
                  note1=None,
                  note2=None,
                  acc_acno=None,
@@ -223,6 +225,7 @@ class Item(db.Model):
         self.adjust = adjust
         self.depr_ed = depr_ed
         self.insure=insure
+        self.keeper=keeper
         self.note1=note1
         self.note2=note2
         self.acc_acno=acc_acno
