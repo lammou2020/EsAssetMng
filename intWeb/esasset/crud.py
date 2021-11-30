@@ -6,8 +6,9 @@ import os
 import zipfile
 import math
 from urllib.parse import quote
-from datetime import datetime
-
+from datetime import datetime,date
+from flask import Response
+import json
 
 crud = Blueprint('crud', __name__)
 
@@ -541,3 +542,15 @@ def cleanclasswork(id):
 def JSON_DB(tablename):
     book = get_assest_model().readAllFromTable(tablename)
     return jsonify(book)
+
+
+def convert_timestamp(item_date_object):
+    if isinstance(item_date_object, (date, datetime)):
+        return item_date_object.timestamp()
+
+@crud.route('/JSON/file/<tablename>')
+@login_required_auth
+def JSON_DBFILE(tablename):
+    book = get_assest_model().readAllFromTable(tablename)
+    xml =json.dumps(book,default=convert_timestamp)
+    return Response(xml, mimetype='text/json',content_type="text/plain;charset=UTF-8")

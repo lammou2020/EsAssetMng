@@ -37,6 +37,18 @@
             </ul>
           </li>
           <li><a href="/EsAsset/mine">我的專案</a></li>
+          {% if session.profile and session.profile.user=="ict" %}
+          <li class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false">
+              <span class="glyphicon glyphicon-paperclip"></span><span class="caret"></span>
+              <span>DB</span>
+            </a>
+            <ul class="dropdown-menu"><a class="dropdown-toggle" data-toggle="dropdown" href="#">
+              <li><a class="dropdown-toggle" data-toggle="dropdown" href="/EsAsset/JSON/db/acc">acc</a></li>
+              <li><a class="dropdown-toggle" data-toggle="dropdown" href="/EsAsset/JSON/db/item">item</a></li>
+            </ul>
+          </li>
+          {% endif %}
         </ul>
         {# [START profile] #}
         <p class="navbar-text navbar-right">
