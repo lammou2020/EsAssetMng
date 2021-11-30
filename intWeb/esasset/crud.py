@@ -221,6 +221,35 @@ def itemadd(id):
     return render_template("esasset/item/form.html", action="Add", book=book)
 # [END add]
 
+
+@crud.route('/<id>/item/addbatch/<cnt>', methods=['GET', 'POST'])
+@login_required_auth
+def itemaddbatch(id,cnt):
+    acc_acno= (request.args.get('acno', "0"))
+    regSDate= (request.args.get('regSDate', datetime.today().strftime( '%Y-%m-%d')))
+    data={
+        "itemno":"",
+        "quantity":"0",
+        "price":"0",
+        "adjust":"0",
+        "amount":"0",
+        "depr_ed":"0",
+        "acc_acno":acc_acno,
+        "regSDate":regSDate}
+    if 'profile' in session:
+        data['createdById'] = session['profile']['id']
+    data['regSDate']=datetime.strptime(data['regSDate'], '%Y-%m-%d')
+    if data["itemno"]==""  or data["itemno"]=="None" or data["itemno"]==None:
+        data["itemno"]=None
+    else:
+        pass
+    for i in range(int(cnt)):
+        book = get_assest_model().createItem(data)
+    
+    return f"${cnt}"
+# [END add]
+
+
 @crud.route('/<id>/item/api/JSON/update/<itemid>', methods=['GET', 'POST'])
 @login_required_auth
 def itemJsonUpdate(id,itemid):

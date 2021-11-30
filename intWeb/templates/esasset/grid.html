@@ -147,8 +147,11 @@
         <td class="M" id="MV_disk_{{item_.id}}">{{item_.disk}}</td>
         <td class="M" id="MW_accyear_{{item_.id}}">{{item_.accyear}}</td>
         {% endif %}   
-
+        {% if session.profile and  session.profile.user=='admin' %}
+        <td class="M" id="MZ_acc-acno_{{item_.id}}">{{item_.acc_acno}}</td>
+        {% else %}
         <td>{{item_.acc_acno}}</td>
+        {% endif %}   
       </tr>
     {% else %}
     <tr><td>No lessons found</td></tr>
