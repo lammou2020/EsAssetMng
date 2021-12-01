@@ -5,6 +5,7 @@ ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
 # Image Path
 UPLOAD_FOLDER=os.getcwd()+"\\TEMP"
 HW_UPLOAD_FOLDER="c:/ASSETDIR/"
+HW_TEMP_FOLDER="c:/ASSETTEMP/"
 
 # [START secret_key]
 SECRET_KEY = 'catcat'

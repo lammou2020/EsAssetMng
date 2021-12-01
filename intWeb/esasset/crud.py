@@ -573,7 +573,29 @@ def cleanclasswork(id):
         #get_assest_model().delete(id)        
     return redirect(url_for('.list'))
 
-
+@crud.route('/ZIPALLPIC')
+@login_required_auth
+def ZIPALLPIC():
+    path = current_app.config['HW_UPLOAD_FOLDER']
+    ZIP_PATH =current_app.config['HW_TEMP_FOLDER']
+    if not os.path.isdir(ZIP_PATH):
+        os.mkdir(ZIP_PATH)
+    # Zip file Initialization and you can change the compression type
+    ZipFileName=f"HW.zip"
+    ZipFilePath=ZIP_PATH+""+ZipFileName
+    zipfolder = zipfile.ZipFile(ZipFilePath,'w', compression = zipfile.ZIP_STORED)
+    # zip all the files which are inside in the folder
+    for root,dirs, files in os.walk(path):
+        for file in files:
+            file_path=root+"/"+file
+            file_path=file_path.replace("//","/")
+            zipfolder.write(file_path)
+    zipfolder.close()
+    return send_file(ZipFilePath,
+            mimetype = 'zip',
+            attachment_filename= ZipFileName,
+            as_attachment = True)
+    #os.remove(ZipFilePath)    
 
 @crud.route('/JSON/db/<tablename>')
 @login_required_auth
