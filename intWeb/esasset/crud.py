@@ -175,6 +175,7 @@ def Get_FileList(crspath, filenames, prefix=None):
 
 
 @crud.route('/<id>/item/<itemid>')
+@login_required_auth
 def itemview(id,itemid):
     book = get_assest_model().readItem(itemid)
     filenames=[]
@@ -227,6 +228,10 @@ def itemadd(id):
 def itemaddbatch(id,cnt):
     acc_acno= (request.args.get('acno', "0"))
     regSDate= (request.args.get('regSDate', datetime.today().strftime( '%Y-%m-%d')))
+    if acc_acno=="0" :
+        acc_rec = get_assest_model().read(id)
+        regSDate=acc_rec["regSDate"].strftime( '%Y-%m-%d')
+        acc_acno=  acc_rec["acno"]
     data={
         "itemno":"",
         "quantity":"0",
@@ -236,8 +241,10 @@ def itemaddbatch(id,cnt):
         "depr_ed":"0",
         "acc_acno":acc_acno,
         "regSDate":regSDate}
+        
     if 'profile' in session:
         data['createdById'] = session['profile']['id']
+
     data['regSDate']=datetime.strptime(data['regSDate'], '%Y-%m-%d')
     if data["itemno"]==""  or data["itemno"]=="None" or data["itemno"]==None:
         data["itemno"]=None
@@ -245,8 +252,9 @@ def itemaddbatch(id,cnt):
         pass
     for i in range(int(cnt)):
         book = get_assest_model().createItem(data)
+        print(book)
     
-    return f"${cnt}"
+    return f"{cnt}"
 # [END add]
 
 
@@ -357,6 +365,7 @@ def download_item_file(id,itemid,filename):
 
 #####
 @crud.route('/<id>')
+@login_required_auth
 def view(id):
     book = get_assest_model().read(id)
     book["regSDate"]=book["regSDate"].strftime( '%Y-%m-%d')

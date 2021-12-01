@@ -20,12 +20,13 @@
 <div class="media">
     <div class="media-left">
       {% if book.imageUrl %}
-        <img style="max-width:200px" src="{{book.imageUrl}}">
+        <img style="max-width:100px" src="{{book.imageUrl}}">
       {% else %}
+      <img style="max-width:100px;width:100px" src="/images/report1.png">
       {% endif %}
     </div>
     <div class="media-body">
-      <table>
+      <table class="table">
         <tr>
           <td>id,項目代號</td>
           <td>專案項目名稱</td>
@@ -33,7 +34,7 @@
           <td>登記日期</td>
           <td>傳票編號</td>
           <td>vendor供應商</td>
-          <td>createdById</td>
+          <td>用戶</td>
         </tr>
         <tr>
           <td>
