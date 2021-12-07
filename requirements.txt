@@ -5,3 +5,4 @@ PyMySQL==0.10.1
 six==1.15.0
 Flask-Session==0.3.2
 httplib2=0.18.1
+flask-qrcode=3.0.0

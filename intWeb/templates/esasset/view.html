@@ -6,34 +6,35 @@
 
 {% block content %}
 <script src="/static/javascripts/JsBarcode.all.min.js"></script>
-<canvas id="canvas"></canvas>
-<!-- or -->
-<!--img id="barcode"/-->
-<!-- or -->
-<svg id="barcode"></svg>
+
 <script>
 // By using querySelector
-JsBarcode("#barcode", "ACC{{book.acno}}", {
-  format: "CODE39",
- // mod43: true
- height: 50
-});
+//<svg id="barcode"></svg>
+//JsBarcode("#barcode", "ACC{{book.acno}}", {
+//  format: "CODE39",
+// // mod43: true
+// height: 50
+//});
+
 // or by passing an element variable
 //var element = document.getElementById("barcode");
 // or jqeuery
 //JsBarcode(element, "Hi!");
-
 //$("#barcode").JsBarcode("Hi!");
+
+//<img src="/EsAsset/qrcode?data={{book.acno}}">
 </script>
+
+
 <style>
   th{min-width: 100px;}
   td {
     padding-right: 5px;
     padding-left: 5px;
-    
   }
 </style>
 <h4>{{book.id}} {{book.acc}}</h4>
+<img src='{{qrcode(book.acno, error_correction="H", icon_img="images/favicon.ico",border=2,box_size=6,back_color="white", fill_color="black" )}}'>
 {% if session.profile and session.profile.Role < "8" %} <div class="btn-group">
   <a href="/EsAsset/{{book.id}}/edit" class="btn btn-primary btn-sm">
     <i class="glyphicon glyphicon-edit"></i>

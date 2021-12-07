@@ -10,6 +10,10 @@ from datetime import datetime,date
 from flask import Response
 import json
 
+
+from flask_qrcode import QRcode
+qrcode=QRcode(current_app)
+
 crud = Blueprint('crud', __name__)
 
 def upload_hw_file(file,UPLOAD_FOLDER,seat):
@@ -46,6 +50,9 @@ def upload_image_file(file,UPLOAD_FOLDER,pixStr=None):
     current_app.logger.info(
         "Uploaded file %s as %s.", file.filename, public_url)
     return public_url
+
+
+
 
 @crud.route("/")
 def home():
@@ -614,3 +621,8 @@ def JSON_DBFILE(tablename):
     book = get_assest_model().readAllFromTable(tablename)
     xml =json.dumps(book,default=convert_timestamp)
     return Response(xml, mimetype='text/json',content_type="text/plain;charset=UTF-8")
+
+@crud.route("/qrcode",methods=["GET"])
+def get_qrcode():
+    data = request.args.get("data", "")
+    return send_file(qrcode(data, mode="raw"), mimetype="image/png")

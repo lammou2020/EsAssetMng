@@ -5,7 +5,7 @@
 {% extends "esasset/base.html" %}
 
 {% block content %}
-
+<script src="https://cdn.ckeditor.com/4.15.1/standard/ckeditor.js"></script>
 <script>
   $( function() {
     $( "#accordion" ).accordion();
@@ -22,11 +22,24 @@
       </div>
       <h3>科目分類</h3>
       <div style="margin:0;padding:0;">
-        
         <h4 style="margin:0;padding:0;"><a href=/EsAsset/categoryitemlist/4261><img src="/static/images/markicon/edit.png" />課室傢具4261</a></h4>
         <h4 style="margin:0;padding:0;"><a href=/EsAsset/categoryitemlist/4269><img src="/static/images/markicon/edit.png" />其他傢具4269</a></h4>
         <h4 style="margin:0;padding:0;"><a href=/EsAsset/categoryitemlist/4271><img src="/static/images/markicon/edit.png" />電腦4271</a></h4>
-        <h4 style="margin:0;padding:0;"><a href=/EsAsset/categoryitemlist/4274><img src="/static/images/markicon/edit.png" />視聽及實驗儀器<br>4274</a></h4>
+        <h4 style="margin:0;padding:0;"><a href=/EsAsset/categoryitemlist/4274><img src="/static/images/markicon/edit.png" />視聽及實驗儀器</a></h4>
+      </div>
+      <h3>會計編號分類</h3>
+      <div style="margin:0;padding:0;">
+  
+        <label for="itemno">會計4271分類002序001</label><br>
+        <img onclick="diagramclick(4271);" src="/static/fonts/diagram-3.svg"><span>ICT</span><span>&nbsp;&nbsp;</span>
+        <img onclick="diagramclick(4276);" src="/static/fonts/diagram-3.svg"><span>傢俱</span><span>&nbsp;&nbsp;</span>
+        <img onclick="diagramclick(4272);" src="/static/fonts/diagram-3.svg"><span>電器</span><span>&nbsp;&nbsp;</span>
+        <span>&nbsp;&nbsp;</span><span>&nbsp;&nbsp;</span><span>&nbsp;&nbsp;</span><span>&nbsp;&nbsp;</span><span>&nbsp;&nbsp;</span><span>&nbsp;&nbsp;</span>
+        <img onclick="diagramclick(4231);" src="/static/fonts/diagram-3.svg"><span>水電消防</span><span>&nbsp;&nbsp;</span><br>   
+        <input type="text" name="itemno" id="itemno" value="" placeholder="PPPPNNNNNN" pattern="([0-9]{4}[0-9]{6}[0-9]{*})|None|()" title="Enter 427100001 (電腦類4271)" class="form-control"/>
+        <label for="name">產品名稱</label>
+        <input type="text" name="name" id="name" value="" class="form-control"/>
+        <button onclick="showCategoryItemList();">查詢</button>
       </div>
       <h3>地點分類</h3>
       <div style="margin:0;padding:0;">
@@ -43,9 +56,9 @@
         <h4 style="margin:0;padding:0;"><a href=#><img src="/static/images/markicon/edit.png" />按項目編號</a></h4>
         <h4 style="margin:0;padding:0;"><a href=#><img src="/static/images/markicon/edit.png" />按部門分類</a></h4>
       </div>
-      <h3>About</h3>
+      <h3>關於</h3>
       <div style="margin:0;padding:0;">
-        <div>學校資訊資產管理需要至2021.11.19起2000千元或以上資產進行登記。 </div>         
+        <div>學校資訊資產管理部門內部,至2021.11.19起2000千元或以上資產進行登記。 </div>         
       </div>
     </div>
   </div>
@@ -91,8 +104,17 @@
     {% endif %}
   </div>
 </div>
+<script>
+  function showCategoryItemList(){
+    let itemno=$("#itemno").val();
+    if(itemno.length==10) itemno=itemno.substring(0,7)
+    if(itemno=="4271046") itemno="42710460"
+    window.location.href = "/EsAsset/categoryitemlist/"+itemno;
+  }
+</script>
 <footer>
   <p class="float-right"><a href="#">Back to top</a></p>
   <small>Copyright&nbsp;&#169; 1999 Macau Baptist College.All Rights Reserved</small>
 </footer>
+{% include 'esasset/item/itemcategory.html' %}
 {% endblock %}

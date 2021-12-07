@@ -1,5 +1,5 @@
 <div id="ict_menudialog">
-    <div id="accordion">
+    <div id="ict_accordion">
         <h3><a href=#>4271 資訊設備(一般)</a></h3>
         <div style="margin:0;padding:0;">
             <h4><a href=# onclick="GetNewItemNo(4271001,this);">4271001 桌上電腦 (主機，滑鼠，鍵盤)</a></h4>
@@ -16,7 +16,7 @@
             <h4><a href=# onclick="GetNewItemNo(4271012,this);">4271012 大型外部儲存裝置</a></h4>
             <h4><a href=# onclick="GetNewItemNo(4271013,this);">4271013 大型外部儲存裝置硬盤</a></h4>
             <h4><a href=# onclick="GetNewItemNo(4271014,this);">4271014 平板電腦</a></h4>
-            <h4><a href=# onclick="GetNewItemNo(4271046,this);">4271046 iPad</a></h4>
+            <h4><a href=# onclick="GetNewItemNo(4271046,this);">42710460 iPad</a></h4>
         </div>
         <h3><a href=#>4271 資訊設備(電腦配件)</a></h3>
         <div style="margin:0;padding:0;">
@@ -146,11 +146,11 @@
     </div>
 </div>
 <div id="elect_menudialog">
-    <div id="accordion">
+    <div id="elect_accordion">
     </div>
 </div>
 <div id="waterelectpower_gongcheng_menudialog">
-    <div id="accordion">
+    <div id="wg_accordion">
     </div>
 </div>
 
@@ -202,8 +202,8 @@
 
     }
     $(function () {
-        CKEDITOR.replace('describe');
-        $("#accordion").accordion();
+        
+        $("#ict_accordion").accordion();
         $("#furniture_accordion").accordion();
         
         ict_menudialog = $("#ict_menudialog").dialog({
@@ -230,5 +230,11 @@
                 Cancel: function () { waterelectpower_gongcheng_menudialog.dialog("close"); }
             }
         });
+        var myEle = document.getElementById("describe");
+        if(myEle){
+            //var myEleValue= myEle.value;
+            CKEDITOR.replace('describe');
+        }        
+          
     });
 </script>
