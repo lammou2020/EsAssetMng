@@ -130,13 +130,18 @@ class Item(db.Model):
     sn = db.Column(db.String(80))    # SN/PN
     quantity= db.Column(db.Integer)  # 數量
     price = db.Column(db.Integer)    # 單價
-    adjust= db.Column(db.Integer)    # 調整 
-    amount= db.Column(db.Integer)    # 金額
-    depr_ed= db.Column(db.Integer)    # 攤折完
-    insure =db.Column(db.String(80))   # 保險
-    keeper=db.Column(db.String(80))
+    adjust= db.Column(db.Integer)    # 攤折
+    amount= db.Column(db.Integer)    # 淨值
+    depr_ed= db.Column(db.Integer)    # 淨攤
+                                     # 資助金額
+                                     # 資助單位/個人
+    insure =db.Column(db.String(80))   # 保險 X
+
+    keeper=db.Column(db.String(80))  # 移動 history
     note1=db.Column(db.Text)  # 地方
+
     note2=db.Column(db.Text)  # 資助
+    
     # status
     lebalmark= db.Column(db.String(80))   # 標籤
     inventory= db.Column(db.String(80))   # 清查
@@ -157,29 +162,12 @@ class Item(db.Model):
     regSDate= db.Column(db.DateTime, nullable=False,default=datetime.utcnow) 
     acc_acno = db.Column(db.BigInteger, db.ForeignKey('Acc.acno'), nullable=False)
     acc = db.relationship('Acc',  backref=db.backref('Item', lazy=True))
-    #orderNO  = db.Column(db.String(80),unique=True,nullable=False)
-    #voucherNo = db.Column(db.String(80),unique=True,nullable=False)
-    #vendor = db.Column(db.String(80),unique=True,nullable=False)
-    # Area
-    #area_id = db.Column(db.Integer, db.ForeignKey('person.id'))
-    #db.relationship('Area', backref='Item', lazy=True)
-    #area = db.Column(db.String(80),unique=True,nullable=False)
     createdById = db.Column(db.String(255))    
     Path=db.Column(db.String(80))
     imageUrl = db.Column(db.String(255))    
     ctime = db.Column(db.DateTime, nullable=False,default=datetime.utcnow)  #创建时间
     utime = db.Column(db.DateTime, nullable=False,default=datetime.utcnow)  #更新时间
     describe = db.Column(db.Text)
-    #belong = models.ForeignKey('Belong', verbose_name='所属公司', null=True, blank=True, on_delete=models.SET_NULL)
-    #manufacturer = models.ForeignKey('Manufacturer',verbose_name='厂家', null=True, blank=True, on_delete=models.CASCADE)
-    #asset_type = models.CharField(choices=asset_type_choice, max_length=64, default='virtual_machine', verbose_name="资产类型")
-    #status = models.SmallIntegerField(choices=asset_status_choice, default=0, verbose_name='设备状态')
-    #cpu = models.CharField(max_length=60,blank=True, null=True)
-    #disk = models.CharField(max_length=60,blank=True, null=True)
-    #memory = models.CharField(max_length=60,blank=True, null=True)
-    #cabinet = models.CharField(max_length=32, null=True, blank=True, verbose_name='机柜号')
-    #railnum = models.IntegerField(null=True, blank=True, verbose_name="导轨位置")
-    #put_shelf_time = models.DateField(verbose_name='上线时间')
 
     def __init__(self, 
                  itemno=None,
