@@ -137,18 +137,6 @@
       <td>{{item_.note2}}</td>
       <td>{{item_.acc_acno}}</td>
       <td>{{item_.regSDate}}</td>
-      {% if session.profile and  session.profile.user=='ict' %}
-      <td>{{item_.hostname}}</td>
-      <td>{{item_.wifi_mac}}</td>
-      <td>{{item_.lan_mac	}}</td>
-      <td>{{item_.wifi_mac_style2	}}</td>
-      <td>{{item_.lan_mac_sytle_2	}}</td>
-      <td>{{item_.cpu}}</td>
-      <td>{{item_.ram}}</td>
-      <td>{{item_.disk}}</td>
-      <td>{{item_.accyear}}</td>
-      {% endif %}
-
     </tr>
   {% else %}
   <tr><td>No found</td></tr>
@@ -172,7 +160,7 @@
   </p>
   </dl>
   <p>
-  <input type="submit" value="提交"">
+  <input type="submit" value="提交">
   <span>MAX_CONTENT_LENGTH = 8 * 1024 * 1024</span>
 </p>
 </form>
