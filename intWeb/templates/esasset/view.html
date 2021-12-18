@@ -60,10 +60,7 @@
       <tr>
         <td>id,項目代號</td>
         <td>專案項目名稱</td>
-        <td>訂單編號</td>
         <td>登記日期</td>
-        <td>傳票編號</td>
-        <td>vendor供應商</td>
         <td>createdById</td>
       </tr>
       <tr>
@@ -74,16 +71,7 @@
           <h4>{{book.acc}}</h4>
         </td>
         <td>
-          {{book.orderNo}}
-        </td>
-        <td>
           {{book.regSDate}}
-        </td>
-        <td>
-          {{book.voucherNo}}
-        </td>
-        <td>
-          {{book.vendor}}
         </td>
         <td>
           {{book.createdById}}
@@ -114,32 +102,22 @@
     <tr>
       <td>序</td>
       <td>id</td>
-      <th>校內編號</th>
+      <th>產品編號</th>
       <th style="width: 100px;">產品名稱</th>
       <th>型號</th>
       <th>SN/PN</th>
       <th>數量</th>
       <th>單價</th>
-      <th>調整</th>
-      <th>小計</th>
       <th>攤折</th>
-      <th>保險</th>
+      <th>淨值</th>
+      <th>攤折</th>
+      <th>資助金額</th>
+      <th>資助單位/個人</th>
       <th>位置</th>
       <th>保管人</th>
       <th>備註</th>
       <th>主項編號</th>
       <th>登錄日期</th>
-      {% if session.profile and  session.profile.user=='ict' %}
-      <th>hostname</th>
-      <th>wifi_mac</th>
-      <th>lan_mac	</th>
-      <th>wifi_mac_style2	</th>
-      <th>lan_mac_sytle_2	</th>
-      <th>cpu</th>
-      <th>ram</th>
-      <th>disk</th>
-      <th>accyear</th>
-      {% endif %}
     </tr>
 
   {% for item_ in items %}
@@ -154,8 +132,6 @@
       <td>{{item_.price}}</td>
       <td>{{item_.adjust}}</td>
       <td>{{item_.amount}}</td>
-      <td>{{item_.depr_ed}}</td>
-      <td>{{item_.insureNote}}</td>
       <td>{{item_.note1}}</td>
       <td>{{item_.keeper}}</td>
       <td>{{item_.note2}}</td>

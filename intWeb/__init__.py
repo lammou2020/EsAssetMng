@@ -7,7 +7,7 @@ from flask.cli import with_appcontext
 
 import httplib2
 # [START include]
-#from oauth2client.contrib.flask_util import UserOAuth2
+# from oauth2client.contrib.flask_util import UserOAuth2
 
 import redis
 pool=redis.ConnectionPool(host='127.0.0.1',port=6379)
@@ -17,8 +17,8 @@ from flask_sqlalchemy import SQLAlchemy
 db = SQLAlchemy()
 init_db_flag=False
 from flask_session import Session
-#from .mySession import MySessionInterface
-#oauth2 = UserOAuth2()
+# from .mySession import MySessionInterface
+# oauth2 = UserOAuth2()
 # [END include]
 
 def from_sql(row):
@@ -29,13 +29,10 @@ def from_sql(row):
     return data
 
 def create_app(config, debug=False, testing=False, config_overrides=None):
-    
-    app = Flask(__name__) #,static_url_path="")
+    app = Flask(__name__)#,  static_url_path="")
     app.config.from_object(config)
-
     app.debug = debug
     app.testing = testing
-
     if config_overrides:
         app.config.update(config_overrides)
 
@@ -64,7 +61,6 @@ def create_app(config, debug=False, testing=False, config_overrides=None):
             from intWeb.initDB_ import initdb_data
             db.init_app(app)
             initdb_data(db,app)
-
         
     app.config['SESSION_COOKIE_NAME'] ="connect.sid"
     app.config['SESSION_TYPE'] = 'redis'  # session类型为redis

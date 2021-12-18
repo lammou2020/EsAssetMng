@@ -51,10 +51,7 @@
         <tr>
           <td>id,項目代號</td>
           <td>專案項目名稱</td>
-          <td>訂單編號</td>
           <td>登記日期</td>
-          <td>傳票編號</td>
-          <td>vendor供應商</td>
           <td>createdById</td>
         </tr>
         <tr>
@@ -64,16 +61,7 @@
           <td><h4>{{book.acc}}</h4>
           </td>
           <td>
-            {{book.orderNo}}
-          </td>
-          <td>
             {{book.regSDate}}
-          </td>
-          <td>
-            {{book.voucherNo}}
-          </td>
-          <td>
-            {{book.vendor}}
           </td>
           <td>
             {{book.createdById}}
@@ -96,25 +84,15 @@
         <td id="MD_H">SN/PN</td>
         <td id="ME_H">數量</td>
         <td id="MF_H">單價</td>
-        <td id="MG_H">調整</td>
-        <td id="MH_H">小計</td>
-        <td id="MI_H">攤折</td>
-        <td id="MJ_H">保險</td>
+        <td id="MG_H">攤折</td>
+        <td id="MH_H">淨值</td>
+        
+        <td id="MJ_H">資助額</td>
+        <td id="MJ_H">資助單位/個人</td>
         <td id="MK_H">位置</td>
         <td id="ML_H">保管人</td>
         <td id="MM_H">備註</td>
         <td id="MN_H">登錄日期</td>
-        {% if session.profile and  session.profile.user=='ict' %}
-        <td id="MO_H">hostname</td>
-        <td id="MP_H">wifi_mac</td>
-        <td id="MQ_H">lan_mac	</td>
-        <td id="MR_H">wifi_mac_style2	</td>
-        <td id="MS_H">lan_mac_sytle_2	</td>
-        <td id="MT_H">cpu</td>
-        <td id="MU_H">ram</td>
-        <td id="MV_H">disk</td>
-        <td id="MW_H">accyear</td>
-        {% endif %}   
         <td>專案編號</td>
       </tr>
   
@@ -136,17 +114,6 @@
         <td class="M" id="ML_keeper_{{item_.id}}">{{item_.keeper}}</td>
         <td class="M" id="MM_note2_{{item_.id}}">{{item_.note2}}</td>
         <td class="M" id="MN_regSDate_{{item_.id}}">{{item_.regSDate}}</td>
-        {% if session.profile and  session.profile.user=='ict' %}
-        <td class="M" id="MO_hostname_{{item_.id}}">{{item_.hostname}}</td>
-        <td class="M" id="MP_wifi-mac_{{item_.id}}">{{item_.wifi_mac}}</td>
-        <td class="M" id="MQ_lan-mac_{{item_.id}}">{{item_.lan_mac	}}</td>
-        <td class="M" id="MR_wifi-mac-style2_{{item_.id}}">{{item_.wifi_mac_style2	}}</td>
-        <td class="M" id="MS_lan-mac-sytle-2_{{item_.id}}">{{item_.lan_mac_sytle_2	}}</td>
-        <td class="M" id="MT_cpu_{{item_.id}}">{{item_.cpu}}</td>
-        <td class="M" id="MU_ram_{{item_.id}}">{{item_.ram}}</td>
-        <td class="M" id="MV_disk_{{item_.id}}">{{item_.disk}}</td>
-        <td class="M" id="MW_accyear_{{item_.id}}">{{item_.accyear}}</td>
-        {% endif %}   
         {% if session.profile and  session.profile.user=='admin' %}
         <td class="M" id="MZ_acc-acno_{{item_.id}}">{{item_.acc_acno}}</td>
         {% else %}

@@ -1,17 +1,11 @@
-{#
-# Copyright 2020 Inc.
-#}
-
 {% extends "esasset/base.html" %}
-
 {% block content %}
 <script src="https://cdn.ckeditor.com/4.15.1/standard/ckeditor.js"></script>
 <script>
   $( function() {
     $( "#accordion" ).accordion();
   } );
-  </script>
-
+</script>
 <div class="row">
   <div class="col-lg-2">
     <div id="accordion">
@@ -82,7 +76,7 @@
           {% if book.imageUrl %}
           <img style="max-width:100px" src="{{book.imageUrl}}">
           {% else %}
-          <img style="max-width:100px;width:100px" src="/images/report1.png">
+          <img style="max-width:100px;width:100px" src="/static/images/report1.png">
           {% endif %}
         </div>
         <div class="media-body">
@@ -94,7 +88,6 @@
     {% else %}
     <p>No asset found</p>
     {% endfor %}
-    
     {% if next_page_token %}
     <nav>
       <ul class="pager">

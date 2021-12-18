@@ -3,7 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from intWeb.auth.models import User
 from intWeb.blog.models import Post
 from intWeb.hello.models import Todo
-from intWeb.esasset.models import Acc,Item,ItemType
+from intWeb.esasset.models import Acc,Item
 from intWeb.lessons.models import Lesson
 from datetime import datetime
 #datetime.strptime(start, '%Y-%m-%d')
@@ -14,17 +14,18 @@ def initdb_data(db,app):
     print("do it")
     db.drop_all()
     db.create_all()
-    admin = User("admin","123","admin","1")
-    mbc_admin = User("mbc","abcd1234","admin","2")
-    studa = User("stu","123","stu","8","SC1A","01")
-    studb = User("sta","123","stu","8","SC2A","01")
-    studb = User("ict","123","ict","2")
-    studb = User("ga","123","ga","2")
-    acc=Acc(acno=0, acc="學校資產", orderNo="None", regSDate=datetime.now(),voucherNo="None",vendor="None",createdById=1)
-    db.session.add(admin)
-    db.session.add(mbc_admin)
-    db.session.add(studa)
-    db.session.add(studb)
+    Users_def=[
+        User("admin","123","admin","1"),
+        User("mbc","123","admin","1"),
+        User("fin","123","admin","1"),
+        User("fin1","123","admin","1"),
+        User("ict","123","admin","1"),
+        User("ga","123","admin","1"),
+    ]
+    for u_ in Users_def:
+        db.session.add(u_)
+        
+    acc=Acc(acno="FA0000", acc="學校資產",  regSDate=datetime.now(),createdById=1)
     db.session.add(acc)
     for acc_ in AccTable:
         db.session.add(acc_)
@@ -37,5 +38,4 @@ def from_sql(row):
     data.pop('_sa_instance_state')
     return data
 
-AccTable=[
-    ]
+AccTable=[    ]

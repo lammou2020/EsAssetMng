@@ -213,7 +213,6 @@ def itemadd(id):
         if data["itemno"]==""  or data["itemno"]=="None" or data["itemno"]==None:
             data["itemno"]=None
         else:
-            #data["itemTypeId"]=math.floor(int(data["itemno"])/1000000)
             pass
         book = get_assest_model().createItem(data)
 
@@ -276,7 +275,6 @@ def itemJsonUpdate(id,itemid):
         if data["itemno"]=="" or data["itemno"]=="None" or data["itemno"]==None:
             data["itemno"]=None
         else:
-            #data["itemTypeId"]=math.floor(int(data['itemno'])/1000000)
             pass
     book = get_assest_model().updateItem(data, itemid)
     return jsonify( book)
@@ -305,7 +303,6 @@ def itemedit(id,itemid):
         if data["itemno"]=="" or data["itemno"]=="None" or data["itemno"]==None:
             data["itemno"]=None
         else:
-            #data["itemTypeId"]=math.floor(int(data['itemno'])/1000000)
             pass
         book = get_assest_model().updateItem(data, itemid)
         #return redirect(url_for('.view', id=book['id']))
