@@ -16,3 +16,6 @@ intWeb/initDB.*
 flask-sqlalchemy/
 initDB__.py
 initDB.py
+.ipynb_checkpoints/
+
+

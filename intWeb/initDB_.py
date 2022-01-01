@@ -25,7 +25,7 @@ def initdb_data(db,app):
     for u_ in Users_def:
         db.session.add(u_)
         
-    acc=Acc(acno="FA0000", acc="學校資產",  regSDate=datetime.now(),createdById=1)
+    acc=Acc(acno="FA0000-TMP-000-000", acc="學校資產",  regSDate=datetime.now(),createdById=1)
     db.session.add(acc)
     for acc_ in AccTable:
         db.session.add(acc_)

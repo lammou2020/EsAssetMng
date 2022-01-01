@@ -109,25 +109,29 @@ def list_by_user(user_id, limit=10, cursor=None):
     return (lessons, next_page)
 # [END list_by_user]
 
+
 # 物品 ITEM  [FA2021-xxx-001/-00[1-9]-[4271046][0001]
 class Item(db.Model):
     __tablename__ = 'Item'    
     id = db.Column(db.Integer,primary_key=True)
     itemno=db.Column(db.String(30),unique=True,nullable=True) # 物品編號
+    itemcatno=db.Column(db.BigInteger,unique=True,nullable=True) # 物品分類編號
     name = db.Column(db.String(80))  # 產品
     model= db.Column(db.String(80))  # 型號
     sn = db.Column(db.String(80))    # SN/PN
-    price = db.Column(db.Integer)    # 單價
+    price = db.Column(db.Numeric(precision=10,scale=2))       # 單價
     quantity= db.Column(db.Integer)  # 數量
-    adjust= db.Column(db.Integer)    # 攤折
-    amount= db.Column(db.Integer)    # 淨值
-    depr_ed= db.Column(db.Integer)   # 淨攤
+    adjust=  db.Column(db.Numeric(precision=10,scale=2))  # 攤折 ; When value=0, depr_ed= db.Column(db.Integer) 淨攤 x
+    amount=  db.Column(db.Numeric(precision=10,scale=2))   # 淨值
     fund_amount=db.Column(db.Integer)# 資助金額
     fund_name=db.Column(db.String(80))  # 資助單位/個人
-    keeper=db.Column(db.String(80))  # 移動 history
-    place =db.Column(db.String(80))  # 地方
-    note1 =db.Column(db.Text)  # 地方
-    note2 =db.Column(db.Text)  # 資助
+    move_log_id=db.Column(db.Integer)
+    keeper=db.Column(db.String(80))  # 移動 link to _table
+    place =db.Column(db.String(80))  # 放置地方
+    depr_rate=db.Column(db.Integer)  # 0505 rate:5/5 NN總年期/淨灘折年期
+    warr_period= db.Column(db.Numeric(precision=10,scale=2))  # 保養
+    note1 =db.Column(db.Text)  # 不作地方記錄 描述
+    note2 =db.Column(db.Text)  # 不作資助記錄
     # Acc_acno
     regSDate= db.Column(db.DateTime, nullable=False,default=datetime.utcnow) 
     acc_acno = db.Column(db.String(16), db.ForeignKey('Acc.acno'), nullable=False)
@@ -138,12 +142,14 @@ class Item(db.Model):
     imageUrl = db.Column(db.String(255))    
     ctime = db.Column(db.DateTime, nullable=False,default=datetime.utcnow)  #创建时间
     utime = db.Column(db.DateTime, nullable=False,default=datetime.utcnow)  #更新时间
-    describe = db.Column(db.Text)    
+    describe = db.Column(db.Text)   
+    
     # Status
     #lebalmark= db.Column(db.String(80))   # 標籤
     #inventory= db.Column(db.String(80))   # 清查
     def __init__(self, 
                  itemno=None,
+                 itemcatno=None,
                  name=None,
                  model=None,
                  sn=None,
@@ -151,8 +157,9 @@ class Item(db.Model):
                  price=None,
                  adjust=None,
                  amount=None,
-                 depr_ed=None,
-                 insure=None,
+                 fund_amount=None,
+                 fund_name=None,
+                 place=None,
                  keeper=None,
                  note1=None,
                  note2=None,
@@ -164,6 +171,7 @@ class Item(db.Model):
                  describe=None
                  ):
         self.itemno =itemno
+        self.itemcatno =itemcatno
         self.name =name
         self.model =model
         self.sn =sn
@@ -171,9 +179,9 @@ class Item(db.Model):
         self.price =price
         self.adjust = adjust
         self.amount = amount
-        self.adjust = adjust
-        self.depr_ed = depr_ed
-        self.insure=insure
+        self.fund_amount = fund_amount
+        self.fund_name = fund_name
+        self.place=place
         self.keeper=keeper
         self.note1=note1
         self.note2=note2
@@ -254,8 +262,8 @@ def categoryitemlist_desc(cateid,buwei=1000000, limit=10,cursor=None):
     sint=int(cateid)*buwei
     print(sint)
     query = (Item.query
-             .filter(Item.itemno.between(sint,sint+buwei-1))
-             .order_by(desc(Item.itemno))
+             .filter(Item.itemcatno.between(sint,sint+buwei-1))
+             .order_by(desc(Item.itemcatno))
              .limit(limit)
              .offset(cursor))
     lessons = builtin_list(map(from_sql, query.all()))
@@ -307,7 +315,125 @@ def Itemlist_by_user(user_id, limit=10, cursor=None):
     return (lessons, next_page)
 # [END Item_list_by_CreateByUserID]
 
-# [ Read rows by tablename, for backup data.]
+# 物品分類 ItemCategory [4271046][0001]
+class ItemCategory(db.Model):
+    __tablename__ = 'ItemCategory'    
+    id = db.Column(db.Integer,primary_key=True)
+    itemcat_pri=db.Column(db.BigInteger) # 物品分類編號
+    itemcat_sec=db.Column(db.Integer) # 物品分類編號
+    name = db.Column(db.String(80))  # 產品
+    depr_year= db.Column(db.Integer)  # 攤折年期
+    note1 =db.Column(db.Text)  # 不作地方記錄 描述
+    note2 =db.Column(db.Text)  # 不作地方記錄 描述
+    describe =db.Column(db.Text)  # 不作地方記錄 描述
+    def __init__(self, 
+                 itemcat_pri=None,
+                 itemcat_sec=None,
+                 name=None,
+                 depr_year=None,
+                 note1=None,
+                 note2=None,
+                 describe=None
+                 ):
+        self.itemcat_pri =itemcat_pri
+        self.itemcat_sec =itemcat_sec
+        self.name =name
+        self.depr_year =depr_year
+        self.note1=note1
+        self.note2=note2
+        self.describe=describe
+
+    def __repr__(self):
+        return "<itemCate(name='%s')" % (self.name)    
+
+#[ ITEMCat CRUD]
+def readItemCat(id):
+    result = ItemCategory.query.get(id)
+    if not result:
+        return None
+    return from_sql(result)
+
+def createItemCat(data):
+    acc = ItemCategory(**data)
+    db.session.add(acc)
+    db.session.commit()
+    return from_sql(acc)
+
+def updateItemCat(data, id):
+    acc = ItemCategory.query.get(id)
+    for k, v in data.items():
+        setattr(acc, k, v)
+    db.session.commit()
+    return from_sql(acc)
+
+def deleteItemCat(id):
+    ItemCategory.query.filter_by(id=id).delete()
+    db.session.commit()
+
+# [END ItemCategory]
+
+# [ItemMoveLog]
+class ItemMoveLog(db.Model):
+    __tablename__ = 'ItemMoveLog'    
+    id = db.Column(db.Integer,primary_key=True)
+    itemno = db.Column(db.String(30), db.ForeignKey("Item.itemno"),nullable=True) # 物品編號
+    item = db.relationship('Item', backref="places",lazy=True) 
+    keeper=db.Column(db.String(80))  # 移動 link to _table
+    place =db.Column(db.String(80))  # 放置地方
+    createdById = db.Column(db.String(255))    
+    ctime = db.Column(db.DateTime, nullable=False,default=datetime.utcnow)  #创建时间
+    utime = db.Column(db.DateTime)  #更新时间
+    
+    def __init__(self, 
+                 itemno=None,
+                 place=None,
+                 keeper=None,
+                 createdById=None
+                 ):
+        self.itemno =itemno
+        self.place=place
+        self.keeper=keeper
+        self.createdById=createdById
+
+    def __repr__(self):
+        return "<ItemMoveLog(name='%s')" % (self.name)    
+
+
+#[ ItemMoveLog CRUD]
+def readItemMoveLog(id):
+    result = ItemMoveLog.query.get(id)
+    if not result:
+        return None
+    return from_sql(result)
+
+def createItemMoveLog(data):
+    acc = ItemMoveLog(**data)
+    db.session.add(acc)
+    db.session.commit()
+    return from_sql(acc)
+
+def updateItemMoveLog(data, id):
+    acc = ItemMoveLog.query.get(id)
+    for k, v in data.items():
+        setattr(acc, k, v)
+    db.session.commit()
+    return from_sql(acc)
+
+def deleteItemMoveLog(id):
+    ItemMoveLog.query.filter_by(id=id).delete()
+    db.session.commit()
+
+# [ 按票號查詢]
+def ItemMoveLoglist_by_itemno(itemno):
+    query = (ItemMoveLog.query
+             .filter_by(itemno=itemno)
+             .order_by(desc(ItemMoveLog.id)))
+    lessons = builtin_list(map(from_sql, query.all()))
+    return (lessons)    
+
+# [End ItemMoveLog]
+
+# maintian tools [ Read rows by tablename, for backup data.]
 def readAllFromTable(tablename):
     if tablename=="acc":
         query = (Acc.query
@@ -335,13 +461,7 @@ def _create_database():
         """
         Users_def=[
             User("admin","123","admin","1"),
-            User("mbc","123","admin","1"),
-            User("fin","123","admin","1"),
-            User("fin1","123","admin","1"),
-            User("ict","123","admin","1"),
-            User("ga","123","admin","1"),
         ]
-        #studa = User("stu","123","stu","8","SC1A","01")
         for u_ in Users_def:
             db.session.add(u_)
         """

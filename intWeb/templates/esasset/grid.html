@@ -5,6 +5,16 @@
   {% extends "esasset/base.html" %}
   
   {% block content %}
+  <style>
+    .container {padding:0px;margin:0;width: 100%;}
+    textarea{
+      min-width:60px;
+      min-height: 40px;
+      overflow-y:visible;
+      padding:0;margin:0;outline: none;overflow: auto;}
+    
+    td{padding:10px;margin:0}
+  </style>
   <script src='/static/javascripts/cool/grid_v2.js?v=2' ></script>
   <script src='/static/javascripts/cool/table2csv.js' ></script>
   <link rel='stylesheet' href='/static/javascripts/cool/grid.css'  />
@@ -34,6 +44,14 @@
       <i class="glyphicon glyphicon-edit"></i>
       儲存
      </a>
+     <a href="#" class="btn btn-primary btn-sm" onclick="calcTotalbtn();">
+      <i class="glyphicon glyphicon-edit"></i>
+      淨值運算
+    </a>
+    <a href="#" class="btn btn-success btn-sm" onclick="status_place_chg();">
+      <i class="glyphicon glyphicon-edit"></i>
+      位置異動日誌儲存
+    </a>   
 
     </div>
     {% endif %}
@@ -73,63 +91,8 @@
     {% endif %}
   <h3>明細</h3>
   
-  
-    <table id=EDUTBL  class="table">
-      <tr>
-        <td>序</td>
-        <td>編號</td>
-        <td id="MA_H">校內編號</td>
-        <td id="MB_H" style="min-width: 100px;">產品名稱</td>
-        <td id="MC_H">型號</td>
-        <td id="MD_H">SN/PN</td>
-        <td id="ME_H">數量</td>
-        <td id="MF_H">單價</td>
-        <td id="MG_H">攤折</td>
-        <td id="MH_H">淨值</td>
-        
-        <td id="MJ_H">資助額</td>
-        <td id="MJ_H">資助單位/個人</td>
-        <td id="MK_H">位置</td>
-        <td id="ML_H">保管人</td>
-        <td id="MM_H">備註</td>
-        <td id="MN_H">登錄日期</td>
-        <td>專案編號</td>
-      </tr>
-  
-    {% for item_ in items %}
-      <tr>
-        <td>{{loop.index}}</td>
-        <td><a href="/EsAsset/{{book.id}}/item/{{item_.id}}">{{item_.id}}</a></td>
-        <td class="M" id="MA_itemno_{{item_.id}}">{{item_.itemno}}</td>
-        <td class="M" id="MB_name_{{item_.id}}">{{item_.name}}</td>
-        <td class="M" id="MC_model_{{item_.id}}">{{item_.model}}</td>
-        <td class="M" id="MD_sn_{{item_.id}}">{{item_.sn}}</td>
-        <td class="M" id="ME_quantity_{{item_.id}}">{{item_.quantity}}</td>
-        <td class="M" id="MF_price_{{item_.id}}">{{item_.price}}</td>
-        <td class="M" id="MG_adjust_{{item_.id}}">{{item_.adjust}}</td>
-        <td class="M" id="MH_amount_{{item_.id}}">{{item_.amount}}</td>
-        <td class="M" id="MI_depr-ed_{{item_.id}}">{{item_.depr_ed}}</td>
-        <td class="M" id="MJ_insure_{{item_.id}}">{{item_.insure}}</td>
-        <td class="M" id="MK_note1_{{item_.id}}">{{item_.note1}}</td>
-        <td class="M" id="ML_keeper_{{item_.id}}">{{item_.keeper}}</td>
-        <td class="M" id="MM_note2_{{item_.id}}">{{item_.note2}}</td>
-        <td class="M" id="MN_regSDate_{{item_.id}}">{{item_.regSDate}}</td>
-        {% if session.profile and  session.profile.user=='admin' %}
-        <td class="M" id="MZ_acc-acno_{{item_.id}}">{{item_.acc_acno}}</td>
-        {% else %}
-        <td>{{item_.acc_acno}}</td>
-        {% endif %}   
-      </tr>
-    {% else %}
-    <tr><td>No lessons found</td></tr>
-    {% endfor %}
-  </table>
-  
-  [Up_load_Img]
-  
-  [Show Img]
-  
-  
+  {% set acc_id=book.id %}
+  {% include 'esasset/control/itemtable.html' %}
   
   <script>
     $("#exportCSV").on('click', function(event) {

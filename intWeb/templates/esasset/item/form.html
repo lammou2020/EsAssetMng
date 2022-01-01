@@ -8,25 +8,38 @@
 {% block content %}
 <h3>{{action}} 產品</h3>
 <script src="https://cdn.ckeditor.com/4.15.1/standard/ckeditor.js"></script>
-
-
+<script>
+  function concat_itemno(){
+    let itemcatno=$("#itemcatno").val()
+    let acc_acno=$("#acc_acno").val()
+    if(itemcatno=="") return $("#itemno").val("")
+    $("#itemno").val(acc_acno+"-"+itemcatno)
+  }
+</script>
 <form method="POST" enctype="multipart/form-data">
   <button type="submit" class="btn btn-success">Save</button>
+  <div class="form-group hidden">
+    <label for="acc_acno">acc_acno</label>
+    <input type="text" name="acc_acno" id="acc_acno" value="{{book.acc_acno}}" class="form-control"/>
+  </div>  
   <div class="form-group">
-    <label for="itemno">[校內代號: 會計號碼4271 +物品分類002+ 序號001]</label>
-    <span>ICT</span><img onclick="diagramclick(4271);" src="/static/fonts/diagram-3.svg">
+    <label for="itemno">產品編號</label>
+    <input type="text" name="itemno" id="itemno" value="{{book.itemno if book.itemno is not none}}" placeholder="{{book.acc_acno}}-NNNNNNNNNNN" class="form-control"/>
+  </div>  
+  <div class="form-group">
+    <label for="itemactno">[大類4271 +分類002+ 序號001]</label>
+    {% include 'esasset/control/itemTypeSel.html' %}
+    <span onclick="diagramclick(4271);">ICT<img  src="/static/fonts/diagram-3.svg"></span>
     <span>&nbsp;&nbsp;</span>
-    <span>傢俱</span><img onclick="diagramclick(4276);" src="/static/fonts/diagram-3.svg">
+    <span onclick="diagramclick(4261);" >課室傢俱<img src="/static/fonts/diagram-3.svg"></span>
     <span>&nbsp;&nbsp;</span>
-    <span>電器</span><img onclick="diagramclick(4272);" src="/static/fonts/diagram-3.svg">
+    <span onclick="diagramclick(4274);" >電器<img src="/static/fonts/diagram-3.svg"></span>
     <span>&nbsp;&nbsp;</span>
-    <span>土木水電消防</span><img onclick="diagramclick(4231);" src="/static/fonts/diagram-3.svg">
-    <span>&nbsp;&nbsp;</span>
-    <input type="text" name="itemno" id="itemno" value="{{book.itemno}}" placeholder="PPPPNNNNNN" pattern="([0-9]{4}[0-9]{6}[0-9]{*})|None|()" title="Enter 427100001 (電腦類4271)" class="form-control"/>
+    <input type="text" name="itemcatno" id="itemcatno" value="{{book.itemcatno if book.itemcatno is not none}}"  onchange="concat_itemno()"  placeholder="PPPPNNNNNN" pattern="([0-9]{4}[0-9]{6}[0-9]{*})|None|()" title="Enter 427100001 (電腦類4271)" class="form-control"/>
   </div>
   <div class="form-group">
     <label for="name">產品名稱</label>
-    <input type="text" name="name" id="name" value="{{book.name}}" class="form-control"/>
+    <input type="text" name="name" id="name" value="{{book.name if book.name is not none}}" class="form-control"/>
   </div>
   <div class="form-group">
     <label for="model">型號</label>
@@ -45,55 +58,42 @@
     <input type="text" name="price" id="price" value="{{book.price}}" class="form-control"/>
   </div>  
   <div class="form-group">
-    <label for="adjust">調整</label>
+    <label for="adjust">攤折</label>
     <input type="text" name="adjust" id="adjust" value="{{book.adjust}}" class="form-control"/>
   </div>  
   <div class="form-group">
-    <label for="amount">小計</label>
+    <label for="amount">淨值</label>
     <input type="text" name="amount" id="amount" value="{{book.amount}}" class="form-control"/>
   </div>    
 
 
 
   <div class="form-group">
-    <label for="note1">存放地點</label>
-    <input type="text" name="note1" id="note1" value="{{book.note1}}" class="form-control"/>
+    <label for="place">存放地點</label>
+    <input type="text" name="place" id="place" value="{{book.place}}" class="form-control"/>
   </div>    
   <div class="form-group">
     <label for="keeper">保管人</label>
     <input type="text" name="keeper" id="keeper" value="{{book.keeper}}" class="form-control"/>
   </div>      
-  <div class="form-group">
-    <label for="depr_ed">攤折完</label>
-    <input type="text" name="depr_ed" id="depr_ed" value="{{book.depr_ed}}" class="form-control"/>
-  </div>    
-  <div class="form-group">
-    <label for="insure">保險</label>
-    <input type="text" name="insure" id="insure" value="{{book.insure}}" class="form-control"/>
-  </div>    
-
 
   <div class="form-group">
-    <label for="lebalmark">張貼標籤</label>
-    <input type="text" name="lebalmark" id="lebalMark" value="{{book.lebalmark}}" class="form-control"/>
+    <label for="fund_amount">資助金額</label>
+    <input type="text" name="fund_amount" id="fund_amount" value="{{book.fund_amount}}" class="form-control"/>
   </div>    
+  <div class="form-group">
+    <label for="fund_name">資助單位/個人</label>
+    <input type="text" name="fund_name" id="fund_name" value="{{book.fund_name}}" class="form-control"/>
+  </div>      
   <input type="hidden" name="acc_acno" value="{{book.acc_acno}}">
-  <div class="form-group">
-    <label for="inventory">定期盤點</label>
-    <input type="text" name="inventory" id="inventory" value="{{book.inventory}}" class="form-control"/>
-  </div>    
+
   <div class="form-group">
     <label for="regSDate">登記日期regSDate</label>
     <input name="regSDate" value="{{book.regSDate}}" placeholder="YYYY-MM-DD" pattern="([0-9]{4}-[0-9]{2}-[0-9]{2})|()" title="Enter a date in this format YYYY-MM-DD" class="form-control"/>
   </div>
   <div class="form-group">
-    <label for="note2">Description</label>
-    <textarea name="note2" id="note2" class="form-control">{{book.note2}}</textarea>
-
-  </div>
-  <div class="form-group">
-    <label for="Path">Path</label>
-    <input type="text" name="Path" id="Path" value="{{book.Path}}" class="form-control"/>
+    <label for="note1">note1</label>
+    <textarea name="note1" id="note1" class="form-control">{{book.note1}}</textarea>
   </div>
   <div class="form-group">
     <label for="image">Cover Image</label>
@@ -106,5 +106,6 @@
 
   <button type="submit" class="btn btn-success">Save</button>
 </form>
-{% include 'esasset/item/itemcategory.html' %}
+{% include 'esasset/control/itemcategory.html' %}
+{% include 'esasset/control/itemcategory_act.html' %}
 {% endblock %}

@@ -12,8 +12,6 @@
   }
 </style>
 
-
-
 <h4>{{book.Lesson}} {{book.Title}}</h4>
 <a href="/EsAsset/{{acc_id}}" class="btn btn-primary btn-sm">
   <i class="glyphicon glyphicon-edit"></i>
@@ -39,118 +37,21 @@
       {% endif %}
     </div>
   </div>
-  
-  
+  {% set items=[book] %}
+  {% include 'esasset/control/itemtable.html' %}
   <div class="media-body">
-    
-    <table class="table">
-      <tr>
-        <td>id</td>
-        <td>產品編號</td>
-        <td style="width: 100px;">產品名稱</td>
-        <td>型號</td>
-        <td>SN/PN</td>
-        <td>數量</td>
-        <td>單價</td>
-        <td>調整</td>
-        <td>小計</td>
-        <td>攤折</td>
-        <td>保險/保養</td>
-        <td>位置</td>
-        <td>保管人</td>
-        <td>備註</td>
-        <td>主項編號</td>
-        <td>登錄日期</td>
-      </tr>
-  
-      <tr>
-        <td>{{book.id}}</a></td>
-        <td>{{book.itemno}}</td>
-        <td>{{book.name}}</td>
-        <td>{{book.model}}</td>
-        <td>{{book.sn}}</td>
-        <td>{{book.quantity}}</td>
-        <td>{{book.price}}</td>
-        <td>{{book.adjust}}</td>
-        <td>{{book.amount}}</td>
-        <td>{{book.depr_ed}}</td>
-        <td>{{book.insureNote}}</td>
-        <td>{{book.note1}}</td>
-        <td>{{book.keeper}}</td>
-        <td>{{book.note2}}</td>
-        <td>{{book.acc_acno}}</td>
-        <td>{{book.regSDate}}</td>
-      </tr>
-    </table>
+     
 <br>
 <br>
 <br>
 {% if (book.itemno|string).startswith("4271") %}
-      <b>ICT 設備</b>
-    <table class="table">
-<tr>
-    <th>hostname</th>
-    <th>wifi_mac</th>
-    <th>lan_mac	</th>
-    <th>wifi_mac_style2	</th>
-    <th>lan_mac_sytle_2	</th>
-  
-</tr>
-
-  <tr>
-
-    <td>{{book.hostname}}</td>
-    <td>{{book.wifi_mac}}</td>
-    <td>{{book.lan_mac	}}</td>
-    <td>{{book.wifi_mac_style2	}}</td>
-    <td>{{book.lan_mac_sytle_2	}}</td>
-  </tr>
-<tr>
-  <th>cpu </th>
-  <th>ram	</th>
-  <th>disk</th>
-  <th>年度</th>
-</tr>
-  <tr>
-    <td>{{book.cpu 	}}</td>
-    <td>{{book.ram	}}</td>
-    <td>{{book.disk}}</td>
-    <td>{{book.accyear	}}</td>
-  </tr>
-</table>  
+     
 {% endif %}
   <p>{{book.note2 | safe}}</p>
   </div>
-
-  <h5> 圖片:</h5>
-  {% for file in filenames %}
-  <div>
-    <a href="/EsAsset/{{acc_id}}/item/{{book.id}}/download/{{file.f}}">
-      <span>{{file.n}}</span>
-    </a>
-  </div>
-  {% else %}
-  <p>No files found</p>
-  {% endfor %}
-  <form method="post" action="/EsAsset/{{acc_id}}/item/{{book.id}}/upload" enctype="multipart/form-data">
-    <dl>
-    <p>
-      <input type="file" name="files[]" multiple="true" autocomplete="off" required>
-    </p>
-    </dl>
-    <p>
-    <input type="submit" value="提交"">
-    <span>MAX_CONTENT_LENGTH = 8 * 1024 * 1024</span>
-  </p>
-  </form>
-
-
-
-
-
-
-
-
+{% set file_link_base="/EsAsset/%s/item/%s/download"%(acc_id,book.id) %}
+{% set file_uplink="/EsAsset/%s/item/%s/upload"%(acc_id,book.id) %}
+{% include 'esasset/control/filenames_form.html' %}
 
 
 {% endblock %}

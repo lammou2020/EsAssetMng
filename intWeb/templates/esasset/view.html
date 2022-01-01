@@ -5,9 +5,10 @@
 {% extends "esasset/base.html" %}
 
 {% block content %}
-<script src="/static/javascripts/JsBarcode.all.min.js"></script>
+
 
 <script>
+//<script src="/static/javascripts/JsBarcode.all.min.js" />  
 // By using querySelector
 //<svg id="barcode"></svg>
 //JsBarcode("#barcode", "ACC{{book.acno}}", {
@@ -23,8 +24,17 @@
 //$("#barcode").JsBarcode("Hi!");
 
 //<img src="/EsAsset/qrcode?data={{book.acno}}">
+function AddBlankRows(){
+  let _url="/EsAsset/{{book.id}}/item/addbatch/0?acno={{book.acno}}&regSDate={{book.regSDate}}" 
+  let number_for_rows = prompt("Please enter number for rows", "0");
+  var reg = /^\d+$/;
+  if (number_for_rows != null && reg.test(number_for_rows)) {
+    window.location.href=_url.replace("/0?",`/${number_for_rows}?`);
+  } 
+}
 </script>
 
+  
 
 <style>
   th{min-width: 100px;}
@@ -34,7 +44,10 @@
   }
 </style>
 <h4>{{book.id}} {{book.acc}}</h4>
-<img src='{{qrcode(book.acno, error_correction="H", icon_img="images/favicon.ico",border=2,box_size=6,back_color="white", fill_color="black" )}}'>
+<div style="display:none">
+<img src='{{qrcode(book.acno, error_correction="H", icon_img="images/favicon.ico",border=2,box_size=4,back_color="white", fill_color="black" )}}'>
+</div>
+
 {% if session.profile and session.profile.Role < "8" %} <div class="btn-group">
   <a href="/EsAsset/{{book.id}}/edit" class="btn btn-primary btn-sm">
     <i class="glyphicon glyphicon-edit"></i>
@@ -82,87 +95,47 @@
   {% if session.profile and session.profile.Role < "8" %} <div class="btn-group">
     <a href="/EsAsset/{{book.id}}/item/add?acno={{book.acno}}&regSDate={{book.regSDate}}" class="btn btn-primary btn-sm">
       <i class="glyphicon glyphicon-edit"></i>
-      Add 明細
+      增加細項
     </a>
-    <a href="/EsAsset/{{book.id}}/item/addbatch/0?acno={{book.acno}}&regSDate={{book.regSDate}}" class="btn btn-primary btn-sm">
+    <a href="#" onclick="AddBlankRows();" class="btn btn-primary btn-sm">
       <i class="glyphicon glyphicon-edit"></i>
-      Add 多項明細
+      增加多項細項
     </a>    
     <a href="/EsAsset/{{book.id}}/itemgrid?acno={{book.acno}}&regSDate={{book.regSDate}}" class="btn btn-primary btn-sm">
       <i class="glyphicon glyphicon-edit"></i>
-      明細Grid
+      細項表格式編輯
     </a>
-
+    <a href="#" class="btn btn-success btn-sm" id="savebtn">
+      <i class="glyphicon glyphicon-edit"></i>
+      儲存
+     </a>    
+    <a href="#" class="btn btn-primary btn-sm" onclick="calcTotalbtn();">
+      <i class="glyphicon glyphicon-edit"></i>
+      淨值運算
+    </a>
+    <a href="#" class="btn btn-success btn-sm" onclick="status_place_chg();">
+      <i class="glyphicon glyphicon-edit"></i>
+      位置異動日誌儲存
+    </a>    
     <br>
     {% endif %}
-<h3>明細</h3>
+
+{% set acc_id=book.id %}
+{% include 'esasset/control/itemtable.html' %}
 
 
-  <table class="table">
-    <tr>
-      <td>序</td>
-      <td>id</td>
-      <th>產品編號</th>
-      <th style="width: 100px;">產品名稱</th>
-      <th>型號</th>
-      <th>SN/PN</th>
-      <th>數量</th>
-      <th>單價</th>
-      <th>攤折</th>
-      <th>淨值</th>
-      <th>攤折</th>
-      <th>資助金額</th>
-      <th>資助單位/個人</th>
-      <th>位置</th>
-      <th>保管人</th>
-      <th>備註</th>
-      <th>主項編號</th>
-      <th>登錄日期</th>
-    </tr>
+{% set file_link_base="/EsAsset/%s/download"%(acc_id) %}
+{% set file_uplink="/EsAsset/%s/upload"%(acc_id) %}
+{% include 'esasset/control/filenames_form.html' %}
 
-  {% for item_ in items %}
-    <tr>
-      <td>{{loop.index}}</td>
-      <td><a href="/EsAsset/{{book.id}}/item/{{item_.id}}">{{item_.id}}</a></td>
-      <td>{{item_.itemno}}</td>
-      <td>{{item_.name}}</td>
-      <td>{{item_.model}}</td>
-      <td>{{item_.sn}}</td>
-      <td>{{item_.quantity}}</td>
-      <td>{{item_.price}}</td>
-      <td>{{item_.adjust}}</td>
-      <td>{{item_.amount}}</td>
-      <td>{{item_.note1}}</td>
-      <td>{{item_.keeper}}</td>
-      <td>{{item_.note2}}</td>
-      <td>{{item_.acc_acno}}</td>
-      <td>{{item_.regSDate}}</td>
-    </tr>
-  {% else %}
-  <tr><td>No found</td></tr>
-  {% endfor %}
-</table>
 
-<h4>Product Img:</h4>
-{% for file in filenames %}
-<div>
-  <a href="/EsAsset/{{book.id}}/download/{{file.f}}">
-    <span>{{file.n}}</span>
-  </a>
-</div>
-{% else %}
-<p>No files found</p>
-{% endfor %}
-<form method="post" action="/EsAsset/{{book.id}}/upload" enctype="multipart/form-data">
-  <dl>
-  <p>
-    <input type="file" name="files[]" multiple="true" autocomplete="off" required>
-  </p>
-  </dl>
-  <p>
-  <input type="submit" value="提交">
-  <span>MAX_CONTENT_LENGTH = 8 * 1024 * 1024</span>
-</p>
-</form>
+<script>
+  var PostUrl='/EsAsset/{{book.id}}/item/api/JSON/update' ;    
+  $(document).ready(function(){
+    $('#savebtn').click(function(event) {
+       saveTotal(PostUrl);
+    });
 
+  });  
+</script>
 {% endblock %}
