@@ -109,7 +109,6 @@ def list_by_user(user_id, limit=10, cursor=None):
     return (lessons, next_page)
 # [END list_by_user]
 
-
 # 物品 ITEM  [FA2021-xxx-001/-00[1-9]-[4271046][0001]
 class Item(db.Model):
     __tablename__ = 'Item'    
@@ -128,25 +127,22 @@ class Item(db.Model):
     move_log_id=db.Column(db.Integer)
     keeper=db.Column(db.String(80))  # 移動 link to _table
     place =db.Column(db.String(80))  # 放置地方
-    depr_rate=db.Column(db.Integer)  # 0505 rate:5/5 NN總年期/淨灘折年期
-    warr_period= db.Column(db.Numeric(precision=10,scale=2))  # 保養
+    depr_rate   = db.Column(db.Integer)  # 0505 rate:5/5 NN總年期/淨灘折年期
+    warr_period = db.Column(db.Numeric(precision=10,scale=2))  # 保養
     note1 =db.Column(db.Text)  # 不作地方記錄 描述
     note2 =db.Column(db.Text)  # 不作資助記錄
     # Acc_acno
-    regSDate= db.Column(db.DateTime, nullable=False,default=datetime.utcnow) 
+    regSDate = db.Column(db.DateTime, nullable=False,default=datetime.utcnow) 
     acc_acno = db.Column(db.String(16), db.ForeignKey('Acc.acno'), nullable=False)
-    acc = db.relationship('Acc',  backref=db.backref('Item', lazy=True))
+    acc      = db.relationship('Acc',  backref=db.backref('Item', lazy=True))
     # User info
     createdById = db.Column(db.String(255))    
-    Path=db.Column(db.String(80))
+    Path     = db.Column(db.String(80))
     imageUrl = db.Column(db.String(255))    
-    ctime = db.Column(db.DateTime, nullable=False,default=datetime.utcnow)  #创建时间
-    utime = db.Column(db.DateTime, nullable=False,default=datetime.utcnow)  #更新时间
+    ctime    = db.Column(db.DateTime, nullable=False,default=datetime.utcnow)  #创建时间
+    utime    = db.Column(db.DateTime, nullable=False,default=datetime.utcnow)  #更新时间
     describe = db.Column(db.Text)   
-    
-    # Status
-    #lebalmark= db.Column(db.String(80))   # 標籤
-    #inventory= db.Column(db.String(80))   # 清查
+
     def __init__(self, 
                  itemno=None,
                  itemcatno=None,

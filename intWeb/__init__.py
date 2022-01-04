@@ -4,6 +4,7 @@ from functools import wraps
 from flask import current_app, Flask, redirect, request, session, url_for, render_template
 import click
 from flask.cli import with_appcontext
+from flask import g
 
 import httplib2
 # [START include]
@@ -40,10 +41,10 @@ def create_app(config, debug=False, testing=False, config_overrides=None):
     if not app.testing:
         logging.basicConfig(level=logging.INFO)
 
-    #app.config.from_mapping(
+    # app.config.from_mapping(
         # default secret that should be overridden in environ or config
         # SQLALCHEMY_TRACK_MODIFICATIONS=False,
-    #)
+    # )
 
     # Setup the data model.
     with app.app_context():
@@ -68,13 +69,13 @@ def create_app(config, debug=False, testing=False, config_overrides=None):
     app.config['SESSION_USE_SIGNER'] = False  # 是否对发送到浏览器上session的cookie值进行加密
     app.config['SESSION_KEY_PREFIX'] = 'sess:'  # 保存到session中的值的前缀
     app.config['SESSION_REDIS'] = redis.Redis(host='127.0.0.1',port=6379)  
-    #app.session_interface = MySessionInterface()
+    # app.session_interface = MySessionInterface()
     Session(app)
-    #se=Session
-    #se.init_app(app)
+    # se=Session
+    # se.init_app(app)
     # [START init_app]
     # Initalize the OAuth2 helper.
-    #oauth2.init_app(
+    # oauth2.init_app(
     #    app,
     #    scopes=['email', 'profile'],
     #    authorize_callback=_request_user_info)
@@ -82,9 +83,10 @@ def create_app(config, debug=False, testing=False, config_overrides=None):
         
     # [END init_app]
     # Register the Bookshelf CRUD blueprint.
-    from intWeb import esasset, lessons,hello, auth,blog
+    from intWeb import esasset, esasset_ex, lessons,hello, auth,blog
 
     app.register_blueprint(esasset.crud,name="EsAsset", url_prefix='/EsAsset')
+    app.register_blueprint(esasset_ex.crud,name="EsAssetEx", url_prefix='/EsAssetEx')
     app.register_blueprint(lessons.crud,name="lessons", url_prefix='/lessons')
     app.register_blueprint(hello.crud,name="hello", url_prefix='/hello')
     app.register_blueprint(auth.bp,name="auth", url_prefix='/auth')
@@ -127,9 +129,6 @@ def create_app(config, debug=False, testing=False, config_overrides=None):
             </form>
             </div>
         '''
-
-
-
     
     # Add a default root route.
     @app.route("/")
@@ -168,6 +167,15 @@ def create_app(config, debug=False, testing=False, config_overrides=None):
         print(session)     
         print ("*profile 2*")
         return str(session["profile"]["user"])
+
+    @app.teardown_appcontext
+    def close_connection(exception):
+        db = getattr(g, '_database', None)
+        if db is not None:
+            db.close()
+            print("close sqlite3")
+
+
     # Add an error handler. This is useful for debugging the live application,
     # however, you should disable the output of the exception for production
     # applications.
