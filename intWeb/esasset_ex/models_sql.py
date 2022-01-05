@@ -20,7 +20,7 @@ def query_db(query, args=(), one=False):
 
 def get_db():
     DATABASE=current_app.config["SQLALCHEMY_DATABASE_URI"].replace("sqlite:///","")
-    db = getattr(g, '_database', None)
+    db = getattr(g, '_sqlite_database', None)
     if db is None:
         db = g._database = sqlite3.connect(DATABASE)
         db.row_factory=sqlite3.Row
@@ -28,7 +28,7 @@ def get_db():
 
 #@app.teardown_appcontext
 #    def close_connection(exception):
-#        db = getattr(g, '_database', None)
+#        db = getattr(g, '_sqlite_database', None)
 #        if db is not None:
 #            db.close()
 #            print("close sqlite3")
@@ -56,6 +56,7 @@ def from_sql(row):
 def main():
     """
     If this script is run directly, create all the tables necessary to run the application.
+    (env) C:\code\EsAsset>python intWeb\esasset_ex\models_sql.py 
     """
     app = Flask(__name__)
     app.config.from_pyfile('../../config.py')

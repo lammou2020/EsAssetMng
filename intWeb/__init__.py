@@ -170,11 +170,9 @@ def create_app(config, debug=False, testing=False, config_overrides=None):
 
     @app.teardown_appcontext
     def close_connection(exception):
-        db = getattr(g, '_database', None)
+        db = getattr(g, '_sqlite_database', None)
         if db is not None:
             db.close()
-            print("close sqlite3")
-
 
     # Add an error handler. This is useful for debugging the live application,
     # however, you should disable the output of the exception for production
