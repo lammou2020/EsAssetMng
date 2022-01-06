@@ -464,28 +464,33 @@ def itemgrid(id):
 
 @crud.route("/itemCateGrid")
 @login_required_auth
-def itemCateGrid():
-    items= get_assest_model().ItemCatlist()
-    return render_template("esasset/itemCategory/grid.html", items=items)
+def itemCateGrid(id):
+    book = get_assest_model().read(id)
+    Err=CheckOwnRecordErr(book,session)
+    if Err != None:  return Err
+    book["regSDate"]=book["regSDate"].strftime( '%Y-%m-%d')
+    items= get_assest_model().Itemlist_by_acno(book["acno"])
+    filenames=[]
+    #Get_FileList(book,filenames)             
+    return render_template("esasset/itemCategory/grid.html", book=book,items=items,lecturesfile=[],filenames=filenames)
 
-@crud.route('/itemCateGrid_/api/JSON/update/<itemcat_id>', methods=['GET', 'POST'])
+@crud.route('/itemCateGrid/api/JSON/update/<itemcat_id>', methods=['GET', 'POST'])
 @login_required_auth
-def itemCateGridJsonUpdate(itemcat_id):
-    print("xxxxxx")
+def itemCateGridJsonUpdate(id,itemid):
     data=request.get_json()
-    #if 'regSDate' in data:
-    #    data['regSDate']=datetime.strptime(data['regSDate'], '%Y-%m-%d')
-    #if 'itemno' in data:   
-    #    if data["itemno"]=="" or data["itemno"]=="None" or data["itemno"]==None:
-    #        data["itemno"]=None
-    #    else:
-    #        pass
-    #if 'itemcatno' in data:   
-    #    if data["itemcatno"]=="" or data["itemcatno"]=="None" or data["itemcatno"]==None:
-    #        data["itemcatno"]=None
-    #    else:
-    #        pass            
-    book = get_assest_model().updateItemCat(data, itemcat_id)
+    if 'regSDate' in data:
+        data['regSDate']=datetime.strptime(data['regSDate'], '%Y-%m-%d')
+    if 'itemno' in data:   
+        if data["itemno"]=="" or data["itemno"]=="None" or data["itemno"]==None:
+            data["itemno"]=None
+        else:
+            pass
+    if 'itemcatno' in data:   
+        if data["itemcatno"]=="" or data["itemcatno"]=="None" or data["itemcatno"]==None:
+            data["itemcatno"]=None
+        else:
+            pass            
+    book = get_assest_model().updateItem(data, itemid)
     return jsonify( book)
 
 @crud.route('/api/JSON/pushItemnoMoveLog', methods=['GET', 'POST'])

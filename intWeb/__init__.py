@@ -87,6 +87,7 @@ def create_app(config, debug=False, testing=False, config_overrides=None):
 
     app.register_blueprint(esasset.crud,name="EsAsset", url_prefix='/EsAsset')
     app.register_blueprint(esasset_ex.crud,name="EsAssetEx", url_prefix='/EsAssetEx')
+    #app.register_blueprint(itemCate.crud,name="EsAssetItemCate", url_prefix='/EsAssetItemCate')
     app.register_blueprint(lessons.crud,name="lessons", url_prefix='/lessons')
     app.register_blueprint(hello.crud,name="hello", url_prefix='/hello')
     app.register_blueprint(auth.bp,name="auth", url_prefix='/auth')

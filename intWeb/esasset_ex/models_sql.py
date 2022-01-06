@@ -56,6 +56,7 @@ def from_sql(row):
 def main():
     """
     If this script is run directly, create all the tables necessary to run the application.
+    Flask SQLite
     (env) C:\code\EsAsset>python intWeb\esasset_ex\models_sql.py 
     """
     app = Flask(__name__)

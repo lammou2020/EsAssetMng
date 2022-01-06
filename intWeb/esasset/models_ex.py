@@ -6,9 +6,6 @@ from sqlalchemy import desc
 
 builtin_list = list
 
-
-
-#db = SQLAlchemy()
 from intWeb import db
 
 def init_app(app):
@@ -31,14 +28,14 @@ class Acc(db.Model):
     acc= db.Column(db.String(160))  #名稱
     regSDate= db.Column(db.DateTime, nullable=False,default=datetime.utcnow) #登記日期
     describe=db.Column(db.Text)  # 描述
-    # User info
+    #
     createdById = db.Column(db.String(255))    
-    readonly=db.Column(db.Integer,default=0)
-    Path=db.Column(db.String(80))
+    readonly = db.Column(db.Integer,default=0)
+    Path = db.Column(db.String(80))
     imageUrl = db.Column(db.String(255))    
     ctime = db.Column(db.DateTime, nullable=False,default=datetime.utcnow)  #创建时间
     utime = db.Column(db.DateTime, nullable=False,default=datetime.utcnow)  #更新时间
-    total=db.Column(db.Integer)  # 計算時使用 
+    total = db.Column(db.Integer)  # 計算時使用 
     
     def __init__(self, acno=None, acc=None, regSDate=None, total=None,describe=None,createdById=None,imageUrl=None,Path=None):
         self.acno=acno
@@ -369,18 +366,6 @@ def deleteItemCat(id):
     ItemCategory.query.filter_by(id=id).delete()
     db.session.commit()
 
-def ItemCatlist():
-    #cursor = int(cursor) if cursor else 0
-    query = (ItemCategory.query
-             #.filter_by(Open=1)
-             #.order_by(ItemCategory.id)
-             #.limit(limit)
-             #.offset(cursor)
-             )
-    lessons = builtin_list(map(from_sql, query.all()))
-    #next_page = cursor + limit if len(lessons) == limit else None
-    return (lessons)
-
 # [END ItemCategory]
 
 # [ItemMoveLog]
@@ -468,18 +453,15 @@ def _create_database():
     app.config.from_pyfile('../../config.py')
     init_app(app)
     with app.app_context():
-        #db.drop_all()
-        #db.create_all()
-        
-        
-        #for i in range(700):
-        #    u_= ItemCategory(
-        #          itemcat_pri=0,
-        #         itemcat_sec=0,
-        #         name="",
-        #         depr_year=0)
-        #    db.session.add(u_)
-        
+        db.drop_all()
+        db.create_all()
+        """
+        Users_def=[
+            User("admin","123","admin","1"),
+        ]
+        for u_ in Users_def:
+            db.session.add(u_)
+        """
         db.session.commit()
     print("All tables created")
 
