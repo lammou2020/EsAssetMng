@@ -471,7 +471,6 @@ def itemCateGrid():
 @crud.route('/itemCateGrid_/api/JSON/update/<itemcat_id>', methods=['GET', 'POST'])
 @login_required_auth
 def itemCateGridJsonUpdate(itemcat_id):
-    print("xxxxxx")
     data=request.get_json()
     #if 'regSDate' in data:
     #    data['regSDate']=datetime.strptime(data['regSDate'], '%Y-%m-%d')
@@ -487,6 +486,13 @@ def itemCateGridJsonUpdate(itemcat_id):
     #        pass            
     book = get_assest_model().updateItemCat(data, itemcat_id)
     return jsonify( book)
+
+@crud.route('/itemCateGrid_/api/OUTJSON', methods=['GET', 'POST'])
+@login_required_auth
+def itemCateGridApiOUTJSON():
+    items= get_assest_model().ItemCatlist()
+    return jsonify(items)
+
 
 @crud.route('/api/JSON/pushItemnoMoveLog', methods=['GET', 'POST'])
 @login_required_auth

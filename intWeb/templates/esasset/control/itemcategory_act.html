@@ -10,7 +10,7 @@
             }
         }
     }
-    function GetNewItemNo(cateid, x) {
+    function GetNewItemNo(cateid, use_period, x) {
         let _Url = "/EsAsset/JSON/categoryitemlist/"
         $.ajax({
             method: "GET",
@@ -31,8 +31,10 @@
                 prompt(itemno, itemno);
             } else {
                 $("#itemcatno").val(itemno)
+                $("#depr_year").val(use_period)
                 if ($("#name").val().length > 0) { }
                 else {
+                    
                     $("#name").val(x.innerHTML)
                 }
             }
@@ -42,23 +44,19 @@
         });
     }
     $(function () {
+
         for(let idx_ in type_id)
         {
             let dialogname=`#PTYPE${type_id[idx_]}_menudialog`
             let accname=`#PTYPE${type_id[idx_]}_accordion`
             $(accname).accordion();
-        }
-        for(let idx_ in type_id)
-        {
-            let dialogname=`#PTYPE${type_id[idx_]}_menudialog`
-            let accname=`#PTYPE${type_id[idx_]}_accordion`
+
             type_dialog[idx_] = $(dialogname).dialog({
             autoOpen: false, height: 700, width: 500, modal: true,
             buttons: {
                 Cancel: function () { type_dialog[idx_].dialog("close"); }
             }
             });
-            
             console.log(dialogname)
             console.log(accname)
         }

@@ -14,8 +14,9 @@
     <td id="MJ_H">資助單位/個人</td>
     <td id="MK_H">位置</td>
     <td id="ML_H">保管人</td>
-    <td id="MM_H">備註</td>
-    <td id="MN_H">登錄日期</td>
+    <td id="MM_H">攤折年期</td>
+    <td id="MN_H">備註</td>
+    <td id="MO_H">登錄日期</td>
     <td>專案編號</td>
   </tr>
   {% for item_ in items %}
@@ -34,8 +35,9 @@
     <td class="M" id="MJ_fund-name_{{item_.id}}">{{item_.fund_name}}</td>
     <td class="M" id="MK_place_{{item_.id}}">{{item_.place}}</td>
     <td class="M" id="ML_keeper_{{item_.id}}">{{item_.keeper}}</td>
-    <td class="M" id="MM_note1_{{item_.id}}">{{item_.note1}}</td>
-    <td class="M" id="MN_regSDate_{{item_.id}}">{{item_.regSDate}}</td>
+    <td class="M" id="MM_depr-year_{{item_.id}}">{{item_.depr_year}}</td>
+    <td class="M" id="MN_note1_{{item_.id}}">{{item_.note1}}</td>
+    <td class="M" id="MO_regSDate_{{item_.id}}">{{item_.regSDate}}</td>
     {% if session.profile and session.profile.user=='admin' and False %}
     <td class="M" id="MZ_acc-acno_{{item_.id}}">{{item_.acc_acno}}</td>
     {% else %}

@@ -123,14 +123,14 @@ class Item(db.Model):
     model= db.Column(db.String(80))  # 型號
     sn = db.Column(db.String(80))    # SN/PN
     price = db.Column(db.Numeric(precision=10,scale=2))       # 單價
-    quantity= db.Column(db.Integer)  # 數量
+    quantity= db.Column(db.Integer,default=0)  # 數量
     adjust=  db.Column(db.Numeric(precision=10,scale=2))  # 攤折 ; When value=0, depr_ed= db.Column(db.Integer) 淨攤 x
     amount=  db.Column(db.Numeric(precision=10,scale=2))   # 淨值
     fund_amount=db.Column(db.Integer)# 資助金額
     fund_name=db.Column(db.String(80))  # 資助單位/個人
     keeper=db.Column(db.String(80))  # 移動 link to _table
     place =db.Column(db.String(80))  # 放置地方
-    depr_rate   = db.Column(db.Integer)  # 0505 rate:5/5 NN總年期/淨灘折年期
+    depr_year   = db.Column(db.Integer,default=0)  # 0505 rate:5/5 NN總年期/淨灘折年期
     warr_period = db.Column(db.Numeric(precision=10,scale=2))  # 保養
     note1 =db.Column(db.Text)  # 不作地方記錄 描述
     note2 =db.Column(db.Text)  # 不作資助記錄
@@ -160,6 +160,7 @@ class Item(db.Model):
                  fund_name=None,
                  place=None,
                  keeper=None,
+                 depr_year=None,
                  note1=None,
                  note2=None,
                  acc_acno=None,
@@ -182,6 +183,7 @@ class Item(db.Model):
         self.fund_name = fund_name
         self.place=place
         self.keeper=keeper
+        self.depr_year=depr_year,
         self.note1=note1
         self.note2=note2
         self.acc_acno=acc_acno
@@ -472,13 +474,13 @@ def _create_database():
         #db.create_all()
         
         
-        #for i in range(700):
-        #    u_= ItemCategory(
-        #          itemcat_pri=0,
-        #         itemcat_sec=0,
-        #         name="",
-        #         depr_year=0)
-        #    db.session.add(u_)
+        for i in range(700):
+            u_= ItemCategory(
+                  itemcat_pri='0',
+                 itemcat_sec='0',
+                 name="",
+                 depr_year=0)
+            db.session.add(u_)
         
         db.session.commit()
     print("All tables created")

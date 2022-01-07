@@ -1,5 +1,32 @@
 import click
 
+@click.command()
+def genitemcat():
+    import sqlite3
+    con = sqlite3.connect('c:/code/EsAsset/bookshelf.db')
+    cur = con.cursor()
+    for row in cur.execute(f"select * from itemCategory;"):#name, sql
+        print(row)
+        if row[1]==0: break
+        if row[2]==0:
+            cnt=cnt+1
+            rcnt=0
+            if cnt>1: print("</div></div></div>")
+            print(f"<div id='PTYPE{row[1]}_menudialog'>")
+            print(f"<div id='PTYPE{row[1]}_accordion'>")
+        if row[2] in ["0","1","2","3","4","5","6","7","8","9"]:
+            rcnt=rcnt+1
+            if rcnt>1 : print("</div>")
+            h3=row[2] 
+            if len(row)>4 and len(row[4])>0 : h3= row[4]
+            print(f'<h3><a href=#>{row[0]} {h3}</a></h3>')
+            print('<div style="margin:0;padding:0;">')
+        if len(row[2])==3:
+            print(f'<h4><a href=# onclick="GetNewItemNo({row[1]}{row[2]},this);">{row[1]}{row[2]} {row[3]}</a></h4>');
+    print("</div></div></div>")
+    pass
+
+
 @click.group()
 def cli():
     pass
@@ -48,13 +75,14 @@ def itemlist(pk):
         else:
             print(f'<h4><a href=# onclick="GetNewItemNo({row[0]},this);">{row[0]} {row[2]}</a></h4>')
     if cnt>1 :print("</div>")
-        
+       
     pass
 
 cli.add_command(itemlist)
 cli.add_command(itRows)
 cli.add_command(initdb)
 cli.add_command(dropdb)
+cli.add_command(genitemcat)
 
 if __name__ == "__main__":
     cli()
