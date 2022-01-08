@@ -3,20 +3,21 @@
     <td class="small">序</td>
     <td class="small">編號</td>
     <td id="MA_H">校內編號</td>
-    <td id="MB_H" style="min-width: 100px;">產品名稱</td>
-    <td id="MC_H">型號</td>
-    <td id="MD_H">SN/PN</td>
-    <td id="ME_H">數量</td>
-    <td id="MF_H">單價</td>
-    <td id="MG_H">攤折</td>
-    <td id="MH_H">淨值</td>
-    <td id="MI_H">資助額</td>
-    <td id="MJ_H">資助單位/個人</td>
-    <td id="MK_H">位置</td>
-    <td id="ML_H">保管人</td>
-    <td id="MM_H">攤折年期</td>
-    <td id="MN_H">備註</td>
-    <td id="MO_H">登錄日期</td>
+    <td id="MB_H">分類編號</td>
+    <td id="MC_H" style="min-width: 100px;">產品名稱</td>
+    <td id="MD_H">型號</td>
+    <td id="ME_H">SN/PN</td>
+    <td id="MF_H">數量</td>
+    <td id="MG_H">單價</td>
+    <td id="MH_H">攤折</td>
+    <td id="MI_H">淨值</td>
+    <td id="MJ_H">使用年期</td>
+    <td id="MK_H">資助額</td>
+    <td id="ML_H">資助單位/個人</td>
+    <td id="MM_H">位置</td>
+    <td id="MN_H">保管人</td>
+    <td id="MO_H">備註</td>
+    <td id="MP_H">登錄日期</td>
     <td>專案編號</td>
   </tr>
   {% for item_ in items %}
@@ -24,20 +25,21 @@
     <td class="small">{{loop.index}}</td>
     <td class="small"><a href="/EsAsset/{{acc_id}}/item/{{item_.id}}">{{item_.id}}</a></td>
     <td class="M" id="MA_itemno_{{item_.id}}">{{item_.itemno if item_.itemno is not none}}</td>
-    <td class="M" id="MB_name_{{item_.id}}">{{item_.name}}</td>
-    <td class="M" id="MC_model_{{item_.id}}">{{item_.model}}</td>
-    <td class="M" id="MD_sn_{{item_.id}}">{{item_.sn}}</td>
-    <td class="M" id="ME_quantity_{{item_.id}}">{{item_.quantity}}</td>
-    <td class="M" id="MF_price_{{item_.id}}">{{item_.price}}</td>
-    <td class="M" id="MG_adjust_{{item_.id}}">{{item_.adjust}}</td>
-    <td class="M" id="MH_amount_{{item_.id}}">{{item_.amount}}</td>
-    <td class="M" id="MI_fund-amount_{{item_.id}}">{{item_.fund_amount}}</td>
-    <td class="M" id="MJ_fund-name_{{item_.id}}">{{item_.fund_name}}</td>
-    <td class="M" id="MK_place_{{item_.id}}">{{item_.place}}</td>
-    <td class="M" id="ML_keeper_{{item_.id}}">{{item_.keeper}}</td>
-    <td class="M" id="MM_depr-year_{{item_.id}}">{{item_.depr_year}}</td>
-    <td class="M" id="MN_note1_{{item_.id}}">{{item_.note1}}</td>
-    <td class="M" id="MO_regSDate_{{item_.id}}">{{item_.regSDate}}</td>
+    <td class="M" id="MB_itemcatno_{{item_.id}}">{{item_.itemcatno if item_.itemcatno is not none}}</td>
+    <td class="M" id="MC_name_{{item_.id}}">{{item_.name}}</td>
+    <td class="M" id="MD_model_{{item_.id}}">{{item_.model}}</td>
+    <td class="M" id="ME_sn_{{item_.id}}">{{item_.sn}}</td>
+    <td class="M" id="MF_quantity_{{item_.id}}">{{item_.quantity}}</td>
+    <td class="M" id="MG_price_{{item_.id}}">{{item_.price}}</td>
+    <td class="M" id="MH_adjust_{{item_.id}}">{{item_.adjust}}</td>
+    <td class="M" id="MI_amount_{{item_.id}}">{{item_.amount}}</td>
+    <td class="M" id="MJ_depr-year_{{item_.id}}">{{item_.depr_year}}</td>
+    <td class="M" id="MK_fund-amount_{{item_.id}}">{{item_.fund_amount}}</td>
+    <td class="M" id="ML_fund-name_{{item_.id}}">{{item_.fund_name}}</td>
+    <td class="M" id="MM_place_{{item_.id}}">{{item_.place}}</td>
+    <td class="M" id="MN_keeper_{{item_.id}}">{{item_.keeper}}</td>
+    <td class="M" id="MO_note1_{{item_.id}}">{{item_.note1}}</td>
+    <td class="M" id="MP_regSDate_{{item_.id}}">{{item_.regSDate}}</td>
     {% if session.profile and session.profile.user=='admin' and False %}
     <td class="M" id="MZ_acc-acno_{{item_.id}}">{{item_.acc_acno}}</td>
     {% else %}
@@ -141,19 +143,52 @@
       var cell8 = totalrow.insertCell();
       var cell9 = totalrow.insertCell();
       var cell10 = totalrow.insertCell();
+      var cell11 = totalrow.insertCell();
       cell1.innerHTML = "-";
       cell3.innerHTML = "小計";
       cell7.innerHTML = total_quantity;
-      cell10.innerHTML = total_amount;
+      cell11.innerHTML = total_amount;
     }else{
       totalrow.cells[6].innerHTML=total_quantity;
-      totalrow.cells[9].innerHTML=total_amount 
+      totalrow.cells[10].innerHTML=total_amount 
     }
   }
 
-  function saveTotal(PostUrl) {
+
+  class ItemtableFrmMessageBox {
+	msg(x) {
+    let temp_ = $("#es_msgbox_txt").html();
+    $("#es_msgbox_txt").html(temp_ + "<br>攤折及淨值 update:<br>" + x);
+	}
+ }
+
+  function post_total_url(PostUrl,rowid,jsondata,frmMessageBox ){
+	return new Promise((resolve,reject)=>{
+		$.ajax({
+			method: "POST",
+			url: PostUrl + `/${rowid}`,
+			data: JSON.stringify(jsondata),
+			contentType: "application/json",
+			timeout: 2000,
+			statusCode: {
+				500: function() {
+				  resolve(rowid);
+				}
+			  }
+		}).done(function (data) {
+			frmMessageBox.msg(JSON.stringify(data))
+			resolve(0)
+		}).fail(function (jqXHR, textStatus, errorThrown) { 
+			resolve(rowid);
+		});
+		;
+	})
+}
+
+  async function saveTotal(PostUrl) {
     closeedit();
     es_msgbox.dialog("open");
+    let frmMsg_=new ItemtableFrmMessageBox()
     var table = document.getElementById("EDUTBL");
     let json = {}
     let curr_itemno = null;
@@ -170,17 +205,16 @@
         }
       }
     }
+    let error_set=[]
     for (let itemno_ in json) {
       console.log(json[itemno_])
-      $.ajax({
-        method: "POST",
-        url: PostUrl + `/${itemno_}`,
-        data: JSON.stringify(json[itemno_]),
-        contentType: "application/json"
-      }).done(function (data_) {
-        let temp_ = $("#es_msgbox_txt").html();
-        $("#es_msgbox_txt").html(temp_ + "<br>攤折及淨值 update:<br>" + JSON.stringify(data_));
-      });
+      let stat_=await post_total_url(PostUrl,itemno_,json[itemno_],frmMsg_)
+      if(stat_!=0) error_set.push(stat_)
+    }
+    for(let itemno_ of error_set)
+    {
+      let stat_=await post_total_url(PostUrl,itemno_,json[itemno_],frmMsg_)
+      if(stat_!=0) alert(stat_)
     }
   }
 </script>

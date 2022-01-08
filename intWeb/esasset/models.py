@@ -179,11 +179,11 @@ class Item(db.Model):
         self.price =price
         self.adjust = adjust
         self.amount = amount
+        self.depr_year=depr_year
         self.fund_amount = fund_amount
         self.fund_name = fund_name
         self.place=place
         self.keeper=keeper
-        self.depr_year=depr_year,
         self.note1=note1
         self.note2=note2
         self.acc_acno=acc_acno

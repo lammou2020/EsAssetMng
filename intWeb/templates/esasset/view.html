@@ -107,7 +107,7 @@ function AddBlankRows(){
     </a>
     <a href="#" class="btn btn-success btn-sm" id="savebtn">
       <i class="glyphicon glyphicon-edit"></i>
-      儲存
+      儲存運算結果
      </a>    
     <a href="#" class="btn btn-primary btn-sm" onclick="calcTotalbtn();">
       <i class="glyphicon glyphicon-edit"></i>
@@ -128,7 +128,7 @@ function AddBlankRows(){
 {% set file_uplink="/EsAsset/%s/upload"%(acc_id) %}
 {% include 'esasset/control/filenames_form.html' %}
 
-
+<script src='/static/javascripts/cool/grid_v2.js?v=2' ></script>
 <script>
   var PostUrl='/EsAsset/{{book.id}}/item/api/JSON/update' ;    
   $(document).ready(function(){

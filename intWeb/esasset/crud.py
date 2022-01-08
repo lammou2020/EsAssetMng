@@ -222,7 +222,7 @@ def itemadd(id):
         "price":"0",
         "adjust":"0",
         "amount":"0",
-        "depr_ed":"0",
+        "depr_year":"0",
         "acc_acno":acc_acno,
         "regSDate":regSDate}
     return render_template("esasset/item/form.html", action="Add", book=book)
