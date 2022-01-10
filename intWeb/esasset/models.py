@@ -210,12 +210,28 @@ def createItem(data):
     db.session.commit()
     return from_sql(acc)
 
+def createItem_Blank(data,cnt):
+    for i in range(cnt):
+        acc = Item(**data)
+        db.session.add(acc)
+    db.session.commit()
+    return from_sql(acc)
+
 def updateItem(data, id):
     acc = Item.query.get(id)
     for k, v in data.items():
         setattr(acc, k, v)
     db.session.commit()
     return from_sql(acc)
+
+def updateItem_Set(data):
+    for id in data:
+        acc = Item.query.get(id)
+        for k, v in data[id].items():
+            setattr(acc, k, v)
+    db.session.commit()
+    return ""
+
 
 def deleteItem(id):
     Item.query.filter_by(id=id).delete()
@@ -361,12 +377,32 @@ def createItemCat(data):
     db.session.commit()
     return from_sql(acc)
 
+def createItemCat_blank(cnt):
+    for i in range(cnt):
+        acc = ItemCategory(
+                  itemcat_pri='0',
+                 itemcat_sec='0',
+                 name="",
+                 depr_year=0)
+        db.session.add(acc)
+    db.session.commit()
+    return cnt
+
 def updateItemCat(data, id):
     acc = ItemCategory.query.get(id)
     for k, v in data.items():
         setattr(acc, k, v)
     db.session.commit()
     return from_sql(acc)
+
+def updateItemCat_Set(data):
+    for id in data:
+        acc = ItemCategory.query.get(id)
+        for k, v in data[id].items():
+            setattr(acc, k, v)
+    db.session.commit()
+    return None
+
 
 def deleteItemCat(id):
     ItemCategory.query.filter_by(id=id).delete()

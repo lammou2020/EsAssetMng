@@ -274,6 +274,10 @@ function BindingFunctions(editbtn, savebtn, readmodbtn) {
 		});
 		if(error_msg !="" ){ alert(error_msg);}
 		if (PostUrl != null) {
+
+			if(PostUrl.indexOf("updateSet")){
+				let stat_=await posturl(PostUrl,0,json,frmMessageBox )
+			}else{
 			for (let rowid in json) {
 				let jsondata = json[rowid]
 				let stat_=await posturl(PostUrl,rowid,jsondata,frmMessageBox )
@@ -282,7 +286,6 @@ function BindingFunctions(editbtn, savebtn, readmodbtn) {
 					result_set.push(stat_)
 				}
 			}
-			
 			for (let rowid of result_set) {
 				let jsondata = json[rowid]
 				let stat_=await posturl(PostUrl,rowid,jsondata,frmMessageBox )
@@ -291,10 +294,11 @@ function BindingFunctions(editbtn, savebtn, readmodbtn) {
 					alert("error:"+stat_)
 				}
 			}
-			
 			for (var key in json) {
 				OriginalData[key] = "-1";
 			}
+		}
+
 		} else {
 			alert("constructing ... POST:\n" + JSON.stringify(json));
 		}

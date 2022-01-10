@@ -255,10 +255,8 @@ def itemaddbatch(id,cnt):
         data["itemno"]=None
     else:
         pass
-    for i in range(int(cnt)):
-        book = get_assest_model().createItem(data)
-        print(book)
-    
+    #for i in range(int(cnt)):
+    book = get_assest_model().createItem_Blank(data,int(cnt))
     return f"{cnt}"
 # [END add]
 
@@ -267,7 +265,6 @@ def itemaddbatch(id,cnt):
 @login_required_auth
 def itemJsonUpdate(id,itemid):
     data=request.get_json()
-    
     if 'regSDate' in data:
         data['regSDate']=datetime.strptime(data['regSDate'], '%Y-%m-%d')
     if 'itemno' in data:   
@@ -277,6 +274,22 @@ def itemJsonUpdate(id,itemid):
             pass
     book = get_assest_model().updateItem(data, itemid)
     return jsonify( book)
+
+@crud.route('/<id>/item/api/JSON/updateSet/<nothing>', methods=['GET', 'POST'])
+@login_required_auth
+def itemJsonUpdateSet(id,nothing):
+    data=request.get_json()
+    for itemid in data:
+        if 'regSDate' in data[itemid]:
+            data[itemid]['regSDate']=datetime.strptime(data[itemid]['regSDate'], '%Y-%m-%d')
+        if 'itemno' in data:   
+            if data[itemid]["itemno"]=="" or data[itemid]["itemno"]=="None" or data[itemid]["itemno"]==None:
+                data[itemid]["itemno"]=None
+            else:
+                pass
+    book = get_assest_model().updateItem_Set(data)
+    return "Update !"
+
 
 def CheckOwnRecordErr(book,session):
     if session["profile"].get("id")==1 : return None
@@ -467,6 +480,22 @@ def itemgrid(id):
 def itemCateGrid():
     items= get_assest_model().ItemCatlist()
     return render_template("esasset/itemCategory/grid.html", items=items)
+
+@crud.route('/itemCateGrid_/addbatch/<cnt>', methods=['GET', 'POST'])
+@login_required_auth
+def itemcataddbatch(cnt):
+    items= get_assest_model().createItemCat_blank(int(cnt))
+    return f"{cnt}"
+
+
+@crud.route('/itemCateGrid_/api/JSON/updateSet/<nothing>', methods=['GET', 'POST'])
+@login_required_auth
+def itemCateGridJsonUpdateSet(nothing):
+    data=request.get_json()
+    book = get_assest_model().updateItemCat_Set(data)
+    return "update !"
+
+
 
 @crud.route('/itemCateGrid_/api/JSON/update/<itemcat_id>', methods=['GET', 'POST'])
 @login_required_auth

@@ -17,6 +17,18 @@ python main.py
 ## SQL
 
 ```sql
+CREATE TABLE IF NOT EXISTS User (
+        id INTEGER NOT NULL,
+        user VARCHAR(255) NOT NULL,
+        password VARCHAR(225) NOT NULL,
+        Name VARCHAR(255),
+        Classno VARCHAR(255),
+        Seat VARCHAR(255),
+        Role VARCHAR(255),
+        PRIMARY KEY (id),
+        UNIQUE (user)
+);
+
 CREATE TABLE IF NOT EXISTS Acc (
         id INTEGER NOT NULL,
         acno VARCHAR(16) NOT NULL,
@@ -24,10 +36,18 @@ CREATE TABLE IF NOT EXISTS Acc (
         regSDate DATETIME NOT NULL,
         describ TEXT,
         createdById VARCHAR(255),
+        /*
+        readonly INTEGER,
+        Path VARCHAR(80),
+        imageUrl VARCHAR(255),
+        ctime DATETIME NOT NULL,
+        utime DATETIME NOT NULL,
         total INTEGER,
+        */
         PRIMARY KEY (id),
         UNIQUE (acno)
 );
+
 CREATE TABLE IF NOT EXISTS ItemCategory (
         id INTEGER NOT NULL,
         itemcat_pri BIGINT,
@@ -39,6 +59,7 @@ CREATE TABLE IF NOT EXISTS ItemCategory (
         describ TEXT,
         PRIMARY KEY (id)
 );
+
 CREATE TABLE IF NOT EXISTS Item (
         id INTEGER NOT NULL,
         itemno VARCHAR(30),
@@ -61,11 +82,19 @@ CREATE TABLE IF NOT EXISTS Item (
         acc_acno VARCHAR(16) NOT NULL,
         createdById VARCHAR(255),
         describ TEXT,
+        /*
+        Path VARCHAR(80),
+        imageUrl VARCHAR(255),
+        ctime DATETIME NOT NULL,
+        utime DATETIME NOT NULL,
+        adjust NUMERIC(10, 2),
+        */
         PRIMARY KEY (id),
         UNIQUE (itemno),
         UNIQUE (itemcatno),
         FOREIGN KEY(acc_acno) REFERENCES Acc (acno)
 );
+
 CREATE TABLE IF NOT EXISTS ItemMoveLog (
         id INTEGER NOT NULL,
         itemno VARCHAR(30),
@@ -81,6 +110,23 @@ CREATE TABLE IF NOT EXISTS ItemMoveLog (
 
 ## ORM
 
+
+config.py
+```python
+import os
+PORT=85
+# [START secret_key]
+SECRET_KEY = 'keyboard_cat'
+SESSION_COOKIE_NAME='connect.sid'
+REDIS_PORT=6379
+# [END secret_key]
+DATA_BACKEND = 'sqlite'
+SQLITE_PATH=f"{os.getcwd()}\\bookshelf.db"
+SQLALCHEMY_SQLITE_URI = ( 'sqlite:///{path}').format(path=SQLITE_PATH)
+SQLALCHEMY_DATABASE_URI = SQLALCHEMY_SQLITE_URI
+```
+
+models.py    
 ```python
 from datetime import datetime
 from flask import Flask
@@ -90,8 +136,7 @@ from sqlalchemy import desc
 
 builtin_list = list
 
-#db = SQLAlchemy()
-from intWeb import db
+db = SQLAlchemy()
 
 def init_app(app):
     # Disable track modifications, as it unnecessarily uses memory.
@@ -109,14 +154,13 @@ def from_sql(row):
 class Acc(db.Model):
     __tablename__ = 'Acc'
     id= db.Column(db.Integer,primary_key=True) # 編號
-    acno = db.Column(db.String(16),unique=True,nullable=False)  #按項目/發票定義 ACC[FA2021-xxx-001/-00[1-9]
+    acno = db.Column(db.String(16),unique=True,nullable=False)  #按項目/發票定義
     acc= db.Column(db.String(160))  #名稱
     regSDate= db.Column(db.DateTime, nullable=False,default=datetime.utcnow) #登記日期
     describ=db.Column(db.Text)  # 描述
     # User info
     createdById = db.Column(db.String(255))    
-    
-    def __init__(self, acno=None, acc=None, regSDate=None, describ=None,createdById=None):
+    def __init__(self, acno=None, acc=None, regSDate=None, describ=None, createdById=None):
         self.acno=acno
         self.acc=acc
         self.regSDate=regSDate
@@ -228,7 +272,6 @@ class ItemCategory(db.Model):
     def __repr__(self):
         return "<itemCate(name='%s')" % (self.name)    
 
-
 # [ItemMoveLog]
 class ItemMoveLog(db.Model):
     __tablename__ = 'ItemMoveLog'    
@@ -237,7 +280,6 @@ class ItemMoveLog(db.Model):
     item = db.relationship('Item', backref="places",lazy=True) 
     keeper=db.Column(db.String(80))  # 移動 link to _table
     place =db.Column(db.String(80))  # 放置地方
-    #
     createdById = db.Column(db.String(255))    
     ctime = db.Column(db.DateTime, nullable=False,default=datetime.utcnow)  #创建时间
     utime = db.Column(db.DateTime)  #更新时间

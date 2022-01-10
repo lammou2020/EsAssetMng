@@ -10,9 +10,24 @@
     <link rel='stylesheet' href='/static/javascripts/cool/grid.css'  />
     <style>
       td {padding-right: 5px; padding-left: 5px; }
-      th{min-width: 100px;}
+      th {min-width: 100px;}
     </style>
+    <script>
+    function AddBlankRows(){
+      let _url="/EsAsset/itemCateGrid_/addbatch/0?" 
+      let number_for_rows = prompt("Please enter number for rows", "0");
+      var reg = /^\d+$/;
+      if (number_for_rows != null && reg.test(number_for_rows)) {
+        window.location.href=_url.replace("/0?",`/${number_for_rows}?`);
+      } 
+    }
+    </script>
     {% if session.profile and session.profile.Role < "8" %} <div class="btn-group">
+      <a href="#" class="btn btn-primary btn-sm" id="" onclick="AddBlankRows()">
+        <i class="glyphicon glyphicon-edit"></i>
+        新增記錄
+       </a>
+
       <a href="#" class="btn btn-primary btn-sm" id="exportCSV">
         <i class="glyphicon glyphicon-edit"></i>
         下戴CSV
@@ -69,7 +84,8 @@
         exportTableToCSV.apply(this, args);
       });
   
-      var PostUrl='itemCateGrid_/api/JSON/update' ;    
+      //var PostUrl='itemCateGrid_/api/JSON/update' ;    
+      var PostUrl='itemCateGrid_/api/JSON/updateSet' ;    
       $(document).ready(function(){
           BindingFunctions("editbtn","savebtn",'readmodebtn');
           BindingHead_EditMode(['MA_H','MB_H','MC_H','MD_H','ME_H','MF_H','MG_H']);
