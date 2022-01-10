@@ -98,7 +98,7 @@ class Area(models.Model):
     phone = models.CharField(max_length=32, blank=True, null=True, verbose_name='联系电话')
     address = models.CharField(max_length=128, blank=True, null=True, default='', verbose_name="机房地址")
     contract_date = models.CharField(max_length=30, verbose_name='合同时间')
-    describe = models.TextField(max_length=128,blank=True, null=True, verbose_name='备注')
+    describ = models.TextField(max_length=128,blank=True, null=True, verbose_name='备注')
     needed_cabinet = models.BooleanField(default=True, verbose_name=u"是否需要渲染机架图")
     def __str__(self):
         return self.name
@@ -114,7 +114,7 @@ class Manufacturer(models.Model):
     name = models.CharField(max_length=32, unique=True,verbose_name='厂家供应商')
     contact = models.CharField(max_length=16, blank=True, null=True, verbose_name='联系人')
     phone = models.CharField(max_length=32, blank=True, null=True, verbose_name='联系电话')
-    describe = models.TextField(max_length=128, blank=True, null=True, verbose_name='备注')
+    describ = models.TextField(max_length=128, blank=True, null=True, verbose_name='备注')
 
 
 
@@ -130,7 +130,7 @@ class Belong(models.Model):
     """所属公司"""
     name = models.CharField(max_length=32, verbose_name='公司名称')
     nickname = models.CharField(max_length=32, verbose_name='平台简称')
-    describe = models.CharField(max_length=60,blank=True, null=True, verbose_name='备注')
+    describ = models.CharField(max_length=60,blank=True, null=True, verbose_name='备注')
 
     def __str__(self):
         return self.name

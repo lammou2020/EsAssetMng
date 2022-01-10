@@ -90,7 +90,7 @@ function AddBlankRows(){
           {{book.createdById}}
         </td>
     </table>
-    <p>{{book.describe | safe}}</p>
+    <p>{{book.describ | safe}}</p>
   </div>
   {% if session.profile and session.profile.Role < "8" %} <div class="btn-group">
     <a href="/EsAsset/{{book.id}}/item/add?acno={{book.acno}}&regSDate={{book.regSDate}}" class="btn btn-primary btn-sm">

@@ -37,7 +37,7 @@ class Acc(db.Model):
     voucherNo= db.Column(db.String(80))
     vendor= db.Column(db.String(80))
     total=db.Column(db.Integer)
-    describe=db.Column(db.Text)
+    describ=db.Column(db.Text)
     readonly=db.Column(db.Integer,default=0)
     createdById = db.Column(db.String(255))    
     Path=db.Column(db.String(80))
@@ -45,7 +45,7 @@ class Acc(db.Model):
     ctime = db.Column(db.DateTime, nullable=False,default=datetime.utcnow)  #创建时间
     utime = db.Column(db.DateTime, nullable=False,default=datetime.utcnow)  #更新时间
     
-    def __init__(self, acno=None, acc=None, orderNo=None, regSDate=None,voucherNo=None,vendor=None,total=None,describe=None,createdById=None,imageUrl=None,Path=None):
+    def __init__(self, acno=None, acc=None, orderNo=None, regSDate=None,voucherNo=None,vendor=None,total=None,describ=None,createdById=None,imageUrl=None,Path=None):
         self.acno=acno
         self.acc=acc
         self.orderNo=orderNo
@@ -55,7 +55,7 @@ class Acc(db.Model):
         self.createdById=createdById
         self.imageUrl=imageUrl
         self.total=total
-        self.describe=describe
+        self.describ=describ
         self.Path=Path
     def __repr__(self):
         return "<acc(accno='%s', acc=%s)" % (self.accno, self.acc)    
@@ -167,7 +167,7 @@ class Item(db.Model):
     imageUrl = db.Column(db.String(255))    
     ctime = db.Column(db.DateTime, nullable=False,default=datetime.utcnow)  #创建时间
     utime = db.Column(db.DateTime, nullable=False,default=datetime.utcnow)  #更新时间
-    describe = db.Column(db.Text)
+    describ = db.Column(db.Text)
 
     def __init__(self, 
                  itemno=None,
@@ -200,7 +200,7 @@ class Item(db.Model):
                  ram	=None,
                  disk=None,
                  accyear	=None,
-                describe=None
+                describ=None
                  ):
         self.itemno =itemno
         self.name =name
@@ -233,7 +233,7 @@ class Item(db.Model):
         self.ram	=ram	
         self.disk=disk
         self.accyear=accyear	
-        self.describe=describe
+        self.describ=describ
 
     def __repr__(self):
         return "<item(name='%s')" % (self.name)    
@@ -381,13 +381,13 @@ def readAllFromTable(tablename):
 #    pk=db.Column(db.Integer)
 #    sk=db.Column(db.Integer)
 #    leaf=db.Column(db.Integer)
-#    describe=db.Column(db.Text)
-#    def __init__(self, itemTypeName=None, pk=None, sk=None, leaf=None, nodescribete=None):
+#    describ=db.Column(db.Text)
+#    def __init__(self, itemTypeName=None, pk=None, sk=None, leaf=None, nodescribte=None):
 #        self.itemType=itemTypeName
 #        self.pk=pk
 #        self.sk=sk
 #        self.leaf=leaf
-#        self.describe=nodescribete
+#        self.describ=nodescribte
 #    def __repr__(self):
 #        return "<itemType(itemType='%s')" % (self.itemType)    
 #
@@ -396,7 +396,7 @@ def readAllFromTable(tablename):
 #    id = db.Column(db.Integer, primary_key=True)
 #    name = db.Column(db.String(80),unique=True,nullable=False) #"区域"
 #    subnet = db.Column(db.String(80))                          # ip subent 
-#    describe = db.Column(db.Text)
+#    describ = db.Column(db.Text)
 #    def __init__(self, name=None):
 #        self.name=name
 #    def __repr__(self):
@@ -408,7 +408,7 @@ def readAllFromTable(tablename):
 #    name =db.Column(db.String(80),unique=True,nullable=False)
 #    contact = db.Column(db.String(80),unique=True,nullable=False)
 #    phone =db.Column(db.String(80),unique=True,nullable=False)
-#    describe = db.Column(db.Text)
+#    describ = db.Column(db.Text)
 #    def __init__(self, name=None):
 #        self.name=name
 #    def __str__(self):
@@ -418,7 +418,7 @@ def readAllFromTable(tablename):
 #    __tablename__ = 'Belong'    
 #    id = db.Column(db.Integer, primary_key=True)
 #    name =db.Column(db.String(80),unique=True,nullable=False)
-#    describe = db.Column(db.Text)
+#    describ = db.Column(db.Text)
 #    def __init__(self, name=None):
 #        self.name=name
 #    def __str__(self):

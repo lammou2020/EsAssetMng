@@ -27,7 +27,7 @@ class Acc(db.Model):
     acno = db.Column(db.String(16),unique=True,nullable=False)  #按項目/發票定義 ACC[FA2021-xxx-001/-00[1-9]
     acc= db.Column(db.String(160))  #名稱
     regSDate= db.Column(db.DateTime, nullable=False,default=datetime.utcnow) #登記日期
-    describe=db.Column(db.Text)  # 描述
+    describ=db.Column(db.Text)  # 描述
     #
     createdById = db.Column(db.String(255))    
     readonly = db.Column(db.Integer,default=0)
@@ -37,14 +37,14 @@ class Acc(db.Model):
     utime = db.Column(db.DateTime, nullable=False,default=datetime.utcnow)  #更新时间
     total = db.Column(db.Integer)  # 計算時使用 
     
-    def __init__(self, acno=None, acc=None, regSDate=None, total=None,describe=None,createdById=None,imageUrl=None,Path=None):
+    def __init__(self, acno=None, acc=None, regSDate=None, total=None,describ=None,createdById=None,imageUrl=None,Path=None):
         self.acno=acno
         self.acc=acc
         self.regSDate=regSDate
         self.createdById=createdById
         self.imageUrl=imageUrl
         self.total=total
-        self.describe=describe
+        self.describ=describ
         self.Path=Path
     def __repr__(self):
         return "<acc(accno='%s', acc=%s)" % (self.accno, self.acc)    
@@ -141,7 +141,7 @@ class Item(db.Model):
     imageUrl = db.Column(db.String(255))    
     ctime    = db.Column(db.DateTime, nullable=False,default=datetime.utcnow)  #创建时间
     utime    = db.Column(db.DateTime, nullable=False,default=datetime.utcnow)  #更新时间
-    describe = db.Column(db.Text)   
+    describ = db.Column(db.Text)   
 
     def __init__(self, 
                  itemno=None,
@@ -164,7 +164,7 @@ class Item(db.Model):
                  Path=None,
                  imageUrl=None,
                  createdById=None,
-                 describe=None
+                 describ=None
                  ):
         self.itemno =itemno
         self.itemcatno =itemcatno
@@ -186,7 +186,7 @@ class Item(db.Model):
         self.Path=Path
         self.imageUrl=imageUrl
         self.createdById=createdById
-        self.describe=describe
+        self.describ=describ
 
     def __repr__(self):
         return "<item(name='%s')" % (self.name)    
@@ -321,7 +321,7 @@ class ItemCategory(db.Model):
     depr_year= db.Column(db.Integer)  # 攤折年期
     note1 =db.Column(db.Text)  # 不作地方記錄 描述
     note2 =db.Column(db.Text)  # 不作地方記錄 描述
-    describe =db.Column(db.Text)  # 不作地方記錄 描述
+    describ =db.Column(db.Text)  # 不作地方記錄 描述
     def __init__(self, 
                  itemcat_pri=None,
                  itemcat_sec=None,
@@ -329,7 +329,7 @@ class ItemCategory(db.Model):
                  depr_year=None,
                  note1=None,
                  note2=None,
-                 describe=None
+                 describ=None
                  ):
         self.itemcat_pri =itemcat_pri
         self.itemcat_sec =itemcat_sec
@@ -337,7 +337,7 @@ class ItemCategory(db.Model):
         self.depr_year =depr_year
         self.note1=note1
         self.note2=note2
-        self.describe=describe
+        self.describ=describ
 
     def __repr__(self):
         return "<itemCate(name='%s')" % (self.name)    
