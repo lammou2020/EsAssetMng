@@ -5,11 +5,10 @@
     <td id="MA_H">校內編號</td>
     <td id="MB_H">分類編號</td>
     <td id="MC_H" style="min-width: 100px;">產品名稱</td>
-    <td id="MD_H">型號</td>
+    <td id="MD_H">Module</td>
     <td id="ME_H">SN/PN</td>
     <td id="MF_H">數量</td>
     <td id="MG_H">單價</td>
-    <td id="MH_H">攤折</td>
     <td id="MI_H">淨值</td>
     <td id="MJ_H">使用年期</td>
     <td id="MK_H">資助額</td>
@@ -31,7 +30,6 @@
     <td class="M" id="ME_sn_{{item_.id}}">{{item_.sn}}</td>
     <td class="M" id="MF_quantity_{{item_.id}}">{{item_.quantity}}</td>
     <td class="M" id="MG_price_{{item_.id}}">{{item_.price}}</td>
-    <td class="M" id="MH_adjust_{{item_.id}}">{{item_.adjust}}</td>
     <td class="M" id="MI_amount_{{item_.id}}">{{item_.amount}}</td>
     <td class="M" id="MJ_depr-year_{{item_.id}}">{{item_.depr_year}}</td>
     <td class="M" id="MK_fund-amount_{{item_.id}}">{{item_.fund_amount}}</td>
@@ -39,7 +37,7 @@
     <td class="M" id="MM_place_{{item_.id}}">{{item_.place}}</td>
     <td class="M" id="MN_keeper_{{item_.id}}">{{item_.keeper}}</td>
     <td class="M" id="MO_note1_{{item_.id}}">{{item_.note1}}</td>
-    <td class="M" id="MP_regSDate_{{item_.id}}">{{item_.regSDate}}</td>
+    <td class="M" id="MP_regSDate_{{item_.id}}">{{item_.regSDate.strftime('%Y-%m-%d')}}</td>
     {% if session.profile and session.profile.user=='admin' and False %}
     <td class="M" id="MZ_acc-acno_{{item_.id}}">{{item_.acc_acno}}</td>
     {% else %}
@@ -106,6 +104,23 @@
       }
     }
   }
+  function depr_rate(acno,depr_year){
+    let res=/FA[\d][\d][\d][\d]/.exec(acno)   
+    if(res==null){return 0;}
+    if(res[0]=="FA0000"){return 0;}
+    let y=res[0].substring(2,6)
+    console.log(y)
+    const d = new Date();
+    let year = d.getFullYear();
+    let month = d.getMonth()+1;
+    let dy= year - Number(y)
+    if(dy>0) dy=dy - (month<8 ? 1:0)
+    if(dy==0) return 1;
+    if(dy>50) return 0;
+    if(dy>0 && dy <51 && depr_year>0 && depr_year<51 && depr_year>dy) return (depr_year-dy) / depr_year;
+    return 0;
+
+  }
   function calcTotalbtn() {
     closeedit();
     var table = document.getElementById("EDUTBL");
@@ -120,14 +135,15 @@
       let depr_year=0;      
       let acc_no=row.cells[row.cells.length-1].innerHTML;
       for (var j = 0, col; col = row.cells[j]; j++) {
-        if (col.id && col.id.indexOf("price") > -1) price = Number(col.innerHTML)
+        if (col.id && col.id.indexOf("price")    > -1) price = Number(col.innerHTML)
         if (col.id && col.id.indexOf("quantity") > -1) quantity = Number(col.innerHTML)
-        if (col.id && col.id.indexOf("amount") > -1) { amout_cell=col;}
+        if (col.id && col.id.indexOf("amount")   > -1) { amout_cell=col;}
         if (col.id && col.id.indexOf("depr-year") > -1){ depr_year = Number(col.innerHTML)
-          amount = price * quantity / depr_year
+          amount = price * quantity *  depr_rate(acc_no, depr_year)
           amout_cell.innerHTML = amount
           total_amount += amount
           total_quantity += quantity
+          
           break;
         }
       }
@@ -150,10 +166,10 @@
       cell1.innerHTML = "-";
       cell3.innerHTML = "小計";
       cell8.innerHTML = total_quantity;
-      cell11.innerHTML = total_amount;
+      cell10.innerHTML = total_amount;
     }else{
       totalrow.cells[7].innerHTML=total_quantity;
-      totalrow.cells[10].innerHTML=total_amount 
+      totalrow.cells[9].innerHTML=total_amount 
     }
   }
 

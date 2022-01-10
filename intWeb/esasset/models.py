@@ -116,7 +116,7 @@ def list_by_user(user_id, limit=10, cursor=None):
 # 物品 ITEM  [FA2021-xxx-001/-00[1-9]-[4271046][0001]
 class Item(db.Model):
     __tablename__ = 'Item'    
-    id = db.Column(db.Integer,primary_key=True)
+    id = db.Column(db.Integer,primary_key=True) # 編號
     itemno=db.Column(db.String(30),unique=True,nullable=True) # 物品編號
     itemcatno=db.Column(db.BigInteger,unique=True,nullable=True) # 物品分類編號
     name = db.Column(db.String(80))  # 產品
@@ -124,7 +124,6 @@ class Item(db.Model):
     sn = db.Column(db.String(80))    # SN/PN
     price = db.Column(db.Numeric(precision=10,scale=2))       # 單價
     quantity= db.Column(db.Integer,default=0)  # 數量
-    adjust=  db.Column(db.Numeric(precision=10,scale=2))  # 攤折 ; When value=0, depr_ed= db.Column(db.Integer) 淨攤 x
     amount=  db.Column(db.Numeric(precision=10,scale=2))   # 淨值
     fund_amount=db.Column(db.Integer)# 資助金額
     fund_name=db.Column(db.String(80))  # 資助單位/個人
@@ -145,6 +144,8 @@ class Item(db.Model):
     ctime    = db.Column(db.DateTime, nullable=False,default=datetime.utcnow)  #创建时间
     utime    = db.Column(db.DateTime, nullable=False,default=datetime.utcnow)  #更新时间
     describe = db.Column(db.Text)   
+    # depercate
+    adjust=  db.Column(db.Numeric(precision=10,scale=2))  # 攤折 ; When value=0, depr_ed= db.Column(db.Integer) 淨攤 x
 
     def __init__(self, 
                  itemno=None,
@@ -154,7 +155,6 @@ class Item(db.Model):
                  sn=None,
                  quantity=None,
                  price=None,
-                 adjust=None,
                  amount=None,
                  fund_amount=None,
                  fund_name=None,
@@ -168,7 +168,8 @@ class Item(db.Model):
                  Path=None,
                  imageUrl=None,
                  createdById=None,
-                 describe=None
+                 describe=None,
+                 adjust=None,                 
                  ):
         self.itemno =itemno
         self.itemcatno =itemcatno
@@ -177,7 +178,6 @@ class Item(db.Model):
         self.sn =sn
         self.quantity =quantity
         self.price =price
-        self.adjust = adjust
         self.amount = amount
         self.depr_year=depr_year
         self.fund_amount = fund_amount
@@ -192,6 +192,7 @@ class Item(db.Model):
         self.imageUrl=imageUrl
         self.createdById=createdById
         self.describe=describe
+        self.adjust = adjust
 
     def __repr__(self):
         return "<item(name='%s')" % (self.name)    
