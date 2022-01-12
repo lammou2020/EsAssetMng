@@ -55,6 +55,7 @@ def upload_image_file(file,UPLOAD_FOLDER,pixStr=None):
 
 
 @crud.route("/")
+@login_required_auth
 def home():
     token = request.args.get('page_token', None)
     if token:
@@ -66,6 +67,7 @@ def home():
         next_page_token=next_page_token)
 
 @crud.route("/list")
+@login_required_auth
 def list():
     token = request.args.get('page_token', None)
     if token:
@@ -464,6 +466,7 @@ def delete(id):
 
 
 @crud.route("/<id>/itemgrid")
+@login_required_auth
 def itemgrid(id):
     book = get_assest_model().read(id)
     Err=CheckOwnRecordErr(book,session)

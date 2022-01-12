@@ -7,7 +7,6 @@ args = sys.argv[1:]
 
 if "--help" in args:
     print("--initdb")
-    print("--inscat")
     print("--inititemcat")
     print(f"default: run on {config.PORT}.")
 
