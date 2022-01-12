@@ -28,6 +28,8 @@ class Acc(db.Model):
     acno = db.Column(db.String(16),unique=True,nullable=False)  #按項目/發票定義 ACC[FA2021-xxx-001/-00[1-9]
     acc= db.Column(db.String(160))  #名稱
     regSDate= db.Column(db.DateTime, nullable=False,default=datetime.utcnow) #登記日期
+    vouchernum =db.Column(db.String(80))  # 憑單編號
+    total=db.Column(db.Integer)  # 計算時使用 
     describ=db.Column(db.Text)  # 描述
     
     # User info
@@ -37,17 +39,19 @@ class Acc(db.Model):
     imageUrl = db.Column(db.String(255))    
     ctime = db.Column(db.DateTime, nullable=False,default=datetime.utcnow)  #创建时间
     utime = db.Column(db.DateTime, nullable=False,default=datetime.utcnow)  #更新时间
-    total=db.Column(db.Integer)  # 計算時使用 
     
-    def __init__(self, acno=None, acc=None, regSDate=None, total=None,describ=None,createdById=None,imageUrl=None,Path=None):
+    
+    def __init__(self, acno=None, acc=None, regSDate=None, vouchernum=None, total=None,describ=None,createdById=None,imageUrl=None,Path=None):
         self.acno=acno
         self.acc=acc
         self.regSDate=regSDate
-        self.createdById=createdById
-        self.imageUrl=imageUrl
+        self.vouchernum=vouchernum
         self.total=total
-        self.describ=describ
+        self.describ=describ        
+        self.createdById=createdById
         self.Path=Path
+        self.imageUrl=imageUrl
+        
     def __repr__(self):
         return "<acc(accno='%s', acc=%s)" % (self.accno, self.acc)    
 
@@ -231,7 +235,7 @@ def updateItem(data, id):
     db.session.commit()
     return from_sql(acc)
 
-def updateItem_Set(data):
+def updateItem_DataSet(data):
     for id in data:
         acc = Item.query.get(id)
         for k, v in data[id].items():
@@ -402,7 +406,7 @@ def updateItemCat(data, id):
     db.session.commit()
     return from_sql(acc)
 
-def updateItemCat_Set(data):
+def updateItemCat_DataSet(data):
     for id in data:
         acc = ItemCategory.query.get(id)
         for k, v in data[id].items():

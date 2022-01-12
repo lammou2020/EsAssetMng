@@ -289,7 +289,7 @@ def itemJsonUpdateSet(id,nothing):
                 data[itemid]["itemno"]=None
             else:
                 pass
-    book = get_assest_model().updateItem_Set(data)
+    book = get_assest_model().updateItem_DataSet(data)
     return "Update !"
 
 
@@ -495,7 +495,7 @@ def itemcataddbatch(cnt):
 @login_required_auth
 def itemCateGridJsonUpdateSet(nothing):
     data=request.get_json()
-    book = get_assest_model().updateItemCat_Set(data)
+    book = get_assest_model().updateItemCat_DataSet(data)
     return "update !"
 
 
