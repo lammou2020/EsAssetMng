@@ -4,8 +4,8 @@ MAX_CONTENT_LENGTH = 8 * 1024 * 1024
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
 # Image Path
 UPLOAD_FOLDER=os.getcwd()+"\\TEMP"
-HW_UPLOAD_FOLDER="c:/ASSETDIR/"
-HW_TEMP_FOLDER="c:/ASSETTEMP/"
+HW_UPLOAD_FOLDER="c:/ASSET_FOLDER/DOC/"
+HW_TEMP_FOLDER="c:/ASSET_FOLDER/TEMP/"
 
 # [START secret_key]
 SECRET_KEY = 'catcat'

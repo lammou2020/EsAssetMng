@@ -28,10 +28,9 @@ class Acc(db.Model):
     acno = db.Column(db.String(16),unique=True,nullable=False)  #按項目/發票定義 ACC[FA2021-xxx-001/-00[1-9]
     acc= db.Column(db.String(160))  #名稱
     regSDate= db.Column(db.DateTime, nullable=False,default=datetime.utcnow) #登記日期
+    describ=db.Column(db.Text)  # 描述
     vouchernum =db.Column(db.String(80))  # 憑單編號
     total=db.Column(db.Integer)  # 計算時使用 
-    describ=db.Column(db.Text)  # 描述
-    
     # User info
     createdById = db.Column(db.String(255))    
     readonly=db.Column(db.Integer,default=0)
@@ -40,18 +39,25 @@ class Acc(db.Model):
     ctime = db.Column(db.DateTime, nullable=False,default=datetime.utcnow)  #创建时间
     utime = db.Column(db.DateTime, nullable=False,default=datetime.utcnow)  #更新时间
     
-    
-    def __init__(self, acno=None, acc=None, regSDate=None, vouchernum=None, total=None,describ=None,createdById=None,imageUrl=None,Path=None):
+    def __init__(self, 
+                acno=None, 
+                acc=None, 
+                regSDate=None, 
+                vouchernum=None, 
+                total=None,
+                describ=None,
+                createdById=None,
+                imageUrl=None,
+                Path=None):
         self.acno=acno
         self.acc=acc
         self.regSDate=regSDate
+        self.createdById=createdById
+        self.imageUrl=imageUrl
         self.vouchernum=vouchernum
         self.total=total
-        self.describ=describ        
-        self.createdById=createdById
+        self.describ=describ
         self.Path=Path
-        self.imageUrl=imageUrl
-        
     def __repr__(self):
         return "<acc(accno='%s', acc=%s)" % (self.accno, self.acc)    
 
@@ -139,6 +145,7 @@ class Item(db.Model):
     note2 =db.Column(db.Text)  # 不作資助記錄
     vouchernum =db.Column(db.String(80))  # 憑單編號
     invoicenum =db.Column(db.String(80))  # 傳票號碼
+    supplier =db.Column(db.String(80))  # 供應商
     unit_descr = db.Column(db.String(80)) # 單位名稱
     # Acc_acno
     regSDate = db.Column(db.DateTime, nullable=False,default=datetime.utcnow) 
@@ -176,6 +183,7 @@ class Item(db.Model):
                  createdById=None,
                  vouchernum=None,
                  invoicenum=None,
+                 supplier=None,
                  unit_descr=None,
                  describ=None,
                  ):
@@ -202,6 +210,7 @@ class Item(db.Model):
         self.createdById=createdById
         self.vouchernum=vouchernum
         self.invoicenum=invoicenum
+        self.supplier=supplier
         self.unit_descr=unit_descr
         self.describ=describ
 

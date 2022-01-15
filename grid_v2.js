@@ -220,9 +220,9 @@ function posturl(PostUrl,rowid,jsondata,frmMessageBox ){
 			url: PostUrl + `/${rowid}`,
 			data: JSON.stringify(jsondata),
 			contentType: "application/json",
-			timeout: 2000,
+			timeout: 6000,
 			statusCode: {
-				500: function() {
+				500: function() { 
 				  resolve(rowid);
 				}
 			  }
@@ -230,9 +230,9 @@ function posturl(PostUrl,rowid,jsondata,frmMessageBox ){
 			frmMessageBox.msg(JSON.stringify(data))
 			resolve(0)
 		}).fail(function (jqXHR, textStatus, errorThrown) { 
+			frmMessageBox.msg("over time!")
 			resolve(rowid);
 		});
-		;
 	})
 }
 
@@ -275,7 +275,7 @@ function BindingFunctions(editbtn, savebtn, readmodbtn) {
 		if(error_msg !="" ){ alert(error_msg);}
 		if (PostUrl != null) {
 
-			if(PostUrl.indexOf("updateSet")){
+			if(PostUrl.indexOf("updateSet")>-1){
 				let stat_=await posturl(PostUrl,0,json,frmMessageBox )
 			}else{
 			for (let rowid in json) {
