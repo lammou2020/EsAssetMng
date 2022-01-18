@@ -143,12 +143,13 @@ def categoryitemlist(cateid):
     if token:
         token = token.encode('utf-8')
     buwei=1000000
+    modwei=10000000000 
     if len(cateid)>4 : buwei=1000
-    books, next_page_token = get_assest_model().categoryitemlist_desc(cateid=cateid,buwei=buwei,cursor=token)
+    books, next_page_token = get_assest_model().categoryitemlist_desc(cateid=cateid,modwei=modwei,buwei=buwei,cursor=token)
     #between
     return render_template(
-        "esasset/item/list.html",
-        books=books,
+        "esasset/grid.html",
+        book={},items=books,
         next_page_token=next_page_token)
 
 @crud.route("/JSON/categoryitemlist/<cateid>")
@@ -244,7 +245,6 @@ def itemaddbatch(id,cnt):
         "itemno":"",
         "quantity":"0",
         "price":"0",
-        "adjust":"0",
         "amount":"0",
         "acc_acno":acc_acno,
         "regSDate":regSDate}
@@ -269,11 +269,11 @@ def itemJsonUpdate(id,itemid):
     data=request.get_json()
     if 'regSDate' in data:
         data['regSDate']=datetime.strptime(data['regSDate'], '%Y-%m-%d')
-    if 'itemno' in data:   
-        if data["itemno"]=="" or data["itemno"]=="None" or data["itemno"]==None:
-            data["itemno"]=None
-        else:
-            pass
+    for f_ in ['itemno',"price", "quantity", "p_amount", "amount", "fund_amount"]:
+        if f_ in data:   
+            if data[f_]=="" or data[f_]=="None" or data[f_]==None:
+                data[f_]=None
+
     book = get_assest_model().updateItem(data, itemid)
     return jsonify( book)
 

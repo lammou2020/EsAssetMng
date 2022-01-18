@@ -128,6 +128,8 @@ class Item(db.Model):
     id = db.Column(db.Integer,primary_key=True) # 編號
     itemno=db.Column(db.String(30),unique=True,nullable=True)    # 物品編號
     itemcatno=db.Column(db.BigInteger,unique=True,nullable=True) # 物品分類編號
+    cate=db.Column(db.Integer,nullable=True) # 物品分類編號
+    sess=db.Column(db.String(4),nullable=True) # 物品分類編號
     name = db.Column(db.String(80))  # 產品
     model= db.Column(db.String(80))  # 型號
     sn = db.Column(db.String(80))    # SN/PN
@@ -151,7 +153,7 @@ class Item(db.Model):
     regSDate = db.Column(db.DateTime, nullable=False,default=datetime.utcnow) 
     acc_acno = db.Column(db.String(16), db.ForeignKey('Acc.acno'), nullable=False)
     acc      = db.relationship('Acc',  backref=db.backref('Item', lazy=True))
-    # User info
+    # User_info
     createdById = db.Column(db.String(255))    
     Path     = db.Column(db.String(80))
     imageUrl = db.Column(db.String(255))    
@@ -162,6 +164,8 @@ class Item(db.Model):
     def __init__(self, 
                  itemno=None,
                  itemcatno=None,
+                 cate=None,
+                 sess=None,
                  name=None,
                  model=None,
                  sn=None,
@@ -189,6 +193,8 @@ class Item(db.Model):
                  ):
         self.itemno =itemno
         self.itemcatno =itemcatno
+        self.cate =cate
+        self.sess =sess
         self.name =name
         self.model =model
         self.sn =sn
@@ -295,13 +301,14 @@ def modelitemlist_desc(model,buwei=1000000, limit=10,cursor=None):
     return (lessons, next_page)
 
 # [ 按產品號, 中的分類查詢]
-def categoryitemlist_desc(cateid,buwei=1000000, limit=10,cursor=None):
+def categoryitemlist_desc(cateid,modwei=10000000000 ,buwei=1000000, limit=2000,cursor=None):
     cursor = int(cursor) if cursor else 0
     sint=int(cateid)*buwei
     print(sint)
     query = (Item.query
-             .filter(Item.itemcatno.between(sint,sint+buwei-1))
-             .order_by(desc(Item.itemcatno))
+             #.filter(Item.itemcatno.between(sint,sint+buwei-1))
+             .filter_by(cate=int(cateid))
+             #.order_by(desc(Item.itemcatno))
              .limit(limit)
              .offset(cursor))
     lessons = builtin_list(map(from_sql, query.all()))
@@ -400,7 +407,7 @@ def createItemCat(data):
 def createItemCat_blank(cnt):
     for i in range(cnt):
         acc = ItemCategory(
-                  itemcat_pri='0',
+                 itemcat_pri='0',
                  itemcat_sec='0',
                  name="",
                  depr_year=0)
