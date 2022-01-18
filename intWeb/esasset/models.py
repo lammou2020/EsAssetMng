@@ -74,6 +74,15 @@ def create(data):
     db.session.commit()
     return from_sql(acc)
 
+def createAcc_Blank(data,cnt):
+    for i in range(cnt):
+        
+        acc = Acc(**data)
+        acc.acno=acc.acno+str(i).zfill(3)
+        db.session.add(acc)
+    db.session.commit()
+    return from_sql(acc)
+
 def update(data, id):
     acc = Acc.query.get(id)
     for k, v in data.items():
@@ -96,6 +105,7 @@ def list(limit=10, cursor=None):
     lessons = builtin_list(map(from_sql, query.all()))
     next_page = cursor + limit if len(lessons) == limit else None
     return (lessons, next_page)
+  
 
 # [START list_desc]
 def list_desc(limit=10, cursor=None):

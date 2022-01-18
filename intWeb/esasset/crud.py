@@ -78,6 +78,8 @@ def list():
         books=books,
         next_page_token=next_page_token)
 
+      
+
 # [START list_mine]
 @crud.route("/mine")
 @login_required_auth
@@ -93,6 +95,46 @@ def list_mine():
         books=books,
         next_page_token=next_page_token)
 # [END list_mine]
+
+
+@crud.route('/acc/addbatch/<cnt>', methods=['GET', 'POST'])
+@login_required_auth
+def acc_addbatch(cnt):
+    regSDate= (request.args.get('regSDate', datetime.today().strftime( '%Y-%m-%d')))
+    data={
+        "acno":str(hex(int(datetime.utcnow().timestamp()))),
+        "regSDate":regSDate}
+
+    data['regSDate']=datetime.strptime(data['regSDate'], '%Y-%m-%d')
+    book = get_assest_model().createAcc_Blank(data,int(cnt))
+    return f"{cnt}"
+# [END add]
+
+
+@crud.route('/acc/JSON/update/<itemid>', methods=['GET', 'POST'])
+@login_required_auth
+def acc_JsonUpdate(itemid):
+    data=request.get_json()
+    if 'regSDate' in data:
+        data['regSDate']=datetime.strptime(data['regSDate'], '%Y-%m-%d')
+    book = get_assest_model().update(data, itemid)
+    return jsonify( book)
+
+
+
+@crud.route("/grid")
+@login_required_auth
+def acc_grid():
+    token = request.args.get('page_token', None)
+    if token:
+        token = token.encode('utf-8')
+    books, next_page_token = get_assest_model().list(limit=1000,cursor=token)
+    return render_template(
+        "esasset/acc_grid.html",
+        items=books,
+        next_page_token=next_page_token)  
+
+
 
 @crud.route("/locationitemlist/<roomid>")
 def locationitemlist(roomid):
