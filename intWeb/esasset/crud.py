@@ -1,3 +1,4 @@
+from cmd import IDENTCHARS
 from intWeb import storage, login_required_auth
 from intWeb import get_assest_model
 from flask import flash,Blueprint, current_app, redirect, render_template, request, \
@@ -66,6 +67,7 @@ def home():
         books=books,
         next_page_token=next_page_token)
 
+
 @crud.route("/list")
 @login_required_auth
 def list():
@@ -77,7 +79,6 @@ def list():
         "esasset/list.html",
         books=books,
         next_page_token=next_page_token)
-
       
 
 # [START list_mine]
@@ -121,19 +122,59 @@ def acc_JsonUpdate(itemid):
     return jsonify( book)
 
 
-
-@crud.route("/grid")
+@crud.route("/showacc")
 @login_required_auth
-def acc_grid():
+def show_acc_grid():
     token = request.args.get('page_token', None)
     if token:
         token = token.encode('utf-8')
     books, next_page_token = get_assest_model().list(limit=1000,cursor=token)
     return render_template(
         "esasset/acc_grid.html",
+        
         items=books,
         next_page_token=next_page_token)  
 
+
+@crud.route("/showitem")
+@login_required_auth
+def show_item_grid():
+    token = request.args.get('page_token', None)
+    if token:
+        token = token.encode('utf-8')
+    books, next_page_token = get_assest_model().Itemlist(limit=6000,cursor=token)
+    return render_template(
+        "esasset/grid.html",
+        book={},
+        items=books,
+        next_page_token=next_page_token)  
+
+
+@crud.route("/QueryForm", methods=['GET', 'POST'])
+@login_required_auth
+def show_QueryForm():
+    token = request.args.get('page_token', None)
+    if token:
+        token = token.encode('utf-8')
+
+    if request.method == 'POST':
+        data = request.form.to_dict(flat=True)
+        if data["TableName"]=="Item":
+            books = get_assest_model().Itemlist_by_FilterOption({data["FieldName"]:data["FieldValue"]})
+            return render_template(
+                "esasset/grid.html",
+                book={"id":0},
+                items=books)
+
+
+        if data["TableName"]=="Acc":
+            books = get_assest_model().Acclist_by_FilterOption({data["FieldName"]:data["FieldValue"]})
+            return render_template(
+                "esasset/acc_grid.html",
+                book={"id":0},
+                items=books)
+
+    return render_template("esasset/QueryForm.html")
 
 
 @crud.route("/locationitemlist/<roomid>")
@@ -178,6 +219,7 @@ def modelitemlist(model_no):
         "esasset/item/list.html",
         books=books,
         next_page_token=next_page_token)
+
 
 @crud.route("/categoryitemlist/<cateid>")
 def categoryitemlist(cateid):
@@ -429,6 +471,7 @@ def download_item_file(id,itemid,filename):
 @crud.route('/<id>')
 @login_required_auth
 def view(id):
+    if id=="0" : return redirect("/EsAsset/")
     book = get_assest_model().read(id)
     book["regSDate"]=book["regSDate"].strftime( '%Y-%m-%d')
     items=  get_assest_model().Itemlist_by_acno(book["acno"])

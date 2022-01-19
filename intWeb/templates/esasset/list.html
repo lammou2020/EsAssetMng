@@ -16,6 +16,7 @@
 </a>
 <small>按單據或專案項目劃分項目</small>
 {% endif %}
+
 {% for book in books %}
 <div class="media">
     <div class="media-left">
@@ -29,11 +30,9 @@
       <table class="table">
         <tr>
           <td>id,項目代號</td>
-          <td>專案項目名稱</td>
+          <td style="width:450px;">專案項目名稱</td>
           <td>訂單編號</td>
           <td>登記日期</td>
-          <td>傳票編號</td>
-          <td>vendor供應商</td>
           <td>用戶</td>
         </tr>
         <tr>
@@ -44,16 +43,10 @@
             <h4>{{book.acc}}</h4>
           </td>
           <td>
-            {{book.orderNo}}
+            {{book.vouchernum}}
           </td>
           <td>
-            {{book.regSDate}}
-          </td>
-          <td>
-            {{book.voucherNo}}
-          </td>
-          <td>
-            {{book.vendor}}
+            {{book.regSDate.strftime('%Y-%m-%d')}}
           </td>
           <td>
             {{book.createdById}}

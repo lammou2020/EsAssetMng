@@ -35,7 +35,7 @@
     <td class="M" id="MC_name_{{item_.id}}">{{item_.name}}</td>
     <td class="M" id="MD_model_{{item_.id}}">{{item_.model}}</td>
     <td class="M" id="ME_sn_{{item_.id}}">{{item_.sn}}</td>
-    <td class="M" id="MF_quantity_{{item_.id}}">{{item_.quantity}}</td>
+    <td class="M" id="MF_quantity_{{item_.id}}">{{item_.quantity if item_.quantity is not none}}</td>
     <td class="M" id="MG_price_{{item_.id}}">{{item_.price if item_.price is not none}}</td>
     <td class="M" id="MI_p-amount_{{item_.id}}">{{item_.p_amount if item_.p_amount is not none}}</td>
     <td class="M" id="MJ_amount_{{item_.id}}">{{item_.amount if item_.amount is not none}}</td>

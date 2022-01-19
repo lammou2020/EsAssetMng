@@ -132,6 +132,14 @@ def list_by_user(user_id, limit=10, cursor=None):
     return (lessons, next_page)
 # [END list_by_user]
 
+def Acclist_by_FilterOption(FilterOption): #
+    query = (Acc.query
+             .filter_by(**FilterOption)
+             .order_by(Acc.id))
+    lessons = builtin_list(map(from_sql, query.all()))
+    return (lessons)
+
+
 # 物品 ITEM  [FA2021-xxx-001/-00[1-9]-[4271046][0001]
 class Item(db.Model):
     __tablename__ = 'Item'    
@@ -329,6 +337,13 @@ def categoryitemlist_desc(cateid,modwei=10000000000 ,buwei=1000000, limit=2000,c
 def Itemlist_by_acno(acc_acno):
     query = (Item.query
              .filter_by(acc_acno=acc_acno)
+             .order_by(Item.id))
+    lessons = builtin_list(map(from_sql, query.all()))
+    return (lessons)
+
+def Itemlist_by_FilterOption(FilterOption): #Acclist_by_FilterOption
+    query = (Item.query
+             .filter_by(**FilterOption)
              .order_by(Item.id))
     lessons = builtin_list(map(from_sql, query.all()))
     return (lessons)
