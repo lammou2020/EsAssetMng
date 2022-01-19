@@ -272,8 +272,7 @@ def Get_FileList(crspath, filenames, prefix=None):
 def itemview(id,itemid):
     book,acc_ = get_assest_model().readItem(itemid)
     acc_id=id
-    if id=="0" or id==0:
-        acc_id=acc_
+    if id=="0" : acc_id=acc_
     print(acc_id)
     filenames=[]
     crspath=str(book["acc_acno"])

@@ -27,6 +27,11 @@
     <input type="text" name="itemno" id="itemno" value="{{book.itemno if book.itemno is not none}}" placeholder="{{book.acc_acno}}-NNNNNNNNNNN" class="form-control"/>
   </div>  
   <div class="form-group">
+    <label for="sess">年度</label>
+    <input type="text" name="sess" id="sess" value="{{book.sess if book.sess is not none}}" required=true placeholder="NN/NN" class="form-control"/>
+  </div>  
+  
+  <div class="form-group">
     <label for="itemactno">[大類4271 +分類002+ 序號001]</label>
     {% include 'esasset/control/itemTypeSel.html' %}
     <span onclick="diagramclick(4271);">ICT<img  src="/static/fonts/diagram-3.svg"></span>

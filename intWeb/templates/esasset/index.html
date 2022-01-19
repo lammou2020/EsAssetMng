@@ -26,7 +26,6 @@
       </div>
       <h3>會計編號分類</h3>
       <div style="margin:0;padding:0;">
-  
         <label for="itemno">會計4271分類002序001</label><br>
         {% include 'esasset/control/itemTypeSel.html' %}
         <input type="text" name="itemcatno" id="itemcatno" value="" placeholder="PPPPNNNNNN" pattern="([0-9]{4}[0-9]{6}[0-9]{*})|None|()" title="Enter 427100001 (電腦類4271)" class="form-control"/>
@@ -42,6 +41,9 @@
       </div>      
       <h3>報表</h3>
       <div style="margin:0;padding:0;">
+
+        <h4 style="margin:0;padding:0;"><a href=/EsAsset/showacc><img src="/static/images/markicon/edit.png" />acc</a></h4>
+        <h4 style="margin:0;padding:0;"><a href=/EsAsset/showitem><img src="/static/images/markicon/edit.png" />item</a></h4>
         <h4 style="margin:0;padding:0;"><a href=/EsAsset/snitemlist/80DW><img src="/static/images/markicon/edit.png" />按物品SN</a></h4>
         <h4 style="margin:0;padding:0;"><a href=/EsAsset/modelitemlist/dell-latitude><img src="/static/images/markicon/edit.png" />按物品Model</a></h4>
         <h4 style="margin:0;padding:0;"><a href=#><img src="/static/images/markicon/edit.png" />按物品分類</a></h4>
