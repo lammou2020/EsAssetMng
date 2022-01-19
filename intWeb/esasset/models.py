@@ -246,7 +246,7 @@ def readItem(id):
     result = Item.query.get(id)
     if not result:
         return None
-    return from_sql(result)
+    return (from_sql(result),result.acc.id)
 
 def createItem(data):
     acc = Item(**data)

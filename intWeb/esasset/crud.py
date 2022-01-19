@@ -79,7 +79,6 @@ def list():
         "esasset/list.html",
         books=books,
         next_page_token=next_page_token)
-      
 
 # [START list_mine]
 @crud.route("/mine")
@@ -271,11 +270,15 @@ def Get_FileList(crspath, filenames, prefix=None):
 @crud.route('/<id>/item/<itemid>')
 @login_required_auth
 def itemview(id,itemid):
-    book = get_assest_model().readItem(itemid)
+    book,acc_ = get_assest_model().readItem(itemid)
+    acc_id=id
+    if id=="0" or id==0:
+        acc_id=acc_
+    print(acc_id)
     filenames=[]
     crspath=str(book["acc_acno"])
     Get_FileList(crspath,filenames,"ASS"+crspath+"ID"+str(book["id"])+"_")             
-    return render_template("esasset/item/view.html",acc_id=id, book=book,filenames=filenames)
+    return render_template("esasset/item/view.html",acc_id=acc_id, book=book,filenames=filenames)
 
 
 @crud.route('/<id>/item/add', methods=['GET', 'POST'])
