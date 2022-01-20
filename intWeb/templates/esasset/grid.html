@@ -44,11 +44,6 @@
       <i class="glyphicon glyphicon-edit"></i>
       儲存
      </a>
-     <a href="#" class="btn btn-success btn-sm" id="saveDataSetbtn">
-      <i class="glyphicon glyphicon-edit"></i>
-      DataSet/Row標誌
-     </a>
-
      <a href="#" class="btn btn-primary btn-sm" onclick="calcTotalbtn();">
       <i class="glyphicon glyphicon-edit"></i>
       淨值運算
@@ -67,7 +62,6 @@
         {% else %}
         {% endif %}
       </div>
-  
     </div>
     <div class="media-body">
       <table>
@@ -101,11 +95,11 @@
   
   <script>
     $("#exportCSV").on('click', function(event) {
-      var args = [$('#EDUTBL'), 'export_{{book.acc}}_items.csv'];
+      var args = [$('#EDUTBL'), 'export_{{acc_id}}_items.csv'];
       exportTableToCSV.apply(this, args);
     });
 
-    var PostUrl='item/api/JSON/update' ;    
+    var PostUrl='/EsAsset/{{acc_id}}/item/api/JSON/update' ;    
     //var PostUrl='item/api/JSON/updateSet' ;    
     $(document).ready(function(){
     	BindingFunctions("editbtn","savebtn",'readmodebtn');
@@ -115,7 +109,6 @@
     	//BindingFieldDefsIntegerFields({'MB':'INT'});
     	GenOriginalData();
       $('#saveDataSetbtn').click(function(event) {
-        PostUrl='item/api/JSON/update'
       });
     });  
 

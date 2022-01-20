@@ -53,7 +53,7 @@
     <td class="M" id="MW_cate_{{item_.id}}">{{item_.cate}}</td>
     <td class="M" id="MX_sess_{{item_.id}}">{{item_.sess}}</td>
     
-    {% if session.profile and session.profile.user=='admin' and False %}
+    {% if session.profile and session.profile.user=='admin' and True %}
     <td class="M" id="MZ_acc-acno_{{item_.id}}">{{item_.acc_acno}}</td>
     {% else %}
     <td>{{item_.acc_acno}}</td>

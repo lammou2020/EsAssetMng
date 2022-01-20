@@ -1,4 +1,5 @@
 from cmd import IDENTCHARS
+from winsound import SND_LOOP
 from intWeb import storage, login_required_auth
 from intWeb import get_assest_model
 from flask import flash,Blueprint, current_app, redirect, render_template, request, \
@@ -10,9 +11,11 @@ from urllib.parse import quote
 from datetime import datetime,date
 from flask import Response
 import json
-
-
+import io
+from openpyxl.workbook import Workbook
+from openpyxl import load_workbook   
 from flask_qrcode import QRcode
+
 qrcode=QRcode(current_app)
 
 crud = Blueprint('crud', __name__)
@@ -127,7 +130,7 @@ def show_acc_grid():
     token = request.args.get('page_token', None)
     if token:
         token = token.encode('utf-8')
-    books, next_page_token = get_assest_model().list(limit=1000,cursor=token)
+    books, next_page_token = get_assest_model().list(limit=2000,cursor=token)
     return render_template(
         "esasset/acc_grid.html",
         
@@ -144,7 +147,7 @@ def show_item_grid():
     books, next_page_token = get_assest_model().Itemlist(limit=6000,cursor=token)
     return render_template(
         "esasset/grid.html",
-        book={},
+        book={"id":0},
         items=books,
         next_page_token=next_page_token)  
 
@@ -794,3 +797,30 @@ def JSON_DBFILE(tablename):
 def get_qrcode():
     data = request.args.get("data", "")
     return send_file(qrcode(data, mode="raw"), mimetype="image/png")
+
+
+#DownloadXLS
+@crud.route("/DownloadXLS",methods=["GET"])
+def get_DownloadXLS():
+    f2A=["-","itemcatno","-","-","-","sess","vouchernum","regSDate","invoicenum","name","model","sn","supplier","price","quantity","p_amount","place","-","fund_amount","fund_name","keeper","amount","depr_year","warr_period","note1","note2"]
+    datestr= datetime.today().strftime( '%Y-%m-%d')
+    wb = load_workbook(filename = 'doc/asset_data_templ.xlsx')
+    cate_row_idx={}
+    for sn_ in wb.sheetnames:
+        cate_row_idx[sn_]=7
+    books, next_page_token = get_assest_model().Itemlist(limit=6000)
+    for r_ in books:
+        sn_=str(r_["cate"])
+        
+        if sn_ in wb.sheetnames:
+            ridx=cate_row_idx[sn_]
+            for i, f_ in enumerate(f2A):
+                if f_ != "-":
+                    wb[sn_][f"{chr(65+i)}{ridx}"]=r_[f_]
+            #print(sn_,ridx)
+            cate_row_idx[sn_]=ridx+1
+
+    file = io.BytesIO()
+    wb.save(file)
+    file.seek(0)
+    return send_file(file, attachment_filename=f"asset_{datestr}.xlsx", as_attachment=True)

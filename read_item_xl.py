@@ -64,9 +64,11 @@ for sn_ in wb.sheetnames:
         q_=txt2num(row_[7],"int")
         p_=txt2num(row_[8],"float")
         t_=txt2num(row_[9],"float")
+        fundm_=row_[12]
         cc=str(row_[2])[2:6]
         if (q_!=None and q_>1) and (p_!=None and p_>1000) and row_[1] in ["16/17","17/18","18/19","19/20","20/21"] and cc in ["4271","4273","4274","4280","4295","4296"]:
             for i in range(0,q_):
+                if i>0: row_[12]=0
                 catetype[catekey_]=Get_id+1+i
                 print([*row_,f"{catekey_}{str(Get_id+1+i).zfill(3)}",1,p_,q_])
                 out_ws.append([*row_,f"{catekey_}{str(Get_id+1+i).zfill(3)}",1,p_,q_])
