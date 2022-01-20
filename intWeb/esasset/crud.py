@@ -235,7 +235,7 @@ def categoryitemlist(cateid):
     #between
     return render_template(
         "esasset/grid.html",
-        book={},items=books,
+        book={"id":0},items=books,
         next_page_token=next_page_token)
 
 @crud.route("/JSON/categoryitemlist/<cateid>")
@@ -358,7 +358,7 @@ def itemJsonUpdate(id,itemid):
     data=request.get_json()
     if 'regSDate' in data:
         data['regSDate']=datetime.strptime(data['regSDate'], '%Y-%m-%d')
-    for f_ in ['itemno',"price", "quantity", "p_amount", "amount", "fund_amount"]:
+    for f_ in ['itemno',"price", "quantity", "p_amount", "amount", "fund_amount","gno","ict"]:
         if f_ in data:   
             if data[f_]=="" or data[f_]=="None" or data[f_]==None:
                 data[f_]=None
@@ -815,7 +815,11 @@ def get_DownloadXLS():
         if sn_ in wb.sheetnames:
             ridx=cate_row_idx[sn_]
             for i, f_ in enumerate(f2A):
-                if f_ != "-":
+                if f_ == "itemcatno":
+                    wb[sn_][f"{chr(65+i)}{ridx}"]=str(r_[f_]).zfill(14)
+                elif f_ == "regSDate":
+                    wb[sn_][f"{chr(65+i)}{ridx}"]=r_[f_].strftime( '%Y-%m-%d')
+                elif f_ != "-":
                     wb[sn_][f"{chr(65+i)}{ridx}"]=r_[f_]
             #print(sn_,ridx)
             cate_row_idx[sn_]=ridx+1

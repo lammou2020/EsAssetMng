@@ -2,6 +2,7 @@
   <tr>
     <td class="small" style="width:10px;padding:0;margin: 0;">-</td>
     <td class="small">編號</td>
+    <td id="M0_H">組別</td>
     <td id="MA_H">校內編號</td>
     <td id="MB_H">分類編號</td>
     <td id="MC_H" style="min-width: 100px;">產品名稱</td>
@@ -17,7 +18,6 @@
     <td id="MN_H">位置</td>
     <td id="MO_H">保管人</td>
     <td id="MP_H">備註</td>
-    <td id="MQ_H">備註</td>
     <td id="MR_H">登錄日期</td>
     <td id="MT_H">vouchernum</td>
     <td id="MU_H">invoicenum</td>
@@ -30,6 +30,7 @@
   <tr>
     <td class="small" style="width:10px;padding:0;margin: 0;">{{loop.index}}</td>
     <td class="small"><a href="/EsAsset/{{acc_id}}/item/{{item_.id}}">{{item_.id}}</a></td>
+    <td class="M" id="M0_gno_{{item_.id}}">{{  '%02d' | format(item_.gno) if item_.gno is not none}}</td>
     <td class="M" id="MA_itemno_{{item_.id}}">{{item_.itemno if item_.itemno is not none}}</td>
     <td class="M" id="MB_itemcatno_{{item_.id}}">{{ '%014d' | format(item_.itemcatno) if item_.itemcatno is not none }}</td>
     <td class="M" id="MC_name_{{item_.id}}">{{item_.name}}</td>
@@ -45,7 +46,6 @@
     <td class="M" id="MN_place_{{item_.id}}">{{item_.place}}</td>
     <td class="M" id="MO_keeper_{{item_.id}}">{{item_.keeper if item_.keeper is not none}}</td>
     <td class="M" id="MP_note1_{{item_.id}}">{{item_.note1}}</td>
-    <td class="M" id="MQ_note2_{{item_.id}}">{{item_.note2}}</td>
     <td class="M" id="MR_regSDate_{{item_.id}}">{{item_.regSDate.strftime('%Y-%m-%d')}}</td>
     <td class="M" id="MT_vouchernum_{{item_.id}}">{{item_.vouchernum}}</td>
     <td class="M" id="MU_invoicenum_{{item_.id}}">{{item_.invoicenum}}</td>

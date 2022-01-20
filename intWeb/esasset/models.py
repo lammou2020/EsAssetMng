@@ -170,7 +170,9 @@ class Item(db.Model):
     # Acc_acno
     regSDate = db.Column(db.DateTime, nullable=False,default=datetime.utcnow) 
     acc_acno = db.Column(db.String(16), db.ForeignKey('Acc.acno'), nullable=False)
-    acc      = db.relationship('Acc',  backref=db.backref('Item', lazy=True))
+    gno  = db.Column(db.Integer,nullable=True) # 物品分類編號 
+    acc  = db.relationship('Acc',  backref=db.backref('Item', lazy=True))
+    ict  = db.Column(db.BigInteger,unique=True,nullable=True) # 物品分類編號
     # User_info
     createdById = db.Column(db.String(255))    
     Path     = db.Column(db.String(80))
