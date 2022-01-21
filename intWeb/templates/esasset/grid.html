@@ -12,7 +12,6 @@
       min-height: 40px;
       overflow-y:visible;
       padding:0;margin:0;outline: none;overflow: auto;}
-    
     td{padding:10px;margin:0}
   </style>
   <script src='/static/javascripts/cool/grid_v2.js?v=2' ></script>
@@ -20,7 +19,7 @@
   <link rel='stylesheet' href='/static/javascripts/cool/grid.css'  />
   <style>
     td {padding-right: 5px; padding-left: 5px; }
-    th{min-width: 100px;}
+    th {min-width: 100px;}
   </style>
   <h4>{{book.Lesson}} {{book.Title}}</h4>
   {% if session.profile and session.profile.Role < "8" %} <div class="btn-group">
@@ -98,23 +97,18 @@
       var args = [$('#EDUTBL'), 'export_{{acc_id}}_items.csv'];
       exportTableToCSV.apply(this, args);
     });
-
-    var PostUrl='/EsAsset/{{acc_id}}/item/api/JSON/update' ;    
+    //var PostUrl='/EsAsset/{{acc_id}}/item/api/JSON/update' ;    
+    var PostUrl='/EsAsset/{{acc_id}}/item/api/JSON/updateSet' ;    
     //var PostUrl='item/api/JSON/updateSet' ;    
     $(document).ready(function(){
     	BindingFunctions("editbtn","savebtn",'readmodebtn');
-    	BindingHead_EditMode(['M0_H','MA_H','MB_H','MC_H','MD_H','ME_H','MF_H','MG_H','MH_H','MI_H',,'MJ_H',
-      'MK_H','ML_H','MM_H','MN_H','MO_H']);
+    	BindingHead_EditMode(['MA_H','MB_H','MC_H','MD_H','ME_H','MF_H','MG_H','MH_H','MI_H',,'MJ_H','MK_H','ML_H','MM_H','MN_H','MO_H','MP_H','MQ_H','MR_H','MS_H','MT_H','MU_H','MV_H','MW_H','MX_H']);
     	BindingFieldDefsIntegerFields({'M0':'INT','MB':'INT','MF':'INT','MG':'INT','MH':'INT','MI':'INT','MJ':'INT'});
     	//BindingFieldDefsIntegerFields({'MB':'INT'});
     	GenOriginalData();
       $('#saveDataSetbtn').click(function(event) {
       });
     });  
-
     </script>
-
-  
-  
   
   {% endblock %}

@@ -2,10 +2,10 @@
   <tr>
     <td class="small" style="width:10px;padding:0;margin: 0;">-</td>
     <td class="small">編號</td>
-    <td id="M0_H">組別</td>
+    <td id="MA_H">組</td>
     <!--td id="MA_H">校內編號</td-->
-    <td id="MB_H">編號</td>
-    <td id="MC_H" style="min-width: 100px;">產品名稱</td>
+    <td id="MB_H">編號*</td>
+    <td id="MC_H" style="min-width: 100px;">產品名稱*</td>
     <td id="MD_H">model</td>
     <td id="ME_H">SN/PN</td>
     <td id="MF_H">數量</td>
@@ -22,15 +22,15 @@
     <td id="MT_H">vouchernum</td>
     <td id="MU_H">invoicenum</td>
     <td id="MV_H">supplier</td>
-    <td id="MW_H">cate</td>
-    <td id="MX_H">sess</td>
+    <td id="MW_H">分類*</td>
+    <td id="MX_H">年度*</td>
     <td id="MZ_H">專案編號</td>
   </tr>
   {% for item_ in items %}
   <tr>
     <td class="small" style="width:10px;padding:0;margin: 0;">{{loop.index}}</td>
     <td class="small"><a href="/EsAsset/{{acc_id}}/item/{{item_.id}}">{{item_.id}}</a></td>
-    <td class="M" id="M0_gno_{{item_.id}}">{{  '%02d' | format(item_.gno) if item_.gno is not none}}</td>
+    <td class="M" id="MA_gno_{{item_.id}}">{{  '%02d' | format(item_.gno) if item_.gno is not none}}</td>
     <!--td class="M" id="MA_itemno_{{item_.id}}">{{item_.itemno if item_.itemno is not none}}</td-->
     <td class="M" id="MB_itemcatno_{{item_.id}}">{{ '%014d' | format(item_.itemcatno) if item_.itemcatno is not none }}</td>
     <td class="M" id="MC_name_{{item_.id}}">{{item_.name}}</td>

@@ -271,12 +271,14 @@ def updateItem(data, id):
     return from_sql(acc)
 
 def updateItem_DataSet(data):
+    cnt=0
     for id in data:
+        cnt=cnt+1
         acc = Item.query.get(id)
         for k, v in data[id].items():
             setattr(acc, k, v)
     db.session.commit()
-    return ""
+    return cnt
 
 
 def deleteItem(id):

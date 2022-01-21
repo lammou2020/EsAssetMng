@@ -376,8 +376,8 @@ def itemJsonUpdateSet(id,nothing):
                 data[itemid]["itemno"]=None
             else:
                 pass
-    book = get_assest_model().updateItem_DataSet(data)
-    return "Update !"
+    cnt = get_assest_model().updateItem_DataSet(data)
+    return f"updated {cnt} rows."
 
 
 def CheckOwnRecordErr(book,session):
