@@ -3,8 +3,8 @@
     <td class="small" style="width:10px;padding:0;margin: 0;">-</td>
     <td class="small">編號</td>
     <td id="M0_H">組別</td>
-    <td id="MA_H">校內編號</td>
-    <td id="MB_H">分類編號</td>
+    <!--td id="MA_H">校內編號</td-->
+    <td id="MB_H">編號</td>
     <td id="MC_H" style="min-width: 100px;">產品名稱</td>
     <td id="MD_H">model</td>
     <td id="ME_H">SN/PN</td>
@@ -31,7 +31,7 @@
     <td class="small" style="width:10px;padding:0;margin: 0;">{{loop.index}}</td>
     <td class="small"><a href="/EsAsset/{{acc_id}}/item/{{item_.id}}">{{item_.id}}</a></td>
     <td class="M" id="M0_gno_{{item_.id}}">{{  '%02d' | format(item_.gno) if item_.gno is not none}}</td>
-    <td class="M" id="MA_itemno_{{item_.id}}">{{item_.itemno if item_.itemno is not none}}</td>
+    <!--td class="M" id="MA_itemno_{{item_.id}}">{{item_.itemno if item_.itemno is not none}}</td-->
     <td class="M" id="MB_itemcatno_{{item_.id}}">{{ '%014d' | format(item_.itemcatno) if item_.itemcatno is not none }}</td>
     <td class="M" id="MC_name_{{item_.id}}">{{item_.name}}</td>
     <td class="M" id="MD_model_{{item_.id}}">{{item_.model}}</td>
@@ -65,9 +65,7 @@
   </tr>
   {% endfor %}
 </table>
-<div id="es_msgbox">
-  <div id="es_msgbox_txt"></div>
-</div>
+<div id="es_msgbox"><div id="es_msgbox_txt"></div></div>
 <script>
   var es_msgbox = $("#es_msgbox").dialog({
     autoOpen: false, height: 700, width: 500, modal: true,

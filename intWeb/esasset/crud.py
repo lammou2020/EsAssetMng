@@ -273,10 +273,8 @@ def Get_FileList(crspath, filenames, prefix=None):
 @crud.route('/<id>/item/<itemid>')
 @login_required_auth
 def itemview(id,itemid):
-    book,acc_ = get_assest_model().readItem(itemid)
-    acc_id=id
-    if id=="0" : acc_id=acc_
-    print(acc_id)
+    book,acc_id= get_assest_model().readItem(itemid)
+    if id!="0" : acc_id=id
     filenames=[]
     crspath=str(book["acc_acno"])
     Get_FileList(crspath,filenames,"ASS"+crspath+"ID"+str(book["id"])+"_")             
@@ -390,11 +388,11 @@ def CheckOwnRecordErr(book,session):
 @crud.route('/<id>/item/<itemid>/edit', methods=['GET', 'POST'])
 @login_required_auth
 def itemedit(id,itemid):
-    book = get_assest_model().readItem(itemid)
+    book, acc_id  = get_assest_model().readItem(itemid)
     Err=CheckOwnRecordErr(book,session) 
     if Err!= None :  return Err
-
-    book['regSDate']=book['regSDate'].isoformat()[:10]
+    if  book['regSDate'] !=None:
+        book['regSDate']=book['regSDate'].isoformat()[:10]
     if request.method == 'POST':
         data = request.form.to_dict(flat=True)
         path = current_app.config['HW_UPLOAD_FOLDER']
@@ -419,7 +417,7 @@ def itemedit(id,itemid):
 @crud.route('/<id>/item/<itemid>/delete')
 @login_required_auth
 def itemdelete(id,itemid):
-    book = get_assest_model().readItem(itemid)
+    book,acc_id = get_assest_model().readItem(itemid)
     crspath=book["acc_acno"]
     if (book["createdById"]==str(session['profile']['id']))  :
         path = current_app.config['HW_UPLOAD_FOLDER']
@@ -433,7 +431,7 @@ def itemdelete(id,itemid):
 
 @crud.route('/<id>/item/<itemid>/upload', methods=['GET', 'POST'])
 def uploadItemfiles(id,itemid):
-    book = get_assest_model().readItem(itemid)
+    book,acc_id = get_assest_model().readItem(itemid)
     crspath=str(book["acc_acno"])
     path = current_app.config['HW_UPLOAD_FOLDER']
     UPLOAD_FOLDER = os.path.join(path, crspath)
@@ -452,7 +450,7 @@ def uploadItemfiles(id,itemid):
 
 @crud.route('/<id>/item/<itemid>/download/<filename>')
 def download_item_file(id,itemid,filename):
-    book = get_assest_model().readItem(itemid)
+    book,acc_id = get_assest_model().readItem(itemid)
     crspath=str(book["acc_acno"])
     #return render_template("view.html", book=book)
     # Get current path os.getcwd()

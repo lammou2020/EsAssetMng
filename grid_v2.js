@@ -6,27 +6,25 @@ var CSVFrm = null;
 var OriginalData = null;
 var PostUrl = null;
 var _Field_Defs = null;
+var _cells_width={};
 ////Program Start
 function BindingZeroClipboard(id, tablename) { throw new expection("no imp") }
 function bind_txtinput_paste($txtinput, cell) {
 	$txtinput.bind('paste', function (e) {
-		var txt = e.originalEvent.clipboardData.getData('Text');
-		console.log(txt)
+		var txt = e.originalEvent.clipboardData.getData('Text').replace(/\n$/, "");
 		var data_arr = txt.split('\n');
 		var rowcnt = data_arr.length; let linefeed = false;
 		var colcnt = data_arr[0].split('\t').length;
 		var f_data_arr = new Array();
-		for (i = 0; i < rowcnt; i++) {
-			f_data_arr[i] = new Array();
-		}
+		for (i = 0; i < rowcnt; i++) { f_data_arr[i] = new Array();	}
 		for (j = 0; j < rowcnt; j++) {
 			var temp_ar = data_arr[j].split('\t');
 			if (temp_ar.length >= colcnt) {
-				for (k = 0; k < colcnt; k++)
-					f_data_arr[j][k] = temp_ar[k];
+				for (k = 0; k < colcnt; k++){
+					f_data_arr[j][k] = temp_ar[k].replace(/\n$/, "").replace(/\r$/, "");
+				}
 			}
 		}
-		//return f_data_arr;
 		if (rowcnt > 1 || colcnt > 1) {
 			if (confirm("DataGrid " + rowcnt + "x" + colcnt + " Paste " + rowcnt + "x" + colcnt + "?")) {
 				var c_cell = cell;
@@ -47,8 +45,9 @@ function bind_txtinput_paste($txtinput, cell) {
 						} else {
 							c_cell.text(f_data_arr[rid][cid]);
 						}
-						if (cid < colcnt - 1)
+						if (cid < colcnt - 1){
 							c_cell = c_cell.next();
+						}
 					}
 					c_cell = c_cell.parent().next('tr').children('td:first');
 					for (i = 1; i < c_cell_col_id; i++) { c_cell = c_cell.next(); }
@@ -62,9 +61,13 @@ function bind_txtinput_paste($txtinput, cell) {
 function editCell(cell) {
 	//$txt=$('<input type=text>');
 	//$txt.width(cell.width()-3);
+	let cellwidth=cell.width()-5
+	let hkey=cell.attr('id').split("_")[1];
+	if(hkey in _cells_width){ cellwidth = _cells_width[hkey] }else{_cells_width[hkey] = cellwidth;}
+
 	if (cell.has(":input").length == 0) {
 		$txt = $('<textarea></textarea>');
-		$txt.width(cell.width() - 5);
+		$txt.width(cellwidth);
 		$txt.height(cell.height() - 5);
 		bind_txtinput_paste($txt, cell);  //cell past 2014/06/03	
 		var val = cell.text();
@@ -151,7 +154,7 @@ function ArrayPast2Table(tablename, fieldname, fill_data) {
 			for (var y = 1; y < cellLength; y++) {
 				var cell = row.cells[y];
 				if (y == find_column_id) {
-					cell.innerHTML = fill_data[i];
+					cell.innerHTML = fill_data[i].replace(/\n$/, "");
 					procmsg += "\n" + i + ":" + y + ":" + cell.innerHTML + "-" + fill_data[i];
 				}
 			}
@@ -201,7 +204,9 @@ class FrmMessageBox {
 		  'right' : '10%',
 		  'top' : '10%',
 		  'border':'3px solid black',
-		  'background-color':'white'
+		  'background-color':'white',
+		  'overflow':'scroll',
+		  'height':'400px'
 	  }).width(400).height(300).appendTo( "body" );
 	  this.year = 0;
 	}
@@ -274,7 +279,6 @@ function BindingFunctions(editbtn, savebtn, readmodbtn) {
 		});
 		if(error_msg !="" ){ alert(error_msg);}
 		if (PostUrl != null) {
-
 			if(PostUrl.indexOf("updateSet")>-1){
 				let stat_=await posturl(PostUrl,0,json,frmMessageBox )
 			}else{
