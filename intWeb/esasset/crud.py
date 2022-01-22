@@ -231,7 +231,7 @@ def categoryitemlist(cateid):
     buwei=1000000
     modwei=10000000000 
     if len(cateid)>4 : buwei=1000
-    books, next_page_token = get_assest_model().categoryitemlist_desc(cateid=cateid,modwei=modwei,buwei=buwei,cursor=token)
+    books, next_page_token = get_assest_model().categoryitemlist_asc(cateid=cateid,modwei=modwei,buwei=buwei,cursor=token)
     #between
     return render_template(
         "esasset/grid.html",
@@ -244,6 +244,7 @@ def JSONcategoryitemlist(cateid):
     if token:
         token = token.encode('utf-8')
     books, next_page_token = get_assest_model().categoryitemlist_desc(cateid=cateid,buwei=1000,cursor=token)
+    print(books)
     return jsonify(books)
 
 
@@ -284,8 +285,9 @@ def itemview(id,itemid):
 @crud.route('/<id>/item/add', methods=['GET', 'POST'])
 @login_required_auth
 def itemadd(id):
-    acc_acno= (request.args.get('acno', "0"))
-    regSDate= (request.args.get('regSDate', datetime.today().strftime( '%Y-%m-%d')))
+    acc_acno= request.args.get('acno', "0")
+    sess= request.args.get('sess', "0000")
+    regSDate= request.args.get('regSDate', datetime.today().strftime( '%Y-%m-%d'))
     if request.method == 'POST':
         data = request.form.to_dict(flat=True)
 
@@ -300,10 +302,11 @@ def itemadd(id):
         if 'profile' in session:
             data['createdById'] = session['profile']['id']
         data['regSDate']=datetime.strptime(data['regSDate'], '%Y-%m-%d')
-        if data["itemno"]==""  or data["itemno"]=="None" or data["itemno"]==None:
-            data["itemno"]=None
-        else:
-            pass
+
+        for f_ in ['itemno',"price", "quantity", "p_amount", "amount", "fund_amount","gno","ict"]:
+            if f_ in data:   
+                if data[f_]=="" or data[f_]=="None" or data[f_]==None:
+                    data[f_]=None
         book = get_assest_model().createItem(data)
 
         return redirect(url_for('.itemview', id=id,itemid=book['id']))
@@ -313,6 +316,7 @@ def itemadd(id):
         "adjust":"0",
         "amount":"0",
         "depr_year":"0",
+        "sess":sess,
         "acc_acno":acc_acno,
         "regSDate":regSDate}
     return render_template("esasset/item/form.html", action="Add", book=book)
@@ -323,6 +327,7 @@ def itemadd(id):
 @login_required_auth
 def itemaddbatch(id,cnt):
     acc_acno= (request.args.get('acno', "0"))
+    sess= (request.args.get('sess', "0000"))
     regSDate= (request.args.get('regSDate', datetime.today().strftime( '%Y-%m-%d')))
     if acc_acno=="0" :
         acc_rec = get_assest_model().read(id)
@@ -333,6 +338,7 @@ def itemaddbatch(id,cnt):
         "quantity":"0",
         "price":"0",
         "amount":"0",
+        "sess":sess,
         "acc_acno":acc_acno,
         "regSDate":regSDate}
         
@@ -404,8 +410,10 @@ def itemedit(id,itemid):
         if data["itemno"]=="" or data["itemno"]=="None" or data["itemno"]==None:
             data["itemno"]=None
         
-        if data["itemcatno"]=="" or data["itemcatno"]=="None" or data["itemcatno"]==None:
-            data["itemcatno"]=None            
+        for f_ in ['itemno',"price", "quantity", "p_amount", "amount", "fund_amount","gno","ict"]:
+            if f_ in data:   
+                if data[f_]=="" or data[f_]=="None" or data[f_]==None:
+                    data[f_]=None      
         
         book = get_assest_model().updateItem(data, itemid)
         #return redirect(url_for('.view', id=book['id']))

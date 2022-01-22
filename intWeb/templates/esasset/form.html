@@ -18,6 +18,11 @@
     <input type="text" name="acc" id="acc" value="{{book.acc}}" class="form-control"/>
   </div>
   <div class="form-group">
+    <label for="sess">學年</label>
+    <input type="text" name="sess" id="sess" value="{{book.sess}}" required=true class="form-control"/>
+  </div>
+
+  <div class="form-group">
     <label for="regSDate">登記日期regSDate</label>
     <input name="regSDate" value="{{book.regSDate}}" placeholder="YYYY-MM-DD" pattern="([0-9]{4}-[0-9]{2}-[0-9]{2})|()" title="Enter a date in this format YYYY-MM-DD" class="form-control"/>
   </div>

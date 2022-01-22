@@ -27,6 +27,7 @@ class Acc(db.Model):
     id= db.Column(db.Integer,primary_key=True) # 編號
     acno = db.Column(db.String(16),unique=True,nullable=False)  #按項目/發票定義 ACC[FA2021-xxx-001/-00[1-9]
     acc= db.Column(db.String(160))  #名稱
+    sess= db.Column(db.String(6))  #名稱
     regSDate= db.Column(db.DateTime, nullable=False,default=datetime.utcnow) #登記日期
     describ=db.Column(db.Text)  # 描述
     vouchernum =db.Column(db.String(80))  # 憑單編號
@@ -42,6 +43,7 @@ class Acc(db.Model):
     def __init__(self, 
                 acno=None, 
                 acc=None, 
+                sess=None, 
                 regSDate=None, 
                 vouchernum=None, 
                 total=None,
@@ -51,6 +53,7 @@ class Acc(db.Model):
                 Path=None):
         self.acno=acno
         self.acc=acc
+        self.sess=sess
         self.regSDate=regSDate
         self.createdById=createdById
         self.imageUrl=imageUrl
@@ -323,7 +326,22 @@ def modelitemlist_desc(model,buwei=1000000, limit=10,cursor=None):
     return (lessons, next_page)
 
 # [ 按產品號, 中的分類查詢]
-def categoryitemlist_desc(cateid,modwei=10000000000 ,buwei=1000000, limit=2000,cursor=None):
+def categoryitemlist_desc(cateid,modwei=10000000000 ,buwei=1000, limit=1,cursor=None):
+    cursor = int(cursor) if cursor else 0
+    sint=int(cateid)*buwei
+    print(sint)
+    query = (Item.query
+             .filter(Item.itemcatno.between(sint,sint+buwei-1))
+             # .filter_by(cate=int(cateid))
+             .order_by(desc(Item.itemcatno))
+             .limit(limit)
+             .offset(cursor))
+    lessons = builtin_list(map(from_sql, query.all()))
+    next_page = cursor + limit if len(lessons) == limit else None
+    return (lessons, next_page)
+
+# [ 按產品號, 中的分類查詢]
+def categoryitemlist_asc(cateid,modwei=10000000000 ,buwei=1000000, limit=2000,cursor=None):
     cursor = int(cursor) if cursor else 0
     sint=int(cateid)*buwei
     print(sint)
@@ -336,6 +354,7 @@ def categoryitemlist_desc(cateid,modwei=10000000000 ,buwei=1000000, limit=2000,c
     lessons = builtin_list(map(from_sql, query.all()))
     next_page = cursor + limit if len(lessons) == limit else None
     return (lessons, next_page)
+
 
 # [ 按票號查詢]
 def Itemlist_by_acno(acc_acno):

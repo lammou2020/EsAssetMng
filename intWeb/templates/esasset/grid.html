@@ -6,20 +6,14 @@
   
   {% block content %}
   <style>
-    .container {padding:0px;margin:0;width: 100%;}
-    textarea{
-      min-width:60px;
-      min-height: 40px;
-      overflow-y:visible;
-      padding:0;margin:0;outline: none;overflow: auto;}
-    td{padding:10px;margin:0}
+    .container {padding:1px;margin:1;width:98%}
   </style>
+
   <script src='/static/javascripts/cool/grid_v2.js?v=2' ></script>
   <script src='/static/javascripts/cool/table2csv.js' ></script>
   <link rel='stylesheet' href='/static/javascripts/cool/grid.css'  />
   <style>
-    td {padding-right: 5px; padding-left: 5px; }
-    th {min-width: 100px;}
+    
   </style>
   <h4>{{book.Lesson}} {{book.Title}}</h4>
   {% if session.profile and session.profile.Role < "8" %} <div class="btn-group">
@@ -63,10 +57,11 @@
       </div>
     </div>
     <div class="media-body">
-      <table>
+      <table class="table">
         <tr>
           <td>id,項目代號</td>
           <td>專案項目名稱</td>
+          <td>學年</td>
           <td>登記日期</td>
           <td>createdById</td>
         </tr>
@@ -76,6 +71,9 @@
           </td>
           <td><h4>{{book.acc}}</h4>
           </td>
+          <td>
+            <h4>{{book.sess}}</h4>
+          </td>                  
           <td>
             {{book.regSDate}}
           </td>
@@ -108,6 +106,9 @@
     	GenOriginalData();
       $('#saveDataSetbtn').click(function(event) {
       });
+      $('td').filter(function() {
+          return this.innerHTML.match(/^[0-9\s\.,]+$/);
+      }).css('text-align','right');
     });  
     </script>
   

@@ -3,7 +3,6 @@
     var type_id=[4231,4232,4233,4234,4235,4236,4249,4251,4261,4262,4264,4269,4271,4272,4273,4274,4276,4278,4280,4284,4293,4295,4296,6112,6113,6315,6318,63162,6743,4270,4277,4279,4294]
     var type_dialog=[]
     function diagramclick(x) {
-        console.log(x)
         for(let idx_ in type_id){
             if(x== type_id[idx_]){
                 type_dialog[idx_].dialog("open");
@@ -11,10 +10,11 @@
         }
     }
     function GetNewItemNo(cateid, use_period, x) {
+        let sess=$("#sess").val()
         let _Url = "/EsAsset/JSON/categoryitemlist/"
         $.ajax({
             method: "GET",
-            url: _Url + `/${cateid}`,
+            url: _Url + `/${sess}${cateid}`,
             contentType: "application/json"
         }).done(function (data) {
             console.log(data)
@@ -24,7 +24,7 @@
                 itemno = data[0].itemcatno + 1
             }
             else {
-                itemno = Number(item_name.split(" ")[0]) * 1000 + 1
+                itemno = sess+(Number(item_name.split(" ")[0]) * 1000 + 1)
             }
             let oldval = $("#itemcatno").val()
             if (oldval.length > 0) {

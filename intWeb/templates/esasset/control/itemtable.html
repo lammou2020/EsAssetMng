@@ -1,4 +1,29 @@
-<table id="EDUTBL" class="table" style="width:2000px">
+<style>    
+  textarea{
+    min-width:60px;
+    min-height: 40px;
+    overflow-y:visible;
+    padding:0;
+    margin:0;
+    outline: none;
+    overflow: auto;
+  }
+  /*th {min-width: 100px;}*/
+  tr:first-child td {
+    font-size: 12px;
+    background: #f2f2f2;
+    vertical-align: top;
+  }
+  table tr td{ 
+    padding-left:2px; 
+    padding-right:2px; 
+    margin:0; 
+    border-collapse: collapse; 
+    border: 1px solid gray; 
+    min-width: 20px;
+    max-width: 100px;}
+</style>
+<table id="EDUTBL" class="" style="width:2000px">
   <tr>
     <td class="small" style="width:10px;padding:0;margin: 0;">-</td>
     <td class="small">編號</td>
@@ -118,10 +143,12 @@
     }
   }
   function depr_rate(acno, depr_year) {
-    let res = /FA[\d][\d][\d][\d]/.exec(acno)
-    if (res == null) { return 0; }
-    if (res[0] == "FA0000") { return 0; }
-    let y = res[0].substring(2, 6)
+    //let res = /FA[\d][\d][\d][\d]/.exec(acno)
+    //if (res == null) { return 0; }
+    //if (res[0] == "FA0000") { return 0; }
+    //let y = res[0].substring(2, 2)
+    y=acno.substring(0,2)
+    if(y.startsWith('9')) {y=`19${y}`}else{y=`20${y}`}
     console.log(y)
     const d = new Date();
     let year = d.getFullYear();
@@ -137,25 +164,44 @@
     closeedit();
     var table = document.getElementById("EDUTBL");
     let total_quantity = 0;
+    let total_pamount = 0;
     let total_amount = 0;
+    let total_fund_amount = 0;
     for (var i = 0, row; row = table.rows[i]; i++) {
       if (row.cells[0].innerHTML == "-") continue;
       let price = 0;
       let quantity = 0;
       let amount = 0;
-      let amout_cell = null;
+      let pamount = 0;
+      let pamount_cell = null;
+      let amount_cell = null;
       let depr_year = 0;
-      let acc_no = row.cells[row.cells.length - 1].innerHTML;
+      let itemcatno = "" //row.cells[row.cells.length - 1].innerHTML;
       for (var j = 0, col; col = row.cells[j]; j++) {
+        if (col.id && col.id.indexOf("itemcatno") > -1) itemcatno = col.innerHTML
         if (col.id && col.id.indexOf("price") > -1) price = Number(col.innerHTML)
         if (col.id && col.id.indexOf("quantity") > -1) quantity = Number(col.innerHTML)
-        if (col.id && col.id.indexOf("amount") > -1) { amout_cell = col; }
+        if (col.id && col.id.indexOf("p-amount") > -1) { pamount_cell = col;pamount=Number(pamount_cell.innerHTML) }
+        if (col.id && col.id.indexOf("amount") > -1) { amount_cell = col; }
         if (col.id && col.id.indexOf("depr-year") > -1) {
+          console.log(quantity,price,pamount)
           depr_year = Number(col.innerHTML)
-          amount = price * quantity * depr_rate(acc_no, depr_year)
-          amout_cell.innerHTML = amount
+          pamount= (price==0||quantity==0)?pamount:price*quantity
+          if(price==0||quantity==0){
+
+          }else{
+            pamount_cell.innerHTML=pamount.toFixed(2)
+          }
+          amount = pamount * depr_rate(itemcatno, depr_year)
+          amount_cell.innerHTML = amount.toFixed(2)
+          total_pamount += pamount
           total_amount += amount
           total_quantity += quantity
+
+        }
+        if (col.id && col.id.indexOf("fund-amount") > -1) {
+          total_fund_amount+=Number(col.innerHTML)
+          console.log(total_fund_amount)
           break;
         }
       }
@@ -174,13 +220,25 @@
       var cell9 = totalrow.insertCell();
       var cell10 = totalrow.insertCell();
       var cell11 = totalrow.insertCell();
+      var cell12 = totalrow.insertCell();
+      var cell13 = totalrow.insertCell()
+
+      cell7.style.textAlign="right";
+      cell8.style.textAlign="right";
+      cell10.style.textAlign="right";
+      cell11.style.textAlign="right";
+      cell13.style.textAlign="right";
       cell1.innerHTML = "-";
-      cell3.innerHTML = "小計";
+      cell7.innerHTML = "小計";
       cell8.innerHTML = total_quantity;
-      cell10.innerHTML = total_amount;
+      cell10.innerHTML = total_pamount.toFixed(2);
+      cell11.innerHTML = total_amount.toFixed(2);
+      cell13.innerHTML = total_fund_amount.toFixed(2);
     } else {
       totalrow.cells[7].innerHTML = total_quantity;
-      totalrow.cells[9].innerHTML = total_amount
+      totalrow.cells[9].innerHTML =  total_pamount.toFixed(2);
+      totalrow.cells[10].innerHTML = total_amount.toFixed(2);
+      totalrow.cells[12].innerHTML = total_fund_amount.toFixed(2);
     }
   }
 
@@ -223,7 +281,7 @@
     for (var i = 0, row; row = table.rows[i]; i++) {
       if (row.cells[0].innerHTML == "-") continue;
       for (var j = 0, col; col = row.cells[j]; j++) {
-        for (let fieldname of ["adjust", "amount"]) {
+        for (let fieldname of ["p-amount", "amount"]) {
           if (col.id && col.id.indexOf(`_${fieldname}_`) > -1) {
             let elarr = col.id.split("_")
             curr_itemno = elarr[2];
