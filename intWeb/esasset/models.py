@@ -572,6 +572,14 @@ def readAllFromTable(tablename):
                  .order_by(Item.id))
         lessons = builtin_list(map(from_sql, query.all()))
         return (lessons)
+        
+    elif  tablename=="ItemCategory":
+        query = (ItemCategory.query
+                 .order_by(ItemCategory.id))
+        lessons = builtin_list(map(from_sql, query.all()))
+        return (lessons)
+
+        
     return None
 
 def _create_database():

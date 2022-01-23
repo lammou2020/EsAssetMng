@@ -33,6 +33,7 @@
             <ul class="dropdown-menu"><a class="dropdown-toggle" data-toggle="dropdown" href="#">
               <li><a class="dropdown-item" href="/EsAsset/QueryForm">查詢</a></li>
               <li><a class="dropdown-item" href="/EsAsset/DownloadXLS">XLS</a></li>
+              <li><a class="dropdown-item" href="/EsAsset/itemCateGrid">大表Item分類</a></li>
               <li><a class="dropdown-item" href="/EsAsset/showacc">大表ACC</a></li>
               <li><a class="dropdown-item" href="/EsAsset/showitem">大表ITEM</a></li>
               <!-- li><a class="dropdown-toggle" data-toggle="dropdown" href="#">註銷</a></li -->
@@ -42,16 +43,17 @@
             </ul>
           </li>
           <li><a href="/EsAsset/mine">我的專案</a></li>
-          {% if session.profile and session.profile.user=="ict" %}
+          {% if session.profile and (session.profile.user=="ict" or session.profile.user=="admin" ) %}
           <li class="dropdown">
             <a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false">
               <span class="glyphicon glyphicon-paperclip"></span><span class="caret"></span>
               <span>DB</span>
             </a>
             <ul class="dropdown-menu"><a class="dropdown-toggle" data-toggle="dropdown" href="#">
-              <li><a class="dropdown-toggle" data-toggle="dropdown" href="/EsAsset/JSON/db/acc">acc</a></li>
-              <li><a class="dropdown-toggle" data-toggle="dropdown" href="/EsAsset/JSON/db/item">item</a></li>
-              <li><a class="dropdown-toggle" data-toggle="dropdown" href="/EsAsset/ZIPALLPIC">zip_doc</a></li>
+              <li><a class="dropdown-item" href="/EsAsset/JSON/db/acc">acc</a></li>
+              <li><a class="dropdown-item" href="/EsAsset/JSON/db/item">item</a></li>
+              <li><a class="dropdown-item" href="/EsAsset/JSON/db/ItemCategory">ItemCategory</a></li>
+              <li><a class="dropdown-item" href="/EsAsset/ZIPALLPIC">zip_doc</a></li>
             </ul>
           </li>
           {% endif %}

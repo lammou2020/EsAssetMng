@@ -23,13 +23,13 @@
     min-width: 20px;
     max-width: 100px;}
 </style>
-<table id="EDUTBL" class="" style="width:2000px">
+<table id="EDUTBL" class="" style="width:1800px">
   <tr>
-    <td class="small" style="width:10px;padding:0;margin: 0;">-</td>
-    <td class="small">編號</td>
+    <td class="small no-print" style="width:10px;padding:0;margin: 0;">-</td>
+    <td class="small no-print" style="width: 10px;">編號</td>
     <td id="MA_H">組</td>
     <!--td id="MA_H">校內編號</td-->
-    <td id="MB_H">編號*</td>
+    <td id="MB_H" style="width:100px;max-width:110px;min-width: 110px;">編號*</td>
     <td id="MC_H" style="min-width: 100px;">產品名稱*</td>
     <td id="MD_H">model</td>
     <td id="ME_H">SN/PN</td>
@@ -46,18 +46,18 @@
     <td id="MR_H">登錄日期</td>
     <td id="MT_H">vouchernum</td>
     <td id="MU_H">invoicenum</td>
-    <td id="MV_H">supplier</td>
-    <td id="MW_H">分類*</td>
-    <td id="MX_H">年度*</td>
-    <td id="MZ_H">專案編號</td>
+    <td id="MV_H" class="no-print">supplier</td>
+    <td id="MW_H" class="no-print">分類*</td>
+    <td id="MX_H" class="no-print">年度*</td>
+    <td id="MZ_H" class="no-print">專案編號</td>
   </tr>
   {% for item_ in items %}
   <tr>
-    <td class="small" style="width:10px;padding:0;margin: 0;">{{loop.index}}</td>
-    <td class="small"><a href="/EsAsset/{{acc_id}}/item/{{item_.id}}">{{item_.id}}</a></td>
+    <td class="small no-print" style="width:10px;padding:0;margin: 0;">{{loop.index}}</td>
+    <td class="small no-print" style="width: 10px;"><a href="/EsAsset/{{acc_id}}/item/{{item_.id}}">{{item_.id}}</a></td>
     <td class="M" id="MA_gno_{{item_.id}}">{{  '%02d' | format(item_.gno) if item_.gno is not none}}</td>
     <!--td class="M" id="MA_itemno_{{item_.id}}">{{item_.itemno if item_.itemno is not none}}</td-->
-    <td class="M" id="MB_itemcatno_{{item_.id}}">{{ '%014d' | format(item_.itemcatno) if item_.itemcatno is not none }}</td>
+    <td class="M" style="width:100px;max-width:110px;min-width: 110px;" id="MB_itemcatno_{{item_.id}}">{{ '%014d' | format(item_.itemcatno) if item_.itemcatno is not none }}</td>
     <td class="M" id="MC_name_{{item_.id}}">{{item_.name}}</td>
     <td class="M" id="MD_model_{{item_.id}}">{{item_.model}}</td>
     <td class="M" id="ME_sn_{{item_.id}}">{{item_.sn}}</td>
@@ -71,17 +71,17 @@
     <td class="M" id="MN_place_{{item_.id}}">{{item_.place}}</td>
     <td class="M" id="MO_keeper_{{item_.id}}">{{item_.keeper if item_.keeper is not none}}</td>
     <td class="M" id="MP_note1_{{item_.id}}">{{item_.note1}}</td>
-    <td class="M" id="MR_regSDate_{{item_.id}}">{{item_.regSDate.strftime('%Y-%m-%d')}}</td>
-    <td class="M" id="MT_vouchernum_{{item_.id}}">{{item_.vouchernum}}</td>
-    <td class="M" id="MU_invoicenum_{{item_.id}}">{{item_.invoicenum}}</td>
-    <td class="M" id="MV_supplier_{{item_.id}}">{{item_.supplier}}</td>
-    <td class="M" id="MW_cate_{{item_.id}}">{{item_.cate}}</td>
-    <td class="M" id="MX_sess_{{item_.id}}">{{item_.sess}}</td>
+    <td class="M" style="max-width: 80px;" id="MR_regSDate_{{item_.id}}">{{item_.regSDate.strftime('%Y-%m-%d')}}</td>
+    <td class="M" style="max-width: 30px;" id="MT_vouchernum_{{item_.id}}">{{item_.vouchernum}}</td>
+    <td class="M" style="max-width: 30px;" id="MU_invoicenum_{{item_.id}}">{{item_.invoicenum}}</td>
+    <td class="M no-print" id="MV_supplier_{{item_.id}}">{{item_.supplier}}</td>
+    <td class="M no-print" id="MW_cate_{{item_.id}}">{{item_.cate}}</td>
+    <td class="M no-print" id="MX_sess_{{item_.id}}">{{item_.sess}}</td>
     
     {% if session.profile and session.profile.user=='admin' and True %}
-    <td class="M" id="MZ_acc-acno_{{item_.id}}">{{item_.acc_acno}}</td>
+    <td class="M no-print" id="MZ_acc-acno_{{item_.id}}">{{item_.acc_acno}}</td>
     {% else %}
-    <td>{{item_.acc_acno}}</td>
+    <td class="no-print">{{item_.acc_acno}}</td>
     {% endif %}
   </tr>
   {% else %}
@@ -202,8 +202,13 @@
         if (col.id && col.id.indexOf("fund-amount") > -1) {
           total_fund_amount+=Number(col.innerHTML)
           console.log(total_fund_amount)
-          break;
         }
+        if (col.id && col.id.indexOf("_cate_") > -1) {
+          if(col.innerHTML){
+            col.innerHTML=itemcatno.substring(4,8)
+          }
+          break;
+        }        
       }
     }
     let totalrow = table.rows[table.rows.length - 1];
