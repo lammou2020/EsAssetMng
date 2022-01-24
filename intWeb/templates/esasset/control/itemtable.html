@@ -302,7 +302,7 @@
     for (var i = 0, row; row = table.rows[i]; i++) {
       if (row.cells[0].innerHTML == "-") continue;
       for (var j = 0, col; col = row.cells[j]; j++) {
-        for (let fieldname of ["p-amount", "amount", "cate"]) {
+        for (let fieldname of ["price","quantity","p-amount", "amount", "cate"]) {
           if (col.id && col.id.indexOf(`_${fieldname}_`) > -1) {
             let elarr = col.id.split("_")
             curr_itemno = elarr[2];

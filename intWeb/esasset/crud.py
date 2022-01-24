@@ -35,6 +35,7 @@ def upload_hw_file(file,UPLOAD_FOLDER,seat):
         "Uploaded file %s as %s.", file.filename, public_url)
     return public_url
 
+
 def upload_image_file(file,UPLOAD_FOLDER,pixStr=None):
     """
     Upload the user-uploaded file to Google Cloud Storage and retrieve its
@@ -49,7 +50,6 @@ def upload_image_file(file,UPLOAD_FOLDER,pixStr=None):
         UPLOAD_FOLDER,
         pixStr,
         "EsAsset",
-
     )
     current_app.logger.info(
         "Uploaded file %s as %s.", file.filename, public_url)
@@ -238,6 +238,7 @@ def categoryitemlist(cateid):
         book={"id":0},items=books,
         next_page_token=next_page_token)
 
+
 @crud.route("/JSON/categoryitemlist/<cateid>")
 def JSONcategoryitemlist(cateid):
     token = request.args.get('page_token', None)
@@ -246,7 +247,6 @@ def JSONcategoryitemlist(cateid):
     books, next_page_token = get_assest_model().categoryitemlist_desc(cateid=cateid,buwei=1000,cursor=token)
     print(books)
     return jsonify(books)
-
 
 
 def Get_FileList(crspath, filenames, prefix=None):
@@ -371,6 +371,7 @@ def itemJsonUpdate(id,itemid):
     book = get_assest_model().updateItem(data, itemid)
     return jsonify( book)
 
+
 @crud.route('/<id>/item/api/JSON/updateSet/<nothing>', methods=['GET', 'POST'])
 @login_required_auth
 def itemJsonUpdateSet(id,nothing):
@@ -378,11 +379,11 @@ def itemJsonUpdateSet(id,nothing):
     for itemid in data:
         if 'regSDate' in data[itemid]:
             data[itemid]['regSDate']=datetime.strptime(data[itemid]['regSDate'], '%Y-%m-%d')
-        if 'itemno' in data:   
-            if data[itemid]["itemno"]=="" or data[itemid]["itemno"]=="None" or data[itemid]["itemno"]==None:
-                data[itemid]["itemno"]=None
-            else:
-                pass
+        for f_ in ['itemno',"price", "quantity", "p_amount", "amount", "fund_amount","gno","ict"]:
+            
+            if f_ in data[itemid]:
+                if data[itemid][f_]=="" or data[itemid][f_]=="None" or data[itemid][f_]==None:
+                    data[itemid][f_]=None
     cnt = get_assest_model().updateItem_DataSet(data)
     return f"updated {cnt} rows."
 
@@ -391,6 +392,7 @@ def CheckOwnRecordErr(book,session):
     if session["profile"].get("id")==1 : return None
     if str(session["profile"].get("id")) != book["createdById"] :  return "no create user!"
     return None
+
 
 @crud.route('/<id>/item/<itemid>/edit', methods=['GET', 'POST'])
 @login_required_auth
@@ -421,6 +423,7 @@ def itemedit(id,itemid):
         return redirect(url_for('.itemview', id=id,itemid=book['id']))
 
     return render_template("esasset/item/form.html", action="Edit", book=book)
+
 
 #####
 @crud.route('/<id>/item/<itemid>/delete')
@@ -457,6 +460,7 @@ def uploadItemfiles(id,itemid):
         return redirect(f"/EsAsset/{id}")
         #return render_template("view.html", book=book)    
 
+
 @crud.route('/<id>/item/<itemid>/download/<filename>')
 def download_item_file(id,itemid,filename):
     book,acc_id = get_assest_model().readItem(itemid)
@@ -479,6 +483,7 @@ def download_item_file(id,itemid,filename):
                 as_attachment = True)
     # Delete the zip file if not needed
 
+
 #####
 @crud.route('/<id>')
 @login_required_auth
@@ -491,6 +496,7 @@ def view(id):
     crspath=str(book["acno"])
     Get_FileList(crspath,filenames)     #"ACC"+crspath+"_"
     return render_template("esasset/view.html", book=book,items=items,filenames=filenames)
+
 
 # [START add]
 @crud.route('/add', methods=['GET', 'POST'])
@@ -514,7 +520,6 @@ def add():
         "readonly":"0",
         "regSDate":datetime.today().strftime( '%Y-%m-%d')
         }
-        
     return render_template("esasset/form.html", action="Add", book=book)
 # [END add]
 
@@ -523,24 +528,18 @@ def add():
 @login_required_auth
 def edit(id):
     book = get_assest_model().read(id)
-    
     Err=CheckOwnRecordErr(book,session) 
     if Err!= None :  return Err
-
-
     book["regSDate"]=book["regSDate"].strftime( '%Y-%m-%d')
     if request.method == 'POST':
         data = request.form.to_dict(flat=True)
         path = current_app.config['HW_UPLOAD_FOLDER']
         image_url = upload_image_file(request.files.get('image'),path,str(data["acno"]))
-
         if image_url:
             data['imageUrl'] = image_url
         data['regSDate']=datetime.strptime(data['regSDate'], '%Y-%m-%d')
         book = get_assest_model().update(data, id)
-
         return redirect(url_for('.view', id=book['id']))
-
     return render_template("esasset/form.html", action="Edit", book=book)
 
 
@@ -552,7 +551,6 @@ def delete(id):
     if Err != None:  return Err
     crspath=book["Path"]
     if (book["createdById"]==str(session['profile']['id']))  :
-
         path = current_app.config['HW_UPLOAD_FOLDER']
         UPLOAD_FOLDER = os.path.join(path, crspath)
         for root,dirs, files in os.walk(UPLOAD_FOLDER):
@@ -571,26 +569,20 @@ def itemgrid(id):
     book["regSDate"]=book["regSDate"].strftime( '%Y-%m-%d')
     items= get_assest_model().Itemlist_by_acno(book["acno"])
     filenames=[]
-    #Get_FileList(book,filenames)             
-    
     return render_template("esasset/grid.html", book=book,items=items,lecturesfile=[],filenames=filenames)
 
-#DownloadXLS
+
 @crud.route("/<id>/DownloadXLS",methods=["GET"])
 def get_Acc_DownloadXLS(id):
     f2A=["-","itemcatno","-","-","-","sess","vouchernum","regSDate","invoicenum","name","model","sn","supplier","quantity","price","p_amount","place","-","fund_amount","fund_name","keeper","amount","depr_year","warr_period","note1","note2"]
     datestr= datetime.today().strftime( '%Y-%m-%d')
     wb = load_workbook(filename = 'doc/asset_page_templ.xlsx')
     cate_row_idx={}
-
-    
     sn_="page"
-
     book = get_assest_model().read(id)    
     wb[sn_]["I3"]=book["acno"]
     wb[sn_]["I4"]=book["acc"]
     items= get_assest_model().Itemlist_by_acno(book["acno"])
-
     cate_row_idx[sn_]=7
     for r_ in items:
         ridx=cate_row_idx[sn_]
@@ -602,7 +594,8 @@ def get_Acc_DownloadXLS(id):
             elif f_ != "-":
                 wb[sn_][f"{chr(65+i)}{ridx}"]=r_[f_]
             if i==15 :
-                wb[sn_][f"{chr(65+i)}{ridx}"].number_format = '#,##0.00;[紅色]-#,##0.00'    
+                wb[sn_][f"{chr(65+i)}{ridx}"].number_format = '#,##0.00'
+        wb[sn_].row_dimensions[ridx].height = 30                   
         cate_row_idx[sn_]=ridx+1
     file = io.BytesIO()
     wb.save(file)
@@ -615,6 +608,7 @@ def get_Acc_DownloadXLS(id):
 def itemCateGrid():
     items= get_assest_model().ItemCatlist()
     return render_template("esasset/itemCategory/grid.html", items=items)
+    
 
 @crud.route('/itemCateGrid_/addbatch/<cnt>', methods=['GET', 'POST'])
 @login_required_auth
@@ -636,20 +630,9 @@ def itemCateGridJsonUpdateSet(nothing):
 @login_required_auth
 def itemCateGridJsonUpdate(itemcat_id):
     data=request.get_json()
-    #if 'regSDate' in data:
-    #    data['regSDate']=datetime.strptime(data['regSDate'], '%Y-%m-%d')
-    #if 'itemno' in data:   
-    #    if data["itemno"]=="" or data["itemno"]=="None" or data["itemno"]==None:
-    #        data["itemno"]=None
-    #    else:
-    #        pass
-    #if 'itemcatno' in data:   
-    #    if data["itemcatno"]=="" or data["itemcatno"]=="None" or data["itemcatno"]==None:
-    #        data["itemcatno"]=None
-    #    else:
-    #        pass            
     book = get_assest_model().updateItemCat(data, itemcat_id)
     return jsonify( book)
+    
 
 @crud.route('/itemCateGrid_/api/OUTJSON', methods=['GET', 'POST'])
 @login_required_auth
@@ -841,7 +824,6 @@ def get_qrcode():
     return send_file(qrcode(data, mode="raw"), mimetype="image/png")
 
 
-#DownloadXLS
 @crud.route("/DownloadXLS",methods=["GET"])
 def get_DownloadXLS():
     f2A=["-","itemcatno","-","-","-","sess","vouchernum","regSDate","invoicenum","name","model","sn","supplier","quantity","price","p_amount","place","-","fund_amount","fund_name","keeper","amount","depr_year","warr_period","note1","note2"]
@@ -865,10 +847,8 @@ def get_DownloadXLS():
                     wb[sn_][f"{chr(65+i)}{ridx}"]=r_[f_]
                 if chr(65+i) in ['O','P','R'] :
                     wb[sn_][f"{chr(65+i)}{ridx}"].number_format = '#,##0.00'    
-            #print(sn_,ridx)
             wb[sn_].row_dimensions[ridx].height = 30
             cate_row_idx[sn_]=ridx+1
-
     file = io.BytesIO()
     wb.save(file)
     file.seek(0)
