@@ -863,9 +863,10 @@ def get_DownloadXLS():
                     wb[sn_][f"{chr(65+i)}{ridx}"]=r_[f_].strftime( '%Y-%m-%d')
                 elif f_ != "-":
                     wb[sn_][f"{chr(65+i)}{ridx}"]=r_[f_]
-                if i==15 :
-                    wb[sn_][f"{chr(65+i)}{ridx}"].number_format = '#,##0.00;[紅色]-#,##0.00'    
+                if chr(65+i) in ['O','P','R'] :
+                    wb[sn_][f"{chr(65+i)}{ridx}"].number_format = '#,##0.00'    
             #print(sn_,ridx)
+            wb[sn_].row_dimensions[ridx].height = 30
             cate_row_idx[sn_]=ridx+1
 
     file = io.BytesIO()
