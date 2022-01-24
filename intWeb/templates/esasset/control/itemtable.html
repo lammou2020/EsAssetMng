@@ -1,35 +1,38 @@
-<style>    
-  textarea{
-    min-width:60px;
+<style>
+  textarea {
+    min-width: 60px;
     min-height: 40px;
-    overflow-y:visible;
-    padding:0;
-    margin:0;
+    overflow-y: visible;
+    padding: 0;
+    margin: 0;
     outline: none;
     overflow: auto;
   }
+
   /*th {min-width: 100px;}*/
   tr:first-child td {
     font-size: 12px;
     background: #f2f2f2;
     vertical-align: top;
   }
-  table tr td{ 
-    padding-left:2px; 
-    padding-right:2px; 
-    margin:0; 
-    border-collapse: collapse; 
-    border: 1px solid gray; 
+
+  table tr td {
+    padding-left: 2px;
+    padding-right: 2px;
+    margin: 0;
+    border-collapse: collapse;
+    border: 1px solid gray;
     min-width: 20px;
-    max-width: 100px;}
+    max-width: 100px;
+  }
 </style>
-<table id="EDUTBL" class="" style="width:1800px">
+<table id="EDUTBL" class="" style="width:100%">
   <tr>
     <td class="small no-print" style="width:10px;padding:0;margin: 0;">-</td>
-    <td class="small no-print" style="width: 10px;">編號</td>
+    <td class="small no-print" style="width: 10px;">序號</td>
     <td id="MA_H">組</td>
     <!--td id="MA_H">校內編號</td-->
-    <td id="MB_H" style="width:100px;max-width:110px;min-width: 110px;">編號*</td>
+    <td id="MB_H" style="width:100px;max-width:110px;min-width: 110px;">產品編號*</td>
     <td id="MC_H" style="min-width: 100px;">產品名稱*</td>
     <td id="MD_H">model</td>
     <td id="ME_H">SN/PN</td>
@@ -37,27 +40,29 @@
     <td id="MG_H">單價</td>
     <td id="MI_H">購入金額</td>
     <td id="MJ_H">攤折淨值</td>
-    <td id="MK_H">使用年期</td>
+    <td id="MK_H">年限*</td>
     <td id="ML_H">資助額</td>
     <td id="MM_H">資助單位/個人</td>
-    <td id="MN_H">位置</td>
-    <td id="MO_H">保管人</td>
-    <td id="MP_H">備註</td>
-    <td id="MR_H">登錄日期</td>
-    <td id="MT_H">vouchernum</td>
-    <td id="MU_H">invoicenum</td>
-    <td id="MV_H" class="no-print">supplier</td>
-    <td id="MW_H" class="no-print">分類*</td>
-    <td id="MX_H" class="no-print">年度*</td>
+    <td id="MN_H">資助標籤</td>
+    <td id="MO_H">位置</td>
+    <td id="MP_H">保管人</td>
+    <td id="MQ_H">備註</td>
+    <td id="MR_H" class="no-print">登錄日期</td>
+    <td id="MU_H" class="no-print">vouchernum</td>
+    <td id="MV_H" class="no-print">invoicenum</td>
+    <td id="MW_H" class="no-print">supplier</td>
+    <td id="MX_H" class="no-print">分類*</td>
+    <td id="MY_H" class="no-print">年度*</td>
     <td id="MZ_H" class="no-print">專案編號</td>
   </tr>
   {% for item_ in items %}
   <tr>
     <td class="small no-print" style="width:10px;padding:0;margin: 0;">{{loop.index}}</td>
     <td class="small no-print" style="width: 10px;"><a href="/EsAsset/{{acc_id}}/item/{{item_.id}}">{{item_.id}}</a></td>
-    <td class="M" id="MA_gno_{{item_.id}}">{{  '%02d' | format(item_.gno) if item_.gno is not none}}</td>
+    <td class="M" id="MA_gno_{{item_.id}}">{{ '%02d' | format(item_.gno) if item_.gno is not none}}</td>
     <!--td class="M" id="MA_itemno_{{item_.id}}">{{item_.itemno if item_.itemno is not none}}</td-->
-    <td class="M" style="width:100px;max-width:110px;min-width: 110px;" id="MB_itemcatno_{{item_.id}}">{{ '%014d' | format(item_.itemcatno) if item_.itemcatno is not none }}</td>
+    <td class="M" style="width:100px;max-width:110px;min-width: 110px;" id="MB_itemcatno_{{item_.id}}">{{ '%014d' |
+      format(item_.itemcatno) if item_.itemcatno is not none }}</td>
     <td class="M" id="MC_name_{{item_.id}}">{{item_.name}}</td>
     <td class="M" id="MD_model_{{item_.id}}">{{item_.model}}</td>
     <td class="M" id="ME_sn_{{item_.id}}">{{item_.sn}}</td>
@@ -67,17 +72,19 @@
     <td class="M" id="MJ_amount_{{item_.id}}">{{item_.amount if item_.amount is not none}}</td>
     <td class="M" id="MK_depr-year_{{item_.id}}">{{item_.depr_year}}</td>
     <td class="M" id="ML_fund-amount_{{item_.id}}">{{item_.fund_amount if item_.fund_amount is not none}}</td>
-    <td class="M" id="MM_fund-name_{{item_.id}}">{{item_.fund_name}}</td>
-    <td class="M" id="MN_place_{{item_.id}}">{{item_.place}}</td>
-    <td class="M" id="MO_keeper_{{item_.id}}">{{item_.keeper if item_.keeper is not none}}</td>
-    <td class="M" id="MP_note1_{{item_.id}}">{{item_.note1}}</td>
-    <td class="M" style="max-width: 80px;" id="MR_regSDate_{{item_.id}}">{{item_.regSDate.strftime('%Y-%m-%d')}}</td>
-    <td class="M" style="max-width: 30px;" id="MT_vouchernum_{{item_.id}}">{{item_.vouchernum}}</td>
-    <td class="M" style="max-width: 30px;" id="MU_invoicenum_{{item_.id}}">{{item_.invoicenum}}</td>
-    <td class="M no-print" id="MV_supplier_{{item_.id}}">{{item_.supplier}}</td>
-    <td class="M no-print" id="MW_cate_{{item_.id}}">{{item_.cate}}</td>
-    <td class="M no-print" id="MX_sess_{{item_.id}}">{{item_.sess}}</td>
-    
+    <td class="M" id="MM_fund-name_{{item_.id}}">{{item_.fund_name if item_.fund_name is not none}}</td>
+    <td class="M" id="MN_fund-lebal_{{item_.id}}">{{item_.fund_lebal if item_.fund_lebal is not none}}</td>
+    <td class="M" id="MO_place_{{item_.id}}">{{item_.place if item_.place is not none}}</td>
+    <td class="M" id="MP_keeper_{{item_.id}}">{{item_.keeper if item_.keeper is not none}}</td>
+    <td class="M" id="MQ_note1_{{item_.id}}">{{item_.note1 if item_.note1 is not none}}</td>
+    <td class="M no-print" style="max-width: 80px;" id="MR_regSDate_{{item_.id}}">
+      {{item_.regSDate.strftime('%Y-%m-%d')}}</td>
+    <td class="M no-print" style="max-width: 30px;" id="MU_vouchernum_{{item_.id}}">{{item_.vouchernum}}</td>
+    <td class="M no-print" style="max-width: 30px;" id="MV_invoicenum_{{item_.id}}">{{item_.invoicenum}}</td>
+    <td class="M no-print" id="MW_supplier_{{item_.id}}">{{item_.supplier}}</td>
+    <td class="M no-print" id="MX_cate_{{item_.id}}">{{item_.cate}}</td>
+    <td class="M no-print" id="MY_sess_{{item_.id}}">{{item_.sess}}</td>
+
     {% if session.profile and session.profile.user=='admin' and True %}
     <td class="M no-print" id="MZ_acc-acno_{{item_.id}}">{{item_.acc_acno}}</td>
     {% else %}
@@ -90,7 +97,9 @@
   </tr>
   {% endfor %}
 </table>
-<div id="es_msgbox"><div id="es_msgbox_txt"></div></div>
+<div id="es_msgbox">
+  <div id="es_msgbox_txt"></div>
+</div>
 <script>
   var es_msgbox = $("#es_msgbox").dialog({
     autoOpen: false, height: 700, width: 500, modal: true,
@@ -147,8 +156,8 @@
     //if (res == null) { return 0; }
     //if (res[0] == "FA0000") { return 0; }
     //let y = res[0].substring(2, 2)
-    y=acno.substring(0,2)
-    if(y.startsWith('9')) {y=`19${y}`}else{y=`20${y}`}
+    y = acno.substring(0, 2)
+    if (y.startsWith('9')) { y = `19${y}` } else { y = `20${y}` }
     console.log(y)
     const d = new Date();
     let year = d.getFullYear();
@@ -181,16 +190,16 @@
         if (col.id && col.id.indexOf("itemcatno") > -1) itemcatno = col.innerHTML
         if (col.id && col.id.indexOf("price") > -1) price = Number(col.innerHTML)
         if (col.id && col.id.indexOf("quantity") > -1) quantity = Number(col.innerHTML)
-        if (col.id && col.id.indexOf("p-amount") > -1) { pamount_cell = col;pamount=Number(pamount_cell.innerHTML) }
+        if (col.id && col.id.indexOf("p-amount") > -1) { pamount_cell = col; pamount = Number(pamount_cell.innerHTML) }
         if (col.id && col.id.indexOf("amount") > -1) { amount_cell = col; }
         if (col.id && col.id.indexOf("depr-year") > -1) {
-          console.log(quantity,price,pamount)
+          console.log(quantity, price, pamount)
           depr_year = Number(col.innerHTML)
-          pamount= (price==0||quantity==0)?pamount:price*quantity
-          if(price==0||quantity==0){
+          pamount = (price == 0 || quantity == 0) ? pamount : price * quantity
+          if (price == 0 || quantity == 0) {
 
-          }else{
-            pamount_cell.innerHTML=pamount.toFixed(2)
+          } else {
+            pamount_cell.innerHTML = pamount.toFixed(2)
           }
           amount = pamount * depr_rate(itemcatno, depr_year)
           amount_cell.innerHTML = amount.toFixed(2)
@@ -200,15 +209,15 @@
 
         }
         if (col.id && col.id.indexOf("fund-amount") > -1) {
-          total_fund_amount+=Number(col.innerHTML)
+          total_fund_amount += Number(col.innerHTML)
           console.log(total_fund_amount)
         }
         if (col.id && col.id.indexOf("_cate_") > -1) {
-          if(col.innerHTML){
-            col.innerHTML=itemcatno.substring(4,8)
+          if (col.innerHTML) {
+            col.innerHTML = itemcatno.substring(4, 8)
           }
           break;
-        }        
+        }
       }
     }
     let totalrow = table.rows[table.rows.length - 1];
@@ -227,12 +236,13 @@
       var cell11 = totalrow.insertCell();
       var cell12 = totalrow.insertCell();
       var cell13 = totalrow.insertCell()
-
-      cell7.style.textAlign="right";
-      cell8.style.textAlign="right";
-      cell10.style.textAlign="right";
-      cell11.style.textAlign="right";
-      cell13.style.textAlign="right";
+      cell1.classList.add("no-print");
+      cell2.classList.add("no-print");
+      cell7.style.textAlign = "right";
+      cell8.style.textAlign = "right";
+      cell10.style.textAlign = "right";
+      cell11.style.textAlign = "right";
+      cell13.style.textAlign = "right";
       cell1.innerHTML = "-";
       cell7.innerHTML = "小計";
       cell8.innerHTML = total_quantity;
@@ -241,9 +251,15 @@
       cell13.innerHTML = total_fund_amount.toFixed(2);
     } else {
       totalrow.cells[7].innerHTML = total_quantity;
-      totalrow.cells[9].innerHTML =  total_pamount.toFixed(2);
+      totalrow.cells[9].innerHTML = total_pamount.toFixed(2);
       totalrow.cells[10].innerHTML = total_amount.toFixed(2);
       totalrow.cells[12].innerHTML = total_fund_amount.toFixed(2);
+    }
+    if (PostUrl) {
+      let isExecuted = confirm("是否儲存結果?");
+      if (isExecuted) {
+        saveTotal(PostUrl)
+      }
     }
   }
 
@@ -286,26 +302,42 @@
     for (var i = 0, row; row = table.rows[i]; i++) {
       if (row.cells[0].innerHTML == "-") continue;
       for (var j = 0, col; col = row.cells[j]; j++) {
-        for (let fieldname of ["p-amount", "amount"]) {
+        for (let fieldname of ["p-amount", "amount", "cate"]) {
           if (col.id && col.id.indexOf(`_${fieldname}_`) > -1) {
             let elarr = col.id.split("_")
             curr_itemno = elarr[2];
             if (curr_itemno in json) { } else { json[curr_itemno] = {}; }
-            json[curr_itemno][fieldname] = col.innerHTML
+            json[curr_itemno][fieldname.replace("-", "_")] = col.innerHTML
           }
         }
       }
     }
-    let error_set = []
-    for (let itemno_ in json) {
-      console.log(json[itemno_])
-      let stat_ = await post_total_url(PostUrl, itemno_, json[itemno_], frmMsg_)
-      if (stat_ != 0) error_set.push(stat_)
-    }
-    for (let itemno_ of error_set) {
-      let stat_ = await post_total_url(PostUrl, itemno_, json[itemno_], frmMsg_)
-      if (stat_ != 0) alert(stat_)
+    if (PostUrl.indexOf("updateSet") > -1) {
+      let keys_ = Object.keys(json)
+      let json_ = {}
+      for (let i = 0; i < keys_.length; i++) {
+        json_[keys_[i]] = json[keys_[i]]
+        if ((i + 1) % 200 == 0) {
+          let stat_ = await post_total_url(PostUrl, 0, json_, frmMsg_)
+          json_ = {}
+        }
+      }
+      if (json_ == {}) { }
+      else {
+        let stat_ = await post_total_url(PostUrl, 0, json_, frmMsg_)
+      }
+    } else {
+      let error_set = []
+      for (let itemno_ in json) {
+        console.log(json[itemno_])
+        let stat_ = await post_total_url(PostUrl, itemno_, json[itemno_], frmMsg_)
+        if (stat_ != 0) error_set.push(stat_)
+      }
+      for (let itemno_ of error_set) {
+        let stat_ = await post_total_url(PostUrl, itemno_, json[itemno_], frmMsg_)
+        if (stat_ != 0) alert(stat_)
+      }
     }
   }
-  // '%03d' | format(my_bandwitdth|int) 
+  // '%03d' | format(my_bandwitdth|int)
 </script>

@@ -31,6 +31,8 @@ class Acc(db.Model):
     regSDate= db.Column(db.DateTime, nullable=False,default=datetime.utcnow) #登記日期
     describ=db.Column(db.Text)  # 描述
     vouchernum =db.Column(db.String(80))  # 憑單編號
+    invoicenum =db.Column(db.String(80))  # 傳票號碼
+    supplier =db.Column(db.String(80))  # 供應商    
     total=db.Column(db.Integer)  # 計算時使用 
     # User info
     createdById = db.Column(db.String(255))    
@@ -46,6 +48,8 @@ class Acc(db.Model):
                 sess=None, 
                 regSDate=None, 
                 vouchernum=None, 
+                invoicenum=None, 
+                supplier=None, 
                 total=None,
                 describ=None,
                 createdById=None,
@@ -58,6 +62,8 @@ class Acc(db.Model):
         self.createdById=createdById
         self.imageUrl=imageUrl
         self.vouchernum=vouchernum
+        self.invoicenum=invoicenum
+        self.supplier=supplier
         self.total=total
         self.describ=describ
         self.Path=Path
@@ -160,6 +166,7 @@ class Item(db.Model):
     amount=  db.Column(db.Numeric(precision=10,scale=2))  # 淨值
     fund_amount=db.Column(db.Integer)  # 資助金額
     fund_name=db.Column(db.String(80)) # 資助單位/個人
+    fund_lebal=db.Column(db.String(80)) # 資助單位/個人
     keeper=db.Column(db.String(80))  # 移動 link to _table
     place =db.Column(db.String(80))  # 放置地方
     depr_year   = db.Column(db.Integer,default=0)  # 0505 rate:5/5 NN總年期/淨灘折年期

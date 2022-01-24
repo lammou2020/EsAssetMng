@@ -10,7 +10,7 @@
         }
     }
     function GetNewItemNo(cateid, use_period, x) {
-        let sess=$("#sess").val()
+        let sess=$("#sess").val().replace("/","")
         let _Url = "/EsAsset/JSON/categoryitemlist/"
         $.ajax({
             method: "GET",

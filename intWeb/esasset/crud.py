@@ -366,7 +366,8 @@ def itemJsonUpdate(id,itemid):
         if f_ in data:   
             if data[f_]=="" or data[f_]=="None" or data[f_]==None:
                 data[f_]=None
-
+    print(data)
+    print(itemid)
     book = get_assest_model().updateItem(data, itemid)
     return jsonify( book)
 
