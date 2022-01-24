@@ -575,6 +575,41 @@ def itemgrid(id):
     
     return render_template("esasset/grid.html", book=book,items=items,lecturesfile=[],filenames=filenames)
 
+#DownloadXLS
+@crud.route("/<id>/DownloadXLS",methods=["GET"])
+def get_Acc_DownloadXLS(id):
+    f2A=["-","itemcatno","-","-","-","sess","vouchernum","regSDate","invoicenum","name","model","sn","supplier","quantity","price","p_amount","place","-","fund_amount","fund_name","keeper","amount","depr_year","warr_period","note1","note2"]
+    datestr= datetime.today().strftime( '%Y-%m-%d')
+    wb = load_workbook(filename = 'doc/asset_page_templ.xlsx')
+    cate_row_idx={}
+
+    
+    sn_="page"
+
+    book = get_assest_model().read(id)    
+    wb[sn_]["I3"]=book["acno"]
+    wb[sn_]["I4"]=book["acc"]
+    items= get_assest_model().Itemlist_by_acno(book["acno"])
+
+    cate_row_idx[sn_]=7
+    for r_ in items:
+        ridx=cate_row_idx[sn_]
+        for i, f_ in enumerate(f2A):
+            if f_ == "itemcatno":
+                wb[sn_][f"{chr(65+i)}{ridx}"]=str(r_[f_]).zfill(14)
+            elif f_ == "regSDate":
+                wb[sn_][f"{chr(65+i)}{ridx}"]=r_[f_].strftime( '%Y-%m-%d')
+            elif f_ != "-":
+                wb[sn_][f"{chr(65+i)}{ridx}"]=r_[f_]
+            if i==15 :
+                wb[sn_][f"{chr(65+i)}{ridx}"].number_format = '#,##0.00;[紅色]-#,##0.00'    
+        cate_row_idx[sn_]=ridx+1
+    file = io.BytesIO()
+    wb.save(file)
+    file.seek(0)
+    return send_file(file, attachment_filename=f"asset_page_{datestr}.xlsx", as_attachment=True)
+
+
 @crud.route("/itemCateGrid")
 @login_required_auth
 def itemCateGrid():
@@ -809,7 +844,7 @@ def get_qrcode():
 #DownloadXLS
 @crud.route("/DownloadXLS",methods=["GET"])
 def get_DownloadXLS():
-    f2A=["-","itemcatno","-","-","-","sess","vouchernum","regSDate","invoicenum","name","model","sn","supplier","price","quantity","p_amount","place","-","fund_amount","fund_name","keeper","amount","depr_year","warr_period","note1","note2"]
+    f2A=["-","itemcatno","-","-","-","sess","vouchernum","regSDate","invoicenum","name","model","sn","supplier","quantity","price","p_amount","place","-","fund_amount","fund_name","keeper","amount","depr_year","warr_period","note1","note2"]
     datestr= datetime.today().strftime( '%Y-%m-%d')
     wb = load_workbook(filename = 'doc/asset_data_templ.xlsx')
     cate_row_idx={}
@@ -828,6 +863,8 @@ def get_DownloadXLS():
                     wb[sn_][f"{chr(65+i)}{ridx}"]=r_[f_].strftime( '%Y-%m-%d')
                 elif f_ != "-":
                     wb[sn_][f"{chr(65+i)}{ridx}"]=r_[f_]
+                if i==15 :
+                    wb[sn_][f"{chr(65+i)}{ridx}"].number_format = '#,##0.00;[紅色]-#,##0.00'    
             #print(sn_,ridx)
             cate_row_idx[sn_]=ridx+1
 
