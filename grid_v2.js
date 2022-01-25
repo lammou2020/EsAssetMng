@@ -6,9 +6,11 @@ var CSVFrm = null;
 var OriginalData = null;
 var PostUrl = null;
 var _Field_Defs = null;
-var _cells_width={};
+var _cells_width = {};
+var _cells_height = {};
 ////Program Start
 function BindingZeroClipboard(id, tablename) { throw new expection("no imp") }
+
 function bind_txtinput_paste($txtinput, cell) {
 	$txtinput.bind('paste', function (e) {
 		var txt = e.originalEvent.clipboardData.getData('Text').replace(/\n$/, "");
@@ -16,11 +18,11 @@ function bind_txtinput_paste($txtinput, cell) {
 		var rowcnt = data_arr.length; let linefeed = false;
 		var colcnt = data_arr[0].split('\t').length;
 		var f_data_arr = new Array();
-		for (i = 0; i < rowcnt; i++) { f_data_arr[i] = new Array();	}
+		for (i = 0; i < rowcnt; i++) { f_data_arr[i] = new Array(); }
 		for (j = 0; j < rowcnt; j++) {
 			var temp_ar = data_arr[j].split('\t');
 			if (temp_ar.length >= colcnt) {
-				for (k = 0; k < colcnt; k++){
+				for (k = 0; k < colcnt; k++) {
 					f_data_arr[j][k] = temp_ar[k].replace(/\n$/, "").replace(/\r$/, "");
 				}
 			}
@@ -30,7 +32,7 @@ function bind_txtinput_paste($txtinput, cell) {
 				var c_cell = cell;
 				var c_cell_col_id = 0;
 				var f_cell = c_cell.parent().children('td:first');
-				for (i = 0; i < 26; i++) {
+				for (i = 0; i < 64; i++) {
 					c_cell_col_id++;
 					if (c_cell.attr('id') == f_cell.attr('id')) {
 						break;
@@ -45,7 +47,7 @@ function bind_txtinput_paste($txtinput, cell) {
 						} else {
 							c_cell.text(f_data_arr[rid][cid]);
 						}
-						if (cid < colcnt - 1){
+						if (cid < colcnt - 1) {
 							c_cell = c_cell.next();
 						}
 					}
@@ -59,21 +61,20 @@ function bind_txtinput_paste($txtinput, cell) {
 }
 
 function editCell(cell) {
-	//$txt=$('<input type=text>');
-	//$txt.width(cell.width()-3);
-	let cellwidth=cell.width()-5
-	let hkey=cell.attr('id').split("_")[1];
-	if(hkey in _cells_width){ cellwidth = _cells_width[hkey] }else{_cells_width[hkey] = cellwidth;}
-
+	let cell_arr= cell.attr('id').split("_")[1];
+	let hkey = cell_arr[1];
+	let cellwidth = cell.width() 
+	let cellheight = cell.height()
+	if (hkey in _cells_width) { cellwidth = _cells_width[hkey] } else { _cells_width[hkey] = cellwidth; }
+	if ("hkey" in _cells_height) { cellheight = _cells_height["hkey"] } else { _cells_height["hkey"] = cellheight; }
 	if (cell.has(":input").length == 0) {
-		$txt = $('<textarea></textarea>');
-		$txt.width(cellwidth);
-		$txt.height(cell.height() - 5);
-		bind_txtinput_paste($txt, cell);  //cell past 2014/06/03	
 		var val = cell.text();
 		cell.text("");
-		$txt.val(val);
-		cell.append($txt);
+		$txt = $('<textarea></textarea>').width(cellwidth).height(cellheight);
+		cell.append($txt.val(val));
+		cell.width($txt.width)	
+		cell.height(cellheight)				
+		bind_txtinput_paste($txt, cell);  //cell past 2014/06/03	
 		return $txt;
 	}
 }
@@ -100,7 +101,6 @@ function GenOriginalData() {
 			OriginalData[$(this).attr('id')] = $(this).text();
 		});
 	}
-	// alert(JSON.stringify(OriginalData));
 }
 
 function SplitPastFrmText(txt) {
@@ -173,7 +173,6 @@ function BindingPastFrm(frm, txt, table) {
 			buttons: {
 				"past": function () {
 					closeedit();
-					//alert($("#"+txt).val());
 					var fill_data = SplitPastFrmText($("#" + txt).val());
 					for (i = 0; i < fill_data.length; i++) {
 						var fieldname = "";
@@ -198,28 +197,28 @@ function BindingPastFrm(frm, txt, table) {
 
 class FrmMessageBox {
 	constructor() {
-	  this.messagebox = $( "<div><h4>Message Bo<a href='#' onclick='FrmMessageBox.closebox(this);'>[x]</a></h4></div>" )
-	  .css({
-		  'position' : 'absolute',
-		  'right' : '10%',
-		  'top' : '10%',
-		  'border':'3px solid black',
-		  'background-color':'white',
-		  'overflow':'scroll',
-		  'height':'400px'
-	  }).width(400).height(300).appendTo( "body" );
-	  this.year = 0;
+		this.messagebox = $("<div><h4>Message Bo<a href='#' onclick='FrmMessageBox.closebox(this);'>[x]</a></h4></div>")
+			.css({
+				'position': 'absolute',
+				'right': '10%',
+				'top': '10%',
+				'border': '3px solid black',
+				'background-color': 'white',
+				'overflow': 'scroll',
+				'height': '400px'
+			}).width(400).height(300).appendTo("body");
+		this.year = 0;
 	}
 
-	static closebox(x){x.parentElement.parentElement.style.display = "none";}
+	static closebox(x) { x.parentElement.parentElement.style.display = "none"; }
 
 	msg(x) {
-		this.messagebox.html(this.messagebox.html()+'<br>'+x);
+		this.messagebox.html(this.messagebox.html() + '<br>' + x);
 	}
 }
 
-function posturl(PostUrl,rowid,jsondata,frmMessageBox ){
-	return new Promise((resolve,reject)=>{
+function posturl(PostUrl, rowid, jsondata, frmMessageBox) {
+	return new Promise((resolve, reject) => {
 		$.ajax({
 			method: "POST",
 			url: PostUrl + `/${rowid}`,
@@ -227,14 +226,14 @@ function posturl(PostUrl,rowid,jsondata,frmMessageBox ){
 			contentType: "application/json",
 			timeout: 6000,
 			statusCode: {
-				500: function() { 
-				  resolve(rowid);
+				500: function () {
+					resolve(rowid);
 				}
-			  }
+			}
 		}).done(function (data) {
 			frmMessageBox.msg(JSON.stringify(data))
 			resolve(0)
-		}).fail(function (jqXHR, textStatus, errorThrown) { 
+		}).fail(function (jqXHR, textStatus, errorThrown) {
 			frmMessageBox.msg("over time!")
 			resolve(rowid);
 		});
@@ -258,7 +257,7 @@ function BindingFunctions(editbtn, savebtn, readmodbtn) {
 		var json = {};
 		var result_set = [];
 		var error_msg = "";
-		var frmMessageBox=new FrmMessageBox();
+		var frmMessageBox = new FrmMessageBox();
 		$('.M').each(function (i) {
 			if (OriginalData[$(this).attr('id')] != $(this).text()) {
 				let elarr = $(this).attr('id').split("_")
@@ -277,31 +276,42 @@ function BindingFunctions(editbtn, savebtn, readmodbtn) {
 				}
 			}
 		});
-		if(error_msg !="" ){ alert(error_msg);}
+		if (error_msg != "") { alert(error_msg); }
 		if (PostUrl != null) {
-			if(PostUrl.indexOf("updateSet")>-1){
-				let stat_=await posturl(PostUrl,0,json,frmMessageBox )
-			}else{
-			for (let rowid in json) {
-				let jsondata = json[rowid]
-				let stat_=await posturl(PostUrl,rowid,jsondata,frmMessageBox )
-				if (stat_!=0 )
-				{
-					result_set.push(stat_)
+			if (PostUrl.indexOf("updateSet") > -1) {
+				let keys_ = Object.keys(json)
+				let json_ = {}
+				for (let i = 0; i < keys_.length; i++) {
+					json_[keys_[i]] = json[keys_[i]]
+					if ((i + 1) % 200 == 0) {
+						let stat_ = await posturl(PostUrl, 0, json_, frmMessageBox)
+						json_ = {}
+					}
+				}
+				if (json_ == {}) { }
+				else {
+					let stat_ = await posturl(PostUrl, 0, json_, frmMessageBox)
+				}
+			} else {
+				for (let rowid in json) {
+
+					let jsondata = json[rowid]
+					let stat_ = await posturl(PostUrl, rowid, jsondata, frmMessageBox)
+					if (stat_ != 0) {
+						result_set.push(stat_)
+					}
+				}
+				for (let rowid of result_set) {
+					let jsondata = json[rowid]
+					let stat_ = await posturl(PostUrl, rowid, jsondata, frmMessageBox)
+					if (stat_ != 0) {
+						alert("error:" + stat_)
+					}
+				}
+				for (var key in json) {
+					OriginalData[key] = "-1";
 				}
 			}
-			for (let rowid of result_set) {
-				let jsondata = json[rowid]
-				let stat_=await posturl(PostUrl,rowid,jsondata,frmMessageBox )
-				if (stat_!=0 )
-				{
-					alert("error:"+stat_)
-				}
-			}
-			for (var key in json) {
-				OriginalData[key] = "-1";
-			}
-		}
 
 		} else {
 			alert("constructing ... POST:\n" + JSON.stringify(json));

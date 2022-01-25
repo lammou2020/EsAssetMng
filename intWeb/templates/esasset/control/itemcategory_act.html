@@ -10,11 +10,13 @@
         }
     }
     function GetNewItemNo(cateid, use_period, x) {
+        let mask=1000
         let sess=$("#sess").val().replace("/","")
-        let _Url = "/EsAsset/JSON/categoryitemlist/"
+        let _Url = `/EsAsset/JSON/categoryitemlist/${sess}${cateid}`
+        if(mask==10000){_Url = `/EsAsset/JSON/categoryitemlist/${cateid}?mask=${mask}`}
         $.ajax({
             method: "GET",
-            url: _Url + `/${sess}${cateid}`,
+            url: _Url ,
             contentType: "application/json"
         }).done(function (data) {
             console.log(data)
@@ -25,6 +27,7 @@
             }
             else {
                 itemno = sess+(Number(item_name.split(" ")[0]) * 1000 + 1)
+                if(mask==10000){ itemno = (Number(item_name.split(" ")[0]) * mask + 1) }
             }
             let oldval = $("#itemcatno").val()
             if (oldval.length > 0) {

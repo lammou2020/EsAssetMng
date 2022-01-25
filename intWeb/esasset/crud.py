@@ -244,7 +244,11 @@ def JSONcategoryitemlist(cateid):
     token = request.args.get('page_token', None)
     if token:
         token = token.encode('utf-8')
-    books, next_page_token = get_assest_model().categoryitemlist_desc(cateid=cateid,buwei=1000,cursor=token)
+    buwei=1000
+    mask=request.args.get("mask",None)
+    if mask!=None:
+        buwei=int(mask)
+    books, next_page_token = get_assest_model().categoryitemlist_desc(cateid=cateid,buwei=buwei,cursor=token)
     print(books)
     return jsonify(books)
 
