@@ -86,6 +86,9 @@ def create_app(config, debug=False, testing=False, config_overrides=None):
     from intWeb import esasset, esasset_ex, lessons,hello, auth,blog
 
     app.register_blueprint(esasset.crud,name="EsAsset", url_prefix='/EsAsset')
+    app.register_blueprint(esasset.crud_item,name="EsAssetItem", url_prefix='/EsAsset')
+    app.register_blueprint(esasset.crud_cate,name="EsAssetCate", url_prefix='/EsAsset')
+    app.register_blueprint(esasset.crud_movelog,name="EsAssetMovelog", url_prefix='/EsAsset')
     app.register_blueprint(esasset_ex.crud,name="EsAssetEx", url_prefix='/EsAssetEx')
     #app.register_blueprint(itemCate.crud,name="EsAssetItemCate", url_prefix='/EsAssetItemCate')
     app.register_blueprint(lessons.crud,name="lessons", url_prefix='/lessons')

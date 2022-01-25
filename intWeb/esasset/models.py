@@ -608,13 +608,6 @@ def _create_database():
     with app.app_context():
         #db.drop_all()
         #db.create_all()
-        for i in range(700):
-            u_= ItemCategory(
-                  itemcat_pri='0',
-                 itemcat_sec='0',
-                 name="",
-                 depr_year=0)
-            db.session.add(u_)
         db.session.commit()
     print("All tables created")
 
