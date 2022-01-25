@@ -110,10 +110,10 @@
         <a href="/EsAsset/{{book.id}}">{{book.id}}.{{book.acno}}</a>
       </td>
       <td>
-        <h4>{{book.acc}}</h4>
+        {{book.acc}}
       </td>
       <td>
-        <h4>{{book.sess}}</h4>
+        {{book.sess}}
       </td>
       <td>
         {{book.regSDate}}
@@ -131,7 +131,7 @@
         {{book.createdById if book.createdById is not none}}
       </td>
   </table>
-  <p>{{book.describ | safe}}</p>
+  <p>{{book.describ | safe if book.describ is not none}}</p>
 </div>
 <div class="btn-group no-print">  
   {% if session.profile and session.profile.Role < "8" %}
@@ -158,7 +158,7 @@
       運算
     </a>
     <a href="/EsAsset/{{book.id}}/DownloadXLS" class="btn btn-primary btn-sm">
-      <i class="glyphicon glyphicon-print"></i>
+      <i class="glyphicon glyphicon-cloud-download"></i>
       excel
     </a>    
     
@@ -172,11 +172,11 @@
 {% set acc_id=book.id %}
 {% include 'esasset/control/itemtable.html' %}
 
-
 {% set file_link_base="/EsAsset/%s/download"%(acc_id) %}
 {% set file_uplink="/EsAsset/%s/upload"%(acc_id) %}
+<div class="no-print">
 {% include 'esasset/control/filenames_form.html' %}
-
+</div>
 
 <script>
   //var PostUrl = '/EsAsset/{{book.id}}/item/api/JSON/update';

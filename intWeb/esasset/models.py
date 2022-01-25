@@ -180,9 +180,18 @@ class Item(db.Model):
     # Acc_acno
     regSDate = db.Column(db.DateTime, nullable=False,default=datetime.utcnow) 
     acc_acno = db.Column(db.String(16), db.ForeignKey('Acc.acno'), nullable=False)
-    gno  = db.Column(db.Integer,nullable=True) # 物品分類編號 
     acc  = db.relationship('Acc',  backref=db.backref('Item', lazy=True))
+    gno  = db.Column(db.Integer,nullable=True) # 物品分類編號 
+    # ict
     ict  = db.Column(db.BigInteger,unique=True,nullable=True) # 物品分類編號
+    hostname= db.Column(db.String(80)) 	
+    wifi_mac= db.Column(db.String(80)) 	
+    lan_mac	= db.Column(db.String(80)) 
+    warr_id  = db.Column(db.String(80)) 
+    iyr_bat = db.Column(db.String(80)) 
+    cpu 	= db.Column(db.String(80)) 
+    ram	= db.Column(db.String(80)) 
+    disk= db.Column(db.String(80)) 
     # User_info
     createdById = db.Column(db.String(255))    
     Path     = db.Column(db.String(80))
