@@ -28,7 +28,7 @@
 </style>
 <table id="EDUTBL" class="" style="width:100%">
   <tr>
-    <td class="small no-print" style="width:10px;padding:0;margin: 0;">-</td>
+    <td class="no-print" style="width:2px;padding:0;margin: 0;">-</td>
     <td class="small no-print" style="width: 10px;">序號</td>
     <td id="MA_H">組</td>
     <!--td id="MA_H">校內編號</td-->
@@ -40,7 +40,7 @@
     <td id="MG_H">單價</td>
     <td id="MI_H">購入金額</td>
     <td id="MJ_H">攤折淨值</td>
-    <td id="MK_H">年限*</td>
+    <td id="MK_H">攤折(年)</td>
     <td id="ML_H">資助額</td>
     <td id="MM_H">資助單位/個人</td>
     <td id="MN_H">資助標籤</td>
@@ -48,16 +48,25 @@
     <td id="MP_H">保管人</td>
     <td id="MQ_H">備註</td>
     <td id="MR_H" class="no-print">登錄日期</td>
-    <td id="MU_H" class="no-print">vouchernum</td>
-    <td id="MV_H" class="no-print">invoicenum</td>
-    <td id="MW_H" class="no-print">supplier</td>
+    <td id="MU_H" class="no-print">憑單號</td>
+    <td id="MV_H" class="no-print">傳票號</td>
+    <td id="MW_H" class="no-print">供應商</td>
     <td id="MX_H" class="no-print">分類*</td>
     <td id="MY_H" class="no-print">年度*</td>
     <td id="MZ_H" class="no-print">專案編號</td>
+    <td id="MZ_H" class="no-print" style="display:none">ict     </td>
+    <td id="MZ_H" class="no-print" style="display:none">hostname</td>
+    <td id="MZ_H" class="no-print" style="display:none">wifi_mac</td>
+    <td id="MZ_H" class="no-print" style="display:none">lan_mac </td>
+    <td id="MZ_H" class="no-print" style="display:none">warr_id </td>
+    <td id="MZ_H" class="no-print" style="display:none">iyr_bat </td>
+    <td id="MZ_H" class="no-print" style="display:none">cpu     </td>
+    <td id="MZ_H" class="no-print" style="display:none">ram	   </td>
+    <td id="MZ_H" class="no-print" style="display:none">disk    </td>
   </tr>
   {% for item_ in items %}
   <tr>
-    <td class="small no-print" style="width:10px;padding:0;margin: 0;">{{loop.index}}</td>
+    <td class="no-print" style="width:2px;padding:0;margin: 0;">{{loop.index}}</td>
     <td class="small no-print" style="width: 10px;"><a href="/EsAsset/{{acc_id}}/item/{{item_.id}}">{{item_.id}}</a></td>
     <td class="M" id="MA_gno_{{item_.id}}">{{ '%02d' | format(item_.gno) if item_.gno is not none}}</td>
     <!--td class="M" id="MA_itemno_{{item_.id}}">{{item_.itemno if item_.itemno is not none}}</td-->
@@ -79,17 +88,27 @@
     <td class="M" id="MQ_note1_{{item_.id}}">{{item_.note1 if item_.note1 is not none}}</td>
     <td class="M no-print" style="max-width: 80px;" id="MR_regSDate_{{item_.id}}">
       {{item_.regSDate.strftime('%Y-%m-%d')}}</td>
-    <td class="M no-print" style="max-width: 30px;" id="MU_vouchernum_{{item_.id}}">{{item_.vouchernum}}</td>
-    <td class="M no-print" style="max-width: 30px;" id="MV_invoicenum_{{item_.id}}">{{item_.invoicenum}}</td>
+    <td class="M no-print" style="max-width: 30px;" id="MU_vouchernum_{{item_.id}}">{{item_.vouchernum if item_.vouchernum is not none}}</td>
+    <td class="M no-print" style="max-width: 30px;" id="MV_invoicenum_{{item_.id}}">{{item_.invoicenum if item_.invoicenum is not none}}</td>
     <td class="M no-print" id="MW_supplier_{{item_.id}}">{{item_.supplier}}</td>
     <td class="M no-print" id="MX_cate_{{item_.id}}">{{item_.cate}}</td>
     <td class="M no-print" id="MY_sess_{{item_.id}}">{{item_.sess}}</td>
 
     {% if session.profile and session.profile.user=='admin' and True %}
-    <td class="M no-print" id="MZ_acc-acno_{{item_.id}}">{{item_.acc_acno}}</td>
+    <td class="M no-print small" id="MZ_acc-acno_{{item_.id}}">{{item_.acc_acno}}</td>
     {% else %}
-    <td class="no-print">{{item_.acc_acno}}</td>
+    <td class="no-print small">{{item_.acc_acno}}</td>
     {% endif %}
+
+    <td class="M no-print" style="display:none" id="M0_ict_{{item_.id}}">     {{item_.ict     }}</td>
+    <td class="M no-print" style="display:none" id="M1_hostname_{{item_.id}}">{{item_.hostname}}</td>
+    <td class="M no-print" style="display:none" id="M2_wifi-mac_{{item_.id}}">{{item_.wifi_mac}}</td>
+    <td class="M no-print" style="display:none" id="M3_lan-mac_{{item_.id}}"> {{item_.lan_mac	}}</td>
+    <td class="M no-print" style="display:none" id="M4_warr-id_{{item_.id}}"> {{item_.warr_id }}</td>
+    <td class="M no-print" style="display:none" id="M5_iyr-bat_{{item_.id}}"> {{item_.iyr_bat }}</td>
+    <td class="M no-print" style="display:none" id="M6_cpu_{{item_.id}}">     {{item_.cpu     }}</td>
+    <td class="M no-print" style="display:none" id="M7_ram_{{item_.id}}">     {{item_.ram	    }}</td>
+    <td class="M no-print" style="display:none" id="M9_disk_{{item_.id}}">    {{item_.disk    }}</td>
   </tr>
   {% else %}
   <tr>

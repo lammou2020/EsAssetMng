@@ -6,7 +6,7 @@
 
 {% block content %}
 
-
+<script src='/static/javascripts/cool/table2csv.js'></script>
 <script>
   //<script src="/static/javascripts/JsBarcode.all.min.js" />  
   // By using querySelector
@@ -94,44 +94,7 @@
 
 </div>
 <div class="media-body">
-  <table class="table">
-    <tr>
-      <td>id,項目代號</td>
-      <td>專案項目名稱</td>
-      <td>學年</td>
-      <td>登記日期</td>
-      <td>vouchernum</td>
-      <td>invoicenum</td>
-      <td>supplier</td>
-      <td>createdById</td>
-    </tr>
-    <tr>
-      <td>
-        <a href="/EsAsset/{{book.id}}">{{book.id}}.{{book.acno}}</a>
-      </td>
-      <td>
-        {{book.acc}}
-      </td>
-      <td>
-        {{book.sess}}
-      </td>
-      <td>
-        {{book.regSDate}}
-      </td>
-      <td>
-        {{book.vouchernum if book.vouchernum is not none}}
-      </td>
-      <td>
-        {{book.invoicenum if book.invoicenum is not none}}
-      </td>
-      <td>
-        {{book.supplier if book.supplier is not none}}
-      </td>
-      <td>
-        {{book.createdById if book.createdById is not none}}
-      </td>
-  </table>
-  <p>{{book.describ | safe if book.describ is not none}}</p>
+  {% include 'esasset/control/acctable.html' %}
 </div>
 <div class="btn-group no-print">  
   {% if session.profile and session.profile.Role < "8" %}
@@ -157,9 +120,13 @@
       <i class="glyphicon glyphicon-scale"></i>
       運算
     </a>
+    <a href="#" class="btn btn-primary btn-sm" id="exportCSV">
+      <i class="glyphicon glyphicon-cloud-download"></i>
+      csv
+    </a>        
     <a href="/EsAsset/{{book.id}}/DownloadXLS" class="btn btn-primary btn-sm">
       <i class="glyphicon glyphicon-cloud-download"></i>
-      excel
+      xlsx
     </a>    
     
     <a href="#" class="btn btn-success btn-sm" onclick="status_place_chg();">
@@ -179,6 +146,11 @@
 </div>
 
 <script>
+  $("#exportCSV").on('click', function (event) {
+    var args = [$('#EDUTBL'), 'export_{{acc_id}}_items.csv'];
+    exportTableToCSV.apply(this, args);
+  });
+
   //var PostUrl = '/EsAsset/{{book.id}}/item/api/JSON/update';
   var PostUrl = '/EsAsset/{{book.id}}/item/api/JSON/updateSet';
   $(document).ready(function () {

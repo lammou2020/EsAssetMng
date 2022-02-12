@@ -1,0 +1,26 @@
+<table class="table">
+    <tr>
+      <td width="2">id</td>
+      <td>項目代號</td>
+      <td>專案項目名稱</td>
+      <td  width="2">學年</td>
+      <td>登記日期</td>
+      <td>憑單號</td>
+      <td>傳票號</td>
+      <td>供應商</td>
+      <td class="no-print" width="2">createdById</td>
+    </tr>
+    <tr>
+      <td  width="2"><a href="/EsAsset/{{book.id}}">{{book.id}}</a></td>
+      <td>{{book.acno}}</td>
+      <td>{{book.acc}}</td>
+      <td width="2">{{book.sess}}</td>
+      <td>{{book.regSDate}}</td>
+      <td>{{book.vouchernum if book.vouchernum is not none}}</td>
+      <td>{{book.invoicenum if book.invoicenum is not none}}</td>
+      <td>{{book.supplier if book.supplier is not none}}    </td>
+      <td class="no-print"  width="2">  
+        {{book.createdById if book.createdById is not none}}
+      </td>
+  </table>
+  <p>{{book.describ | safe if book.describ is not none}}</p>
