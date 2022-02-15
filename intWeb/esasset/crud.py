@@ -16,6 +16,8 @@ from openpyxl.workbook import Workbook
 from openpyxl import load_workbook   
 from flask_qrcode import QRcode
 
+
+
 qrcode=QRcode(current_app)
 
 crud = Blueprint('crud', __name__)
@@ -193,15 +195,15 @@ def show_QueryForm():
     return render_template("esasset/QueryForm.html")
 
 
-#####
+#############
 # [START add]
+#############
 
 
-
-#####
 @crud.route('/<id>')
 @login_required_auth
 def view(id):
+    gridfmt=request.args.get("gridfmt",current_app.config['ITEM_GRID_DEFAULT_FMT'])
     if id=="0" : return redirect("/EsAsset/")
     book = get_assest_model().read(id)
     book["regSDate"]=book["regSDate"].strftime( '%Y-%m-%d')
@@ -209,7 +211,7 @@ def view(id):
     filenames=[]
     crspath=str(book["acno"])
     Get_FileList(crspath,filenames)     #"ACC"+crspath+"_"
-    return render_template("esasset/view.html", book=book,items=items,filenames=filenames)
+    return render_template("esasset/view.html", book=book,items=items,filenames=filenames,gridfmt=gridfmt)
 
 
 # [START add]
@@ -277,13 +279,14 @@ def delete(id):
 @crud.route("/<id>/itemgrid")
 @login_required_auth
 def itemgrid(id):
+    gridfmt=request.args.get("gridfmt",current_app.config['ITEM_GRID_DEFAULT_FMT'])
     book = get_assest_model().read(id)
     Err=CheckOwnRecordErr(book,session)
     if Err != None:  return Err
     book["regSDate"]=book["regSDate"].strftime( '%Y-%m-%d')
     items= get_assest_model().Itemlist_by_acno(book["acno"])
     filenames=[]
-    return render_template("esasset/grid.html", book=book,items=items,lecturesfile=[],filenames=filenames)
+    return render_template("esasset/grid.html", book=book,items=items,lecturesfile=[],filenames=filenames,gridfmt=gridfmt)
 
 
 @crud.route("/<id>/DownloadXLS",methods=["GET"])
