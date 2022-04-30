@@ -170,7 +170,7 @@ class Item(db.Model):
     keeper=db.Column(db.String(80))  # 移動 link to _table
     place =db.Column(db.String(80))  # 放置地方
     depr_year   = db.Column(db.Integer,default=0)  # 0505 rate:5/5 NN總年期/淨灘折年期
-    warr_period = db.Column(db.Numeric(precision=10,scale=2))  # 保養
+    warr_period = db.Column(db.String(80)) #db.Column(db.Numeric(precision=10,scale=2))  # 保養
     note1 =db.Column(db.Text)  # 不作地方記錄 描述
     note2 =db.Column(db.Text)  # 不作資助記錄
     vouchernum =db.Column(db.String(80))  # 憑單編號
